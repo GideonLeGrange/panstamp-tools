@@ -38,24 +38,13 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        org.jdesktop.layout.GroupLayout poesLayout = new org.jdesktop.layout.GroupLayout(poes);
-        poes.setLayout(poesLayout);
-        poesLayout.setHorizontalGroup(
-            poesLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 444, Short.MAX_VALUE)
-        );
-        poesLayout.setVerticalGroup(
-            poesLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 232, Short.MAX_VALUE)
-        );
-
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .add(poes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(255, Short.MAX_VALUE))
+                .addContainerGap(689, Short.MAX_VALUE))
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                 .add(0, 0, Short.MAX_VALUE)
                 .add(jButton1)
@@ -68,7 +57,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .add(jButton1)
                 .add(13, 13, 13)
                 .add(poes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(301, Short.MAX_VALUE))
         );
 
         pack();
