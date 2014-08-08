@@ -6,10 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * A simple container for the serial configuration data 
+ * A simple container for the configuration data 
  * @author gideon
  */
-class Serial {
+class Config {
 
     /**
      * return the list of serial ports
@@ -46,7 +46,43 @@ class Serial {
         this.portName = portName;
     }
 
+    int getChannel() {
+        return channel;
+    }
+
+    void setChannel(int channel) {
+        this.channel = channel;
+    }
+
+    int getNetworkID() {
+        return networkID;
+    }
+
+    public void setNetworkID(int networkID) {
+        this.networkID = networkID;
+    }
+
+    int getDeviceAddress() {
+        return deviceAddress;
+    }
+
+    void setDeviceAddress(int deviceAddress) {
+        this.deviceAddress = deviceAddress;
+    }
+
+    int getSecurityOption() {
+        return securityOption;
+    }
+
+    void setSecurityOption(int securityOption) {
+        this.securityOption = securityOption;
+    }
+
     private String portName = "";
     private int portSpeed = 38400;
+    private int channel;
+    private int networkID;
+    private int deviceAddress;
+    private int securityOption;
 
 }

@@ -12,7 +12,7 @@ class SerialConfigPanel extends javax.swing.JPanel {
     /**
      * Creates new form SerialConfigPanel
      */
-     SerialConfigPanel(Serial util) {
+     SerialConfigPanel(Config util) {
         this.util = util;
         initComponents();
     }
@@ -191,7 +191,7 @@ class SerialConfigPanel extends javax.swing.JPanel {
         checkChanges();
     }//GEN-LAST:event_speedComboBoxActionPerformed
 
-    private final Serial util;
+    private final Config util;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton applyButton;
     private javax.swing.JButton cancelButton;
