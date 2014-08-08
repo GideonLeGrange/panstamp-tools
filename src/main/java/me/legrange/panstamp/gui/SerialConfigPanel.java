@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package me.legrange.panstamp.gui;
 
 import javax.swing.ComboBoxModel;
@@ -22,13 +18,36 @@ class SerialConfigPanel extends javax.swing.JPanel {
     }
     
     /** get the list of serial ports as a combo box model */
-    private ComboBoxModel serialPortListModel() {
-        DefaultComboBoxModel cbm = new DefaultComboBoxModel(util.getPorts().toArray(new String[]{}));
+    private ComboBoxModel portListModel() {
+        DefaultComboBoxModel cbm = new DefaultComboBoxModel(util.getPorts());
         String sp = util.getPortName();
+        if ((sp != null) && !sp.equals("")) {
+            cbm.setSelectedItem(sp);
+        }
+        else {
+            cbm.setSelectedItem(cbm.getElementAt(0));
+        }
+        return cbm;
+    }
+    
+    private ComboBoxModel speedListModel() {
+        DefaultComboBoxModel<Integer> cbm = new DefaultComboBoxModel<>(util.getSpeeds());
+        Integer sp = util.getPortSpeed();
         if (sp != null) {
             cbm.setSelectedItem(sp);
         }
+        else {
+            cbm.setSelectedItem(cbm.getElementAt(0));
+        }
         return cbm;
+    }
+    
+    /**  check for changed and enable apply and cancel */
+    private void checkChanges() {
+        boolean vis = !util.getPortName().equals(portComboBox.getModel().getSelectedItem())
+               || !util.getPortSpeed().equals(speedComboBox.getModel().getSelectedItem());
+        applyButton.setEnabled(vis);
+        cancelButton.setEnabled(vis);
     }
     
     /** 
@@ -45,8 +64,13 @@ class SerialConfigPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        portComboBox = new javax.swing.JComboBox();
         speedComboBox = new javax.swing.JComboBox();
+        portComboBox = new javax.swing.JComboBox();
+        applyButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+
+        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         jLabel1.setText("Serial Port");
@@ -55,17 +79,40 @@ class SerialConfigPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Speed (bps):");
 
-        portComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "38400", "19200", "9600" }));
+        speedComboBox.setModel(speedListModel());
+        speedComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                speedComboBoxActionPerformed(evt);
+            }
+        });
+
+        portComboBox.setModel(portListModel());
         portComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 portComboBoxActionPerformed(evt);
             }
         });
 
-        speedComboBox.setModel(serialPortListModel());
-        speedComboBox.addActionListener(new java.awt.event.ActionListener() {
+        applyButton.setText("Apply");
+        applyButton.setEnabled(false);
+        applyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                speedComboBoxActionPerformed(evt);
+                applyButtonActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.setEnabled(false);
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/reload.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -74,47 +121,81 @@ class SerialConfigPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                     .add(layout.createSequentialGroup()
                         .addContainerGap()
                         .add(jLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 351, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(layout.createSequentialGroup()
                         .add(37, 37, 37)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel3)
-                            .add(jLabel2))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                            .add(applyButton)
+                            .add(layout.createSequentialGroup()
+                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jLabel3)
+                                    .add(jLabel2))
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(speedComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                    .add(portComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(speedComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(portComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                            .add(jButton1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(cancelButton))
+                        .add(41, 41, 41)))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .add(jLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(26, 26, 26)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel2)
-                    .add(speedComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(25, 25, 25)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jButton1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(jLabel2)
+                        .add(portComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel3)
-                    .add(portComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(0, 180, Short.MAX_VALUE))
+                    .add(speedComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 123, Short.MAX_VALUE)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(applyButton)
+                    .add(cancelButton))
+                .add(27, 27, 27))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void portComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portComboBoxActionPerformed
-    
+        checkChanges();
     }//GEN-LAST:event_portComboBoxActionPerformed
 
+    private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
+        util.setPortName(portComboBox.getModel().getSelectedItem().toString());
+        util.setPortSpeed((Integer)speedComboBox.getModel().getSelectedItem());
+        checkChanges();
+    }//GEN-LAST:event_applyButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        // TODO add your handling code here:
+        portComboBox.setSelectedItem(util.getPortName());
+        speedComboBox.setSelectedItem(util.getPortSpeed());
+        checkChanges();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        portComboBox.setModel(portListModel());
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private void speedComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speedComboBoxActionPerformed
-    
+        checkChanges();
     }//GEN-LAST:event_speedComboBoxActionPerformed
 
-    private Serial util;
+    private final Serial util;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton applyButton;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
