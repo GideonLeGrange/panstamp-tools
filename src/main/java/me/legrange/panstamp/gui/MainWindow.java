@@ -7,6 +7,7 @@ package me.legrange.panstamp.gui;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
+import javax.swing.table.DefaultTableModel;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.swap.CommandMessage;
@@ -88,7 +89,6 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener  {
 
     @Override
     public void statusReceived(StatusMessage msg) {
-        System.out.printf("Status: %s\n", msg);
    }
 
     @Override

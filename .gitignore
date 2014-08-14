@@ -44,3 +44,6 @@ _site/
 .classpath
 
 .project
+
+# Apple being annoying 
+.DS_Store
