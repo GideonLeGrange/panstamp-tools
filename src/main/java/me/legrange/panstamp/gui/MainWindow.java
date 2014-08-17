@@ -1,25 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package me.legrange.panstamp.gui;
 
+import java.awt.Component;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.swap.CommandMessage;
+import me.legrange.panstamp.gui.SWAPMessageModel.Direction;
+import me.legrange.panstamp.gui.tree.TreeModelManager;
+import me.legrange.swap.Message;
 import me.legrange.swap.MessageListener;
-import me.legrange.swap.QueryMessage;
-import me.legrange.swap.StatusMessage;
 
 /**
  *
  * @author gideon
  */
-public class MainWindow extends javax.swing.JFrame implements MessageListener  {
+public class MainWindow extends javax.swing.JFrame implements MessageListener {
 
     /**
      * @param args the command line arguments
@@ -47,28 +46,51 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener  {
             java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
             public void run() {
-                MainWindow mw = new MainWindow();
+                final MainWindow mw = new MainWindow();
                 mw.setVisible(true);
                 mw.start();
             }
         });
     }
+    
+    private class TCR extends DefaultTreeCellRenderer {
+
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+            if (value instanceof Component) {
+                return (Component)value;
+            }
+            return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus); //To change body of generated methods, choose Tools | Templates.
+        }
+        
+    }
+
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         config = new Config();
+        tmm = new TreeModelManager();
+        testCR = new TCR();
+
         initComponents();
     }
-    
 
-    
-    /** start the application */
+    @Override
+    public void messageReceived(Message msg) {
+        displaySWAPMessage(msg, Direction.IN);
+    }
+
+    @Override
+    public void messageSent(Message msg) {
+        displaySWAPMessage(msg, Direction.OUT);
+    }
+
+    /**
+     * start the application
+     */
     private void start() {
         while (!config.hasValidPort()) {
             ConfigDialog cd = new ConfigDialog(config, this);
@@ -76,24 +98,17 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener  {
         }
         try {
             gw = Gateway.openSerial(config.getPortName(), config.getPortSpeed());
-            gw.getSWAPModem().addListener(this);
+            tmm.addGateway(gw);
+          //  networkTree.setRootVisible(false);
+            gw.getSWAPModem().addListener(MainWindow.this);
         } catch (GatewayException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    @Override
-    public void queryReceived(QueryMessage msg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void statusReceived(StatusMessage msg) {
-   }
-
-    @Override
-    public void commandReceived(CommandMessage msg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void displaySWAPMessage(Message msg, Direction dir) {
+        SWAPMessageModel mod = (SWAPMessageModel) swapMessagesTable.getModel();
+        mod.add(msg, System.currentTimeMillis(), dir);
     }
 
     /**
@@ -137,25 +152,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener  {
         swapMessagesLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         swapMessagesLabel.setText("SWAP Messages");
 
-        swapMessagesTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Timestamp", "Direction", "Type", "Message"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
+        swapMessagesTable.setModel(new SWAPMessageModel());
         swapMessagesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         swapMessagesTable.setShowGrid(false);
         swapMessagesTable.getTableHeader().setResizingAllowed(false);
@@ -240,8 +237,8 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener  {
         swapNetworkLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         swapNetworkLabel.setText("SWAP Network");
 
-        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
-        networkTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        networkTree.setModel(tmm.getModel());
+        networkTree.setCellRenderer(testCR);
         swapNetworkPane.setViewportView(networkTree);
 
         org.jdesktop.layout.GroupLayout leftPanelLayout = new org.jdesktop.layout.GroupLayout(leftPanel);
@@ -321,10 +318,12 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener  {
         ConfigDialog cd = new ConfigDialog(config, this);
         cd.setVisible(true);
     }//GEN-LAST:event_configMenuItemActionPerformed
-   
-    
+
     private final Config config;
     private Gateway gw;
+    private TreeModelManager tmm;
+    private TreeCellRenderer testCR;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JMenuItem configMenuItem;
