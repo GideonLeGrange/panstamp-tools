@@ -35,6 +35,9 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+      <Font name="Courier" size="10" style="0"/>
+    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="mainMenu"/>
@@ -288,10 +291,10 @@
                 <Component class="javax.swing.JTree" name="networkTree">
                   <Properties>
                     <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="tmm.getModel()" type="code"/>
+                      <Connection code="stm" type="code"/>
                     </Property>
                     <Property name="cellRenderer" type="javax.swing.tree.TreeCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="testCR" type="code"/>
+                      <Connection code="new SWAPNodeRenderer()" type="code"/>
                     </Property>
                   </Properties>
                 </Component>

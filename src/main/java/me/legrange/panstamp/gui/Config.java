@@ -34,7 +34,7 @@ class Config {
         }
         return serials.toArray(new String[]{});
     }
-
+    
     boolean hasValidPort() {
         if (!portName.equals("")) {
             try {

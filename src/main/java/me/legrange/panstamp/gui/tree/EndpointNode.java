@@ -7,20 +7,35 @@
 package me.legrange.panstamp.gui.tree;
 
 import me.legrange.panstamp.Endpoint;
+import me.legrange.panstamp.EndpointListener;
 
 /**
  *
  * @author gideon
  */
-public class EndpointNode extends SWAPNode {
+public class EndpointNode extends SWAPNode implements EndpointListener {
 
     public EndpointNode(Endpoint ep) {
         super(ep);
+    }
+    
+    public Endpoint getEndpoint() {
+        return (Endpoint)getUserObject();
+    }
+
+    @Override
+    protected void start() {
+        getEndpoint().addListener(this);
+    }
+    @Override
+    public void valueReceived(Endpoint ep) {
+        reload();
     }
 
     @Override
     Type getType() {
         return Type.ENDPOINT;
     }
+
     
 }

@@ -5,12 +5,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.SWAPMessageModel.Direction;
-import me.legrange.panstamp.gui.tree.TreeModelManager;
+import me.legrange.panstamp.gui.tree.GatewayNode;
+import me.legrange.panstamp.gui.tree.SWAPNodeRenderer;
+import me.legrange.panstamp.gui.tree.SWAPTreeModel;
 import me.legrange.swap.Message;
 import me.legrange.swap.MessageListener;
 
@@ -72,9 +76,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
      */
     public MainWindow() {
         config = new Config();
-        tmm = new TreeModelManager();
-        testCR = new TCR();
-
+        stm =  SWAPTreeModel.create();
         initComponents();
     }
 
@@ -98,8 +100,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         }
         try {
             gw = Gateway.openSerial(config.getPortName(), config.getPortSpeed());
-            tmm.addGateway(gw);
-          //  networkTree.setRootVisible(false);
+            stm.addGateway(gw);
             gw.getSWAPModem().addListener(MainWindow.this);
         } catch (GatewayException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -140,6 +141,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         quitItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setFont(new java.awt.Font("Courier", 0, 10)); // NOI18N
 
         leftRightSplitPane.setBorder(null);
         leftRightSplitPane.setDividerLocation(220);
@@ -237,8 +239,8 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         swapNetworkLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         swapNetworkLabel.setText("SWAP Network");
 
-        networkTree.setModel(tmm.getModel());
-        networkTree.setCellRenderer(testCR);
+        networkTree.setModel(stm);
+        networkTree.setCellRenderer(new SWAPNodeRenderer());
         swapNetworkPane.setViewportView(networkTree);
 
         org.jdesktop.layout.GroupLayout leftPanelLayout = new org.jdesktop.layout.GroupLayout(leftPanel);
@@ -321,8 +323,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
 
     private final Config config;
     private Gateway gw;
-    private TreeModelManager tmm;
-    private TreeCellRenderer testCR;
+    private final SWAPTreeModel stm;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomPanel;
