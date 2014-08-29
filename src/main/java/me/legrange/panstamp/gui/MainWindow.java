@@ -100,7 +100,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         }
         try {
             gw = Gateway.openSerial(config.getPortName(), config.getPortSpeed());
-            stm.addGateway(gw);
+               stm.addGateway(gw);
             gw.getSWAPModem().addListener(MainWindow.this);
         } catch (GatewayException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);

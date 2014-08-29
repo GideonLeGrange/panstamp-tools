@@ -1,6 +1,5 @@
 package me.legrange.panstamp.gui.tree;
 
-import javax.swing.tree.DefaultTreeModel;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
