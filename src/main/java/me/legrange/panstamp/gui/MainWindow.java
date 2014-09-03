@@ -5,18 +5,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeCellRenderer;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.SWAPMessageModel.Direction;
-import me.legrange.panstamp.gui.tree.GatewayNode;
 import me.legrange.panstamp.gui.tree.SWAPNodeRenderer;
 import me.legrange.panstamp.gui.tree.SWAPTreeModel;
-import me.legrange.swap.Message;
 import me.legrange.swap.MessageListener;
+import me.legrange.swap.SwapMessage;
 
 /**
  *
@@ -58,6 +54,8 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
             }
         });
     }
+
+   
     
     private class TCR extends DefaultTreeCellRenderer {
 
@@ -81,12 +79,12 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
     }
 
     @Override
-    public void messageReceived(Message msg) {
+    public void messageReceived(SwapMessage msg) {
         displaySWAPMessage(msg, Direction.IN);
     }
 
     @Override
-    public void messageSent(Message msg) {
+    public void messageSent(SwapMessage msg) {
         displaySWAPMessage(msg, Direction.OUT);
     }
 
@@ -101,13 +99,14 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         try {
             gw = Gateway.openSerial(config.getPortName(), config.getPortSpeed());
                stm.addGateway(gw);
+            
             gw.getSWAPModem().addListener(MainWindow.this);
         } catch (GatewayException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void displaySWAPMessage(Message msg, Direction dir) {
+    private void displaySWAPMessage(SwapMessage msg, Direction dir) {
         SWAPMessageModel mod = (SWAPMessageModel) swapMessagesTable.getModel();
         mod.add(msg, System.currentTimeMillis(), dir);
     }

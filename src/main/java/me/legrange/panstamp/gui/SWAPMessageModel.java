@@ -9,7 +9,7 @@ import java.util.List;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import me.legrange.swap.Message;
+import me.legrange.swap.SwapMessage;
 
 /**
  * A table model that deals with SWAP messages
@@ -84,7 +84,7 @@ class SWAPMessageModel implements TableModel {
         listeners.remove(l);
     }
     
-    void add(Message msg, long timestamp, Direction dir) {
+    void add(SwapMessage msg, long timestamp, Direction dir) {
         data.add(0, new Entry(msg, timestamp, dir));
         for (TableModelListener l : listeners) {
             l.tableChanged(new TableModelEvent(this, 0, 0, -1, TableModelEvent.INSERT));
@@ -93,13 +93,13 @@ class SWAPMessageModel implements TableModel {
 
     private static class Entry {
 
-        public Entry(Message msg, long timestamp, Direction dir) {
+        public Entry(SwapMessage msg, long timestamp, Direction dir) {
             this.msg = msg;
             this.timestamp = timestamp;
             this.dir = dir;
         }
 
-        private final Message msg;
+        private final SwapMessage msg;
         private final long timestamp;
         private final Direction dir;
 
