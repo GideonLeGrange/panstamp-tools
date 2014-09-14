@@ -5,6 +5,7 @@ import gnu.io.NoSuchPortException;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -18,6 +19,7 @@ class Config {
     Config() {
         conf = Preferences.userRoot().node(Config.class.getPackage().getName());
         load();
+        
     }
 
     /**
@@ -51,31 +53,31 @@ class Config {
     }
 
     Integer getPortSpeed() {
-        return portSpeed;
+        return getInt(SERIAL_SPEED);
     }
 
     void setPortSpeed(int portSpeed) {
-        this.portSpeed = portSpeed;
+        set.put(SERIAL_SPEED, portSpeed);
     }
 
     String getPortName() {
-        return portName;
+        return (String) set.get(SERIAL_PORT);
     }
 
     void setPortName(String portName) {
-        this.portName = portName;
+        set.put(SERIAL_PORT, portName);
     }
 
     int getChannel() {
-        return channel;
+        return (int) set.get(CHANNEL);
     }
 
     void setChannel(int channel) {
-        this.channel = channel;
+        set.put(CHANNEL, channel);
     }
 
     int getNetworkID() {
-        return networkID;
+        return (int) set.get(NETWORK_ID);
     }
 
     public void setNetworkID(int networkID) {
@@ -114,6 +116,11 @@ class Config {
         conf.putInt(SERIAL_SPEED, portSpeed);
         conf.sync();
     }
+    
+    private Integer getInt(String name) {
+        return (Integer) set.get(name);
+        
+    }
 
     /**
      * config variable names
@@ -126,11 +133,7 @@ class Config {
     private static final String DEVICE_ADDRESS = "network.address";
 
     private final Preferences conf;
-    private String portName = "";
-    private int portSpeed = 38400;
-    private int channel = 0;
-    private int networkID = 0xB547;
-    private int deviceAddress;
-    private int securityOption;
+    private  Map<String, Object> loaded;
+    private Map<String, Object> set; 
 
 }
