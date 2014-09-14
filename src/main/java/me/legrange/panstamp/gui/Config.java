@@ -2,7 +2,6 @@ package me.legrange.panstamp.gui;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,6 +20,15 @@ class Config {
     Config() {
         conf = Preferences.userRoot().node(Config.class.getPackage().getName());
         load();
+    }
+    
+    boolean hasChanged() {
+        for (String key : set.keySet()) {
+            if (!set.get(key).equals(loaded.get(key))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -112,9 +120,14 @@ class Config {
     }
 
     final void save() throws BackingStoreException {
-        conf.put(SERIAL_PORT, getPortName());
-        for (String name : INTS) {
-            conf.putInt(name, getInt(name));
+        for (String key : set.keySet()) {
+            Object val = set.get(key);
+            if (val instanceof String) {
+                conf.put(key, (String)val);
+            }
+            else if (val instanceof Integer) {
+                conf.putInt(key, (Integer)val);
+            }
         }
         conf.sync();
         mapCopy(set, loaded);
@@ -155,7 +168,6 @@ class Config {
     private static final String CHANNEL = "network.channel";
     private static final String SECURITY = "network.security";
     private static final String DEVICE_ADDRESS = "network.address";
-    private static final String INTS[] = {SERIAL_SPEED, NETWORK_ID, CHANNEL, SECURITY, DEVICE_ADDRESS};
 
     private final Preferences conf;
     private final Map<String, Object> loaded = new HashMap<>();

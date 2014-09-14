@@ -17,18 +17,18 @@ public class HexDocument extends PlainDocument {
 
     @Override
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-        System.out.printf("offs = %d, str = %s, a = %s\n", offs, str, a);
         if (str.length() > 0) {
             if (str.startsWith("-") && min >= 0) { // special case to suppress "-0"
                 return;
             }
             String val = getText(0, getLength());
             if (offs == 0) {
-                val = str + offs;
+                val = str + val;
             } else {
                 val = val.substring(0, offs) + str + val.substring(offs);
             }
             try {
+                val = val.trim();
                 int newVal = Integer.parseInt(val, 16);
                 if ((newVal >= min) && (newVal <= max)) {
                     super.insertString(offs, str, a); 
@@ -43,6 +43,5 @@ public class HexDocument extends PlainDocument {
 
     private final int min;
     private final int max;
-    private int value;
 
 }

@@ -92,7 +92,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
      * start the application
      */
     private void start() {
-        while (!config.hasValidPort()) {
+        if (!config.hasValidPort()) {
             ConfigDialog cd = new ConfigDialog(config, this);
             cd.setVisible(true);
         }

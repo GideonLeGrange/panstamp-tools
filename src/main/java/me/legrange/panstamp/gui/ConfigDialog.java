@@ -10,7 +10,15 @@ import javax.swing.DefaultComboBoxModel;
  *
  * @author gideon
  */
-class ConfigDialog extends javax.swing.JDialog {
+class ConfigDialog extends javax.swing.JDialog  {
+
+    @Override
+    public void dispose() {
+        if (config.hasChanged()) {
+            config.revert();
+        }
+        super.dispose(); //To change body of generated methods, choose Tools | Templates.
+    }
 
     /**
      * Creates new form ConfigDialog
@@ -23,7 +31,7 @@ class ConfigDialog extends javax.swing.JDialog {
         super(parent, true);
         this.config = config;
         initComponents();
-        
+
     }
 
     private ComboBoxModel<String> portListModel() {
@@ -134,27 +142,35 @@ class ConfigDialog extends javax.swing.JDialog {
         frequencyLabel.setText("Frequency channel:");
         frequencyLabel.setToolTipText("");
 
-        networkTextField.setDocument(new HexDocument(0, 65535));
-        networkTextField.setText(String.format("%x", config.getNetworkID()));
+        networkTextField.setDocument(new HexDocument(0,65535));
+        networkTextField.setText(String.format("%4x",config.getNetworkID()));
+        networkTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                networkTextFieldPropertyChange(evt);
+            }
+        });
 
         addressLabel.setText("Device address:");
 
         securityLabel.setText("Security option:");
 
         securityTextField.setDocument(new IntegerDocument(0,255));
-        securityTextField.setText(String.format("%d", config.getSecurityOption()));
 
         addressTextField.setDocument(new HexDocument(0, 255));
-        addressTextField.setText(String.format("%2x", config.getDeviceAddress())
-        );
         addressTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addressTextFieldActionPerformed(evt);
             }
         });
 
-        channelTextField.setDocument(new IntegerDocument(0, 255));
+        channelTextField.setColumns(4);
+        channelTextField.setDocument(new IntegerDocument(0,255));
         channelTextField.setText(String.format("%d", config.getChannel()));
+        channelTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                channelTextFieldPropertyChange(evt);
+            }
+        });
 
         javax.swing.GroupLayout networkTabLayout = new javax.swing.GroupLayout(networkTab);
         networkTab.setLayout(networkTabLayout);
@@ -167,13 +183,13 @@ class ConfigDialog extends javax.swing.JDialog {
                     .addComponent(networkIDLabel)
                     .addComponent(addressLabel)
                     .addComponent(securityLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                 .addGroup(networkTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(networkTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                    .addComponent(networkTextField)
                     .addComponent(securityTextField)
                     .addComponent(addressTextField)
-                    .addComponent(channelTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE))
-                .addContainerGap(78, Short.MAX_VALUE))
+                    .addComponent(channelTextField))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
         networkTabLayout.setVerticalGroup(
             networkTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -194,7 +210,7 @@ class ConfigDialog extends javax.swing.JDialog {
                 .addGroup(networkTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(securityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(securityLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         configTabs.addTab("Network settings", networkTab);
@@ -221,7 +237,7 @@ class ConfigDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(configTabs)
+                        .addComponent(configTabs, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
@@ -251,7 +267,7 @@ class ConfigDialog extends javax.swing.JDialog {
         } catch (BackingStoreException ex) {
             Logger.getLogger(ConfigDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
-        dispose();        
+        dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void speedComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speedComboBoxActionPerformed
@@ -270,6 +286,21 @@ class ConfigDialog extends javax.swing.JDialog {
         config.revert();
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void channelTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_channelTextFieldPropertyChange
+        String text = channelTextField.getText().trim();
+        if ((text != null) && !text.equals("")) {
+            config.setChannel(Integer.parseInt(text));
+        }
+
+    }//GEN-LAST:event_channelTextFieldPropertyChange
+
+    private void networkTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_networkTextFieldPropertyChange
+         String text = networkTextField.getText().trim();
+        if ((text != null) && !text.equals("")) {
+            config.setNetworkID(Integer.parseInt(text,16));
+        }        
+    }//GEN-LAST:event_networkTextFieldPropertyChange
 
     private final Config config;
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -291,4 +322,6 @@ class ConfigDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox speedComboBox;
     private javax.swing.JLabel speedLabel;
     // End of variables declaration//GEN-END:variables
+
+
 }

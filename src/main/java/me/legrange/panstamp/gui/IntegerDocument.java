@@ -18,14 +18,13 @@ public class IntegerDocument extends PlainDocument {
 
     @Override
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-        System.out.printf("offs = %d, str = %s, a = %s\n", offs, str, a);
         if (str.length() > 0) {
             if (str.startsWith("-") && min >= 0) { // special case to suppress "-0"
                 return;
             }
             String val = getText(0, getLength());
             if (offs == 0) {
-                val = str + offs;
+                val = str + val;
             } else {
                 val = val.substring(0, offs) + str + val.substring(offs);
             }
@@ -38,10 +37,8 @@ public class IntegerDocument extends PlainDocument {
             }
         }
     }
-    
 
     private final int min;
     private final int max;
-    private int value;
 
 }
