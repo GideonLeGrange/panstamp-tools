@@ -2,7 +2,9 @@ package me.legrange.panstamp.gui;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,6 @@ class Config {
     Config() {
         conf = Preferences.userRoot().node(Config.class.getPackage().getName());
         load();
-        
     }
 
     /**
@@ -36,11 +37,11 @@ class Config {
         }
         return serials.toArray(new String[]{});
     }
-    
+
     boolean hasValidPort() {
-        if (!portName.equals("")) {
+        if (!getPortName().equals("")) {
             try {
-                CommPortIdentifier.getPortIdentifier(portName);
+                CommPortIdentifier.getPortIdentifier(getPortName());
                 return true;
             } catch (NoSuchPortException ex) {
             }
@@ -57,71 +58,94 @@ class Config {
     }
 
     void setPortSpeed(int portSpeed) {
-        set.put(SERIAL_SPEED, portSpeed);
+        setInt(SERIAL_SPEED, portSpeed);
     }
 
     String getPortName() {
-        return (String) set.get(SERIAL_PORT);
+        return getString(SERIAL_PORT);
     }
 
     void setPortName(String portName) {
-        set.put(SERIAL_PORT, portName);
+        setString(SERIAL_PORT, portName);
     }
 
     int getChannel() {
-        return (int) set.get(CHANNEL);
+        return getInt(CHANNEL);
     }
 
     void setChannel(int channel) {
-        set.put(CHANNEL, channel);
+        setInt(CHANNEL, channel);
     }
 
     int getNetworkID() {
-        return (int) set.get(NETWORK_ID);
+        return getInt(NETWORK_ID);
     }
 
     public void setNetworkID(int networkID) {
-        this.networkID = networkID;
+        setInt(NETWORK_ID, networkID);
     }
 
     int getDeviceAddress() {
-        return deviceAddress;
+        return getInt(DEVICE_ADDRESS);
     }
 
     void setDeviceAddress(int deviceAddress) {
-        this.deviceAddress = deviceAddress;
+        setInt(DEVICE_ADDRESS, deviceAddress);
     }
 
     int getSecurityOption() {
-        return securityOption;
+        return getInt(SECURITY);
     }
 
     void setSecurityOption(int securityOption) {
-        this.securityOption = securityOption;
+        setInt(SECURITY, securityOption);
     }
 
-    final void  load() {
-        portName = conf.get(SERIAL_PORT, "");
-        portSpeed = conf.getInt(SERIAL_SPEED, 38400);
-        channel = conf.getInt(CHANNEL, 0);
-        networkID = conf.getInt(NETWORK_ID, 0xB547);
-        securityOption = conf.getInt(SECURITY, 0);
-        deviceAddress = conf.getInt(DEVICE_ADDRESS, 1);
+    final void load() {
+        setPortName(conf.get(SERIAL_PORT, ""));
+        setPortSpeed(conf.getInt(SERIAL_SPEED, 38400));
+        setChannel(conf.getInt(CHANNEL, 0));
+        setNetworkID(conf.getInt(NETWORK_ID, 0xB547));
+        setSecurityOption(conf.getInt(SECURITY, 0));
+        setDeviceAddress(conf.getInt(DEVICE_ADDRESS, 1));
+        mapCopy(set, loaded);
     }
 
-    void save() throws BackingStoreException {
-        if (!portName.equals("")) {
-            conf.put(SERIAL_PORT, portName);
+    final void save() throws BackingStoreException {
+        conf.put(SERIAL_PORT, getPortName());
+        for (String name : INTS) {
+            conf.putInt(name, getInt(name));
         }
-        conf.putInt(SERIAL_SPEED, portSpeed);
         conf.sync();
+        mapCopy(set, loaded);
     }
     
-    private Integer getInt(String name) {
-        return (Integer) set.get(name);
-        
+    final void revert() {
+        mapCopy(loaded, set);
     }
 
+    private Integer getInt(String name) {
+        return (Integer) set.get(name);
+    }
+
+    private void setInt(String name, Integer val) {
+        set.put(name, val);
+    }
+
+    private String getString(String name) {
+        return (String) set.get(name);
+    }
+
+    private void setString(String name, String val) {
+        set.put(name, val);
+    }
+    
+    private void mapCopy(Map<String, Object> src, Map<String, Object> dst) {
+        dst.clear();
+        for (String key : src.keySet()) {
+            dst.put(key, src.get(key));
+        }
+    }
     /**
      * config variable names
      */
@@ -131,9 +155,10 @@ class Config {
     private static final String CHANNEL = "network.channel";
     private static final String SECURITY = "network.security";
     private static final String DEVICE_ADDRESS = "network.address";
+    private static final String INTS[] = {SERIAL_SPEED, NETWORK_ID, CHANNEL, SECURITY, DEVICE_ADDRESS};
 
     private final Preferences conf;
-    private  Map<String, Object> loaded;
-    private Map<String, Object> set; 
+    private final Map<String, Object> loaded = new HashMap<>();
+    private final Map<String, Object> set = new HashMap<>();
 
 }

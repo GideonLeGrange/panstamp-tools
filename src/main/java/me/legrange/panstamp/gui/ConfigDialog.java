@@ -1,5 +1,8 @@
 package me.legrange.panstamp.gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 
@@ -20,6 +23,7 @@ class ConfigDialog extends javax.swing.JDialog {
         super(parent, true);
         this.config = config;
         initComponents();
+        
     }
 
     private ComboBoxModel<String> portListModel() {
@@ -203,6 +207,11 @@ class ConfigDialog extends javax.swing.JDialog {
         });
 
         cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -237,7 +246,12 @@ class ConfigDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        
+        try {
+            config.save();
+        } catch (BackingStoreException ex) {
+            Logger.getLogger(ConfigDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dispose();        
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void speedComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speedComboBoxActionPerformed
@@ -251,6 +265,11 @@ class ConfigDialog extends javax.swing.JDialog {
     private void addressTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addressTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_addressTextFieldActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        config.revert();
+        dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
     private final Config config;
     // Variables declaration - do not modify//GEN-BEGIN:variables
