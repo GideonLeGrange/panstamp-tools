@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package me.legrange.panstamp.gui;
 
 import javax.swing.ComboBoxModel;
@@ -66,13 +61,13 @@ class ConfigDialog extends javax.swing.JDialog {
         portComboBox = new javax.swing.JComboBox();
         networkTab = new javax.swing.JPanel();
         networkIDLabel = new javax.swing.JLabel();
-        channelTextField = new javax.swing.JTextField();
         frequencyLabel = new javax.swing.JLabel();
         networkTextField = new javax.swing.JTextField();
         addressLabel = new javax.swing.JLabel();
-        addressTextField = new javax.swing.JTextField();
         securityLabel = new javax.swing.JLabel();
         securityTextField = new javax.swing.JTextField();
+        addressTextField = new javax.swing.JTextField();
+        channelTextField = new javax.swing.JTextField();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
@@ -135,9 +130,27 @@ class ConfigDialog extends javax.swing.JDialog {
         frequencyLabel.setText("Frequency channel:");
         frequencyLabel.setToolTipText("");
 
+        networkTextField.setDocument(new HexDocument(0, 65535));
+        networkTextField.setText(String.format("%x", config.getNetworkID()));
+
         addressLabel.setText("Device address:");
 
         securityLabel.setText("Security option:");
+
+        securityTextField.setDocument(new IntegerDocument(0,255));
+        securityTextField.setText(String.format("%d", config.getSecurityOption()));
+
+        addressTextField.setDocument(new HexDocument(0, 255));
+        addressTextField.setText(String.format("%2x", config.getDeviceAddress())
+        );
+        addressTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addressTextFieldActionPerformed(evt);
+            }
+        });
+
+        channelTextField.setDocument(new IntegerDocument(0, 255));
+        channelTextField.setText(String.format("%d", config.getChannel()));
 
         javax.swing.GroupLayout networkTabLayout = new javax.swing.GroupLayout(networkTab);
         networkTab.setLayout(networkTabLayout);
@@ -150,13 +163,13 @@ class ConfigDialog extends javax.swing.JDialog {
                     .addComponent(networkIDLabel)
                     .addComponent(addressLabel)
                     .addComponent(securityLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                 .addGroup(networkTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(addressTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                    .addComponent(networkTextField)
-                    .addComponent(channelTextField)
-                    .addComponent(securityTextField))
-                .addContainerGap(123, Short.MAX_VALUE))
+                    .addComponent(networkTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                    .addComponent(securityTextField)
+                    .addComponent(addressTextField)
+                    .addComponent(channelTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         networkTabLayout.setVerticalGroup(
             networkTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,20 +177,20 @@ class ConfigDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(networkTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(frequencyLabel)
-                    .addComponent(addressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(channelTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(networkTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(networkIDLabel)
                     .addComponent(networkTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(networkTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(channelTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addressLabel))
+                    .addComponent(addressLabel)
+                    .addComponent(addressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(networkTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(securityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(securityLabel))
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         configTabs.addTab("Network settings", networkTab);
@@ -212,12 +225,12 @@ class ConfigDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(configTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(configTabs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
                     .addComponent(cancelButton))
-                .addContainerGap(7, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -234,6 +247,10 @@ class ConfigDialog extends javax.swing.JDialog {
     private void portComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portComboBoxActionPerformed
         config.setPortName((String) portComboBox.getModel().getSelectedItem());
     }//GEN-LAST:event_portComboBoxActionPerformed
+
+    private void addressTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addressTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addressTextFieldActionPerformed
 
     private final Config config;
     // Variables declaration - do not modify//GEN-BEGIN:variables

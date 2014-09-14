@@ -101,6 +101,10 @@ class Config {
     final void  load() {
         portName = conf.get(SERIAL_PORT, "");
         portSpeed = conf.getInt(SERIAL_SPEED, 38400);
+        channel = conf.getInt(CHANNEL, 0);
+        networkID = conf.getInt(NETWORK_ID, 0xB547);
+        securityOption = conf.getInt(SECURITY, 0);
+        deviceAddress = conf.getInt(DEVICE_ADDRESS, 1);
     }
 
     void save() throws BackingStoreException {
@@ -116,6 +120,10 @@ class Config {
      */
     private static final String SERIAL_PORT = "serial.port";
     private static final String SERIAL_SPEED = "serial.speed";
+    private static final String NETWORK_ID = "network.id";
+    private static final String CHANNEL = "network.channel";
+    private static final String SECURITY = "network.security";
+    private static final String DEVICE_ADDRESS = "network.address";
 
     private final Preferences conf;
     private String portName = "";

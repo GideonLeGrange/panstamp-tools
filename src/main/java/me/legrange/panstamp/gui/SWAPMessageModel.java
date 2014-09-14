@@ -29,7 +29,9 @@ class SWAPMessageModel implements TableModel {
 
     @Override
     public int getRowCount() {
-        return data.size();
+        synchronized (data) {
+            return data.size();
+        }
     }
 
     @Override
@@ -54,11 +56,18 @@ class SWAPMessageModel implements TableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Entry entry = data.get(rowIndex);
+        Entry entry;
+        synchronized (data) {
+            if (rowIndex < data.size()) {
+                entry = data.get(rowIndex);
+            }
+            else {
+                return null;
+            }
+        }
         switch (columnIndex) {
             case 0:
                 return timeFormat.format(new Date(entry.timestamp));
-//                return String.format("%.3f", ((double) entry.timestamp) / 1000);
             case 1:
                 return entry.dir.name();
             case 2:
@@ -66,6 +75,7 @@ class SWAPMessageModel implements TableModel {
             case 3:
                 return entry.msg.toString();
         }
+
         return null;
     }
 
@@ -83,9 +93,11 @@ class SWAPMessageModel implements TableModel {
     public void removeTableModelListener(TableModelListener l) {
         listeners.remove(l);
     }
-    
+
     void add(SwapMessage msg, long timestamp, Direction dir) {
-        data.add(0, new Entry(msg, timestamp, dir));
+        synchronized (data) {
+            data.add(0, new Entry(msg, timestamp, dir));
+        }
         for (TableModelListener l : listeners) {
             l.tableChanged(new TableModelEvent(this, 0, 0, -1, TableModelEvent.INSERT));
         }

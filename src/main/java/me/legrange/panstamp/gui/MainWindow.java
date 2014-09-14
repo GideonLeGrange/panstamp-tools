@@ -153,6 +153,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         swapMessagesLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         swapMessagesLabel.setText("SWAP Messages");
 
+        swapMessagesTable.setFont(new java.awt.Font("Courier", 0, 12)); // NOI18N
         swapMessagesTable.setModel(new SWAPMessageModel());
         swapMessagesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         swapMessagesTable.setShowGrid(false);
