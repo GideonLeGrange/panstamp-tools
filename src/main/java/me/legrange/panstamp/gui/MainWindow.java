@@ -1,11 +1,11 @@
 package me.legrange.panstamp.gui;
 
-import java.awt.Component;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultTreeCellRenderer;
+import me.legrange.panstamp.Endpoint;
+import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.SWAPMessageModel.Direction;
@@ -47,6 +47,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         }
         //</editor-fold>
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 final MainWindow mw = new MainWindow();
                 mw.setVisible(true);
@@ -55,26 +56,13 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         });
     }
 
-   
-    
-    private class TCR extends DefaultTreeCellRenderer {
-
-        @Override
-        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-            if (value instanceof Component) {
-                return (Component)value;
-            }
-            return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus); //To change body of generated methods, choose Tools | Templates.
-        }
-        
-    }
-
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         config = new Config();
-        stm =  SWAPTreeModel.create();
+        stm = SWAPTreeModel.create();
+        etm = EndpointTableModel.create();
         initComponents();
     }
 
@@ -88,6 +76,9 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         displaySWAPMessage(msg, Direction.OUT);
     }
 
+ 
+
+
     /**
      * start the application
      */
@@ -98,8 +89,9 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         }
         try {
             gw = Gateway.openSerial(config.getPortName(), config.getPortSpeed());
-               stm.addGateway(gw);
-            
+            stm.addGateway(gw);
+            etm.addGateway(gw);
+            // add listener to capture SWAP messages
             gw.getSWAPModem().addListener(MainWindow.this);
         } catch (GatewayException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -324,7 +316,8 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
     private final Config config;
     private Gateway gw;
     private final SWAPTreeModel stm;
-    
+    private final EndpointTableModel etm;
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JMenuItem configMenuItem;

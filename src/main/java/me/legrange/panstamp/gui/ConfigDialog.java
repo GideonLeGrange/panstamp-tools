@@ -10,7 +10,7 @@ import javax.swing.DefaultComboBoxModel;
  *
  * @author gideon
  */
-class ConfigDialog extends javax.swing.JDialog  {
+class ConfigDialog extends javax.swing.JDialog {
 
     @Override
     public void dispose() {
@@ -155,11 +155,19 @@ class ConfigDialog extends javax.swing.JDialog  {
         securityLabel.setText("Security option:");
 
         securityTextField.setDocument(new IntegerDocument(0,255));
+        securityTextField.setText(String.format("%d", config.getSecurityOption()));
+        securityTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                securityTextFieldPropertyChange(evt);
+            }
+        });
 
-        addressTextField.setDocument(new HexDocument(0, 255));
-        addressTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addressTextFieldActionPerformed(evt);
+        addressTextField.setDocument(new IntegerDocument(0, 255));
+        addressTextField.setText(String.format("%d", config.getDeviceAddress()));
+        addressTextField.setToolTipText("Local device address in decimal");
+        addressTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                addressTextFieldPropertyChange(evt);
             }
         });
 
@@ -237,7 +245,7 @@ class ConfigDialog extends javax.swing.JDialog  {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(configTabs, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+                        .addComponent(configTabs)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
@@ -278,10 +286,6 @@ class ConfigDialog extends javax.swing.JDialog  {
         config.setPortName((String) portComboBox.getModel().getSelectedItem());
     }//GEN-LAST:event_portComboBoxActionPerformed
 
-    private void addressTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addressTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addressTextFieldActionPerformed
-
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         config.revert();
         dispose();
@@ -296,11 +300,25 @@ class ConfigDialog extends javax.swing.JDialog  {
     }//GEN-LAST:event_channelTextFieldPropertyChange
 
     private void networkTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_networkTextFieldPropertyChange
-         String text = networkTextField.getText().trim();
+        String text = networkTextField.getText().trim();
         if ((text != null) && !text.equals("")) {
-            config.setNetworkID(Integer.parseInt(text,16));
-        }        
+            config.setNetworkID(Integer.parseInt(text, 16));
+        }
     }//GEN-LAST:event_networkTextFieldPropertyChange
+
+    private void addressTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_addressTextFieldPropertyChange
+        String text = addressTextField.getText().trim();
+        if ((text != null) && !text.equals("")) {
+            config.setDeviceAddress(Integer.parseInt(text));
+        }
+    }//GEN-LAST:event_addressTextFieldPropertyChange
+
+    private void securityTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_securityTextFieldPropertyChange
+        String text = securityTextField.getText().trim();
+        if ((text != null) && !text.equals("")) {
+            config.setSecurityOption(Integer.parseInt(text));
+        }
+     }//GEN-LAST:event_securityTextFieldPropertyChange
 
     private final Config config;
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -322,6 +340,5 @@ class ConfigDialog extends javax.swing.JDialog  {
     private javax.swing.JComboBox speedComboBox;
     private javax.swing.JLabel speedLabel;
     // End of variables declaration//GEN-END:variables
-
 
 }
