@@ -1,8 +1,10 @@
 package me.legrange.panstamp.gui.tree;
 
 import me.legrange.panstamp.Gateway;
+import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.PanStampEvent;
 
 /**
  *
@@ -14,15 +16,21 @@ public class GatewayNode extends SWAPNode implements GatewayListener {
         super(gw);
     }
 
-    public Gateway getGateway() { 
-        return (Gateway)getUserObject();
+    public Gateway getGateway() {
+        return (Gateway) getUserObject();
     }
 
     @Override
-    public void deviceDetected(PanStamp ps) {
-        PanStampNode psn = new PanStampNode(ps);
-        addToTree(psn, this);
-        psn.start();
+    public void gatewayUpdated(GatewayEvent ev) {
+        switch (ev.getType()) {
+            case DEVICE_DETECTED : {
+                PanStamp ps = ev.getDevice();
+                PanStampNode psn = new PanStampNode(ps);
+                addToTree(psn, this);
+                psn.start();
+            }
+            break;
+        }
     }
 
     @Override
@@ -30,11 +38,9 @@ public class GatewayNode extends SWAPNode implements GatewayListener {
         getGateway().addListener(this);
     }
 
-    
     @Override
     Type getType() {
         return Type.GATEWAY;
     }
-    
-    
+
 }

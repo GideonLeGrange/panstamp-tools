@@ -10,24 +10,27 @@ import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.RegisterEvent;
+import me.legrange.panstamp.RegisterListener;
 
 /**
  *
  * @author gideon
  */
-public class RegisterNode extends SWAPNode {
+public class RegisterNode extends SWAPNode implements RegisterListener {
 
     public RegisterNode(Register reg) {
         super(reg);
     }
-    
+
     public Register getRegister() {
-        return (Register)getUserObject();
+        return (Register) getUserObject();
     }
 
     @Override
     protected void start() {
         try {
+            getRegister().addListener(this);
             for (Endpoint ep : getRegister().getEndpoints()) {
                 EndpointNode epn = new EndpointNode(ep);
                 addToTree(epn, this);
@@ -37,11 +40,41 @@ public class RegisterNode extends SWAPNode {
             Logger.getLogger(RegisterNode.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
+    void update(Register reg) {
+        try {
+            if (reg.getEndpoints().size() < getRegister().getEndpoints().size()) {
+                for (Endpoint ep : getRegister().getEndpoints()) {
+                    EndpointNode epn = new EndpointNode(ep);
+                    addToTree(epn, this);
+                    epn.start();
+                }
+                reload();
+            }
+        } catch (GatewayException ex) {
+            Logger.getLogger(RegisterNode.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     @Override
     Type getType() {
         return Type.REGISTER;
+    }
+
+    @Override
+    public void registerUpdated(RegisterEvent ev) {
+        switch (ev.getType()) {
+            case ENDPOINT_ADDED:
+                try {
+                    for (Endpoint ep : getRegister().getEndpoints()) {
+                        EndpointNode epn = new EndpointNode(ep);
+                        addToTree(epn, this);
+                        epn.start();
+                    }
+                    reload();
+                } catch (GatewayException ex) {
+                    Logger.getLogger(RegisterNode.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }
     }
 }

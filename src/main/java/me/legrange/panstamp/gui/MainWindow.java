@@ -1,11 +1,8 @@
 package me.legrange.panstamp.gui;
 
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
-import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.SWAPMessageModel.Direction;
@@ -176,25 +173,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
 
         topBottomSplitPane.setTopComponent(topPanel);
 
-        eventTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
-            },
-            new String [] {
-                "Timestamp", "Event"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
+        eventTable.setModel(etm);
         eventPanel.setViewportView(eventTable);
 
         eventLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N

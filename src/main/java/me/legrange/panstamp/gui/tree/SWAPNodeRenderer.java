@@ -6,8 +6,6 @@
 package me.legrange.panstamp.gui.tree;
 
 import java.awt.Component;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +41,8 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
                         return renderPanStamp((PanStampNode) node);
                     case GATEWAY:
                         return renderGateway((GatewayNode) node);
-                    case WORLD : 
-                        return renderWorld((WorldNode)node);
+                    case WORLD:
+                        return renderWorld((WorldNode) node);
                 }
             } catch (GatewayException ex) {
                 Logger.getLogger(SWAPNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
@@ -58,7 +56,7 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
     }
 
     private Component renderRegister(RegisterNode rn) {
-        return new JLabel("" + rn.getRegister().getId(), getIcon(ICON_REGISTER), JLabel.LEADING);
+        return new JLabel(String.format("%d - %s", rn.getRegister().getId(), rn.getRegister().getName()), getIcon(ICON_REGISTER), JLabel.LEADING);
 
     }
 
@@ -78,43 +76,49 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
     private String formatValue(Endpoint ep) throws GatewayException {
         List<String> units = ep.getUnits();
         String unit = "";
-        Object val = ep.getValue();
-        if (!units.isEmpty()) {
-            unit = units.get(0);
-            val = ep.getValue(unit);
+        Object val;
+        if (ep.hasValue()) {
+            val = ep.getValue();
+            if (!units.isEmpty()) {
+                unit = units.get(0);
+                val = ep.getValue(unit);
+            }
+            if (val instanceof Double) {
+                return String.format("%.1f %s", ((Double) val), unit);
+            }
+            if (val instanceof Boolean) {
+                return ((Boolean) val) ? "on" : "off";
+            }
         }
-        if (val instanceof Double) {
-            return String.format("%.1f %s", ((Double) val), unit);
-        }
-        if (val instanceof Boolean) {
-            return ((Boolean) val) ? "on" : "off";
+        else {
+            val = "<unknown>";
         }
         return String.format("%s%s", val.toString(), unit);
     }
-    
-    private Icon getIcon(String name)  {
+
+    private Icon getIcon(String name) {
         ImageIcon ico = icons.get(name);
         if (ico == null) {
-                try {
-                     ico = new ImageIcon(ImageIO.read(ClassLoader.getSystemResourceAsStream("images/" + name)));
-/*                    Image image = ico.getImage(); // transform it 
-                    Image newimg = image.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-                    ico  = new ImageIcon(newimg);  // transform it back */
-                } catch (IOException ex) {
-                    Logger.getLogger(SWAPNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
-                    
-                }
-                icons.put(name, ico);
+            try {
+                ico = new ImageIcon(ImageIO.read(ClassLoader.getSystemResourceAsStream("images/" + name)));
+                /*                    Image image = ico.getImage(); // transform it 
+                 Image newimg = image.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+                 ico  = new ImageIcon(newimg);  // transform it back */
+            } catch (IOException ex) {
+                Logger.getLogger(SWAPNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
+
             }
-        
-    return ico;
+            icons.put(name, ico);
+        }
+
+        return ico;
     }
-    
+
     private static final String ICON_WORLD = "world16x16.png";
     private static final String ICON_NETWORK = "network16x16.png";
     private static final String ICON_DEVICE = "device16x16.png";
     private static final String ICON_REGISTER = "register16x16.png";
     private static final String ICON_ENDPOINT = "endpoint16x16.png";
     private final Map<String, ImageIcon> icons = new HashMap<>();
-    
+
 }

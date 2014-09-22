@@ -10,14 +10,16 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import me.legrange.panstamp.Gateway;
+import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayListener;
-import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.PanStampEvent;
+import me.legrange.panstamp.PanStampListener;
 
 /**
  *
  * @author gideon
  */
-public class EndpointTableModel implements TableModel, GatewayListener {
+public class EndpointTableModel implements TableModel, GatewayListener, PanStampListener {
    
 
     @Override
@@ -29,7 +31,7 @@ public class EndpointTableModel implements TableModel, GatewayListener {
 
     @Override
     public int getColumnCount() {
-        return 4;
+        return 2;
     }
 
     @Override
@@ -90,9 +92,10 @@ public class EndpointTableModel implements TableModel, GatewayListener {
         this.gw = gw;
         gw.addListener(this);
     }
-    void add(String msg, long timestamp) {
+    void add(String msg) {
+        long timeStamp = System.currentTimeMillis();
         synchronized (data) {
-            data.add(0, new Entry(timestamp, msg));
+            data.add(0, new Entry(timeStamp, msg));
         }
         for (TableModelListener l : listeners) {
             l.tableChanged(new TableModelEvent(this, 0, 0, -1, TableModelEvent.INSERT));
@@ -104,10 +107,26 @@ public class EndpointTableModel implements TableModel, GatewayListener {
     }
 
     @Override
-    public void deviceDetected(PanStamp ps) {
-       
-                
+    public void gatewayUpdated(GatewayEvent ev) {
+        switch (ev.getType()) {
+            case DEVICE_DETECTED  :
+                ev.getDevice().addListener(this);
+                add(String.format("Detected new device with address %d", ev.getDevice().getAddress()));
+                break;
+        }
     }
+
+    @Override
+    public void deviceUpdated(PanStampEvent ev) {
+        switch (ev.getType()) {
+            case PRODUCT_CODE_UPDATE : 
+                add(String.format("Device %d has a new product code", ev.getDevice().getAddress()));
+                break;
+            case SYNC_STATE_CHANGE : 
+                add(String.format("Sync state changed for device %d", ev.getDevice().getAddress()));
+        }
+    }
+
 
     private static class Entry {
 
