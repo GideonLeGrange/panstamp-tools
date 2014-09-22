@@ -6,21 +6,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
+import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
+import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampEvent;
 import me.legrange.panstamp.PanStampListener;
+import me.legrange.panstamp.Register;
+import me.legrange.panstamp.impl.StandardEndpoint;
+import me.legrange.swap.Registers;
 
 /**
  *
  * @author gideon
  */
 public class EndpointTableModel implements TableModel, GatewayListener, PanStampListener {
-   
 
     @Override
     public int getRowCount() {
@@ -83,15 +90,16 @@ public class EndpointTableModel implements TableModel, GatewayListener, PanStamp
     public void removeTableModelListener(TableModelListener l) {
         listeners.remove(l);
     }
- 
+
     static EndpointTableModel create() {
         return new EndpointTableModel();
     }
-    
+
     void addGateway(Gateway gw) {
         this.gw = gw;
         gw.addListener(this);
     }
+
     void add(String msg) {
         long timeStamp = System.currentTimeMillis();
         synchronized (data) {
@@ -109,7 +117,7 @@ public class EndpointTableModel implements TableModel, GatewayListener, PanStamp
     @Override
     public void gatewayUpdated(GatewayEvent ev) {
         switch (ev.getType()) {
-            case DEVICE_DETECTED  :
+            case DEVICE_DETECTED:
                 ev.getDevice().addListener(this);
                 add(String.format("Detected new device with address %d", ev.getDevice().getAddress()));
                 break;
@@ -119,14 +127,57 @@ public class EndpointTableModel implements TableModel, GatewayListener, PanStamp
     @Override
     public void deviceUpdated(PanStampEvent ev) {
         switch (ev.getType()) {
-            case PRODUCT_CODE_UPDATE : 
-                add(String.format("Device %d has a new product code", ev.getDevice().getAddress()));
-                break;
-            case SYNC_STATE_CHANGE : 
-                add(String.format("Sync state changed for device %d", ev.getDevice().getAddress()));
+            case PRODUCT_CODE_UPDATE: {
+                try {
+                    add(productCodeMessage(ev.getDevice()));
+                } catch (GatewayException ex) {
+                    Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            break;
+            case SYNC_STATE_CHANGE: {
+                try {
+                    add(syncStateMessage(ev.getDevice()));
+                } catch (GatewayException ex) {
+                    Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
 
+    private String productCodeMessage(PanStamp ps) throws GatewayException {
+        Register reg = ps.getRegister(Registers.Register.PRODUCT_CODE.position());
+        return String.format("Device %d identified as %s/%s", ps.getAddress(),
+                reg.getEndpoint(StandardEndpoint.MANUFACTURER_ID.getName()).getName(),
+                reg.getEndpoint(StandardEndpoint.PRODUCT_ID.getName()).getName());
+    }
+
+    private String syncStateMessage(PanStamp ps) throws GatewayException {
+        Register reg = ps.getRegister(Registers.Register.SYSTEM_STATE.position());
+        Endpoint<Integer> ep = reg.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
+        int state = ep.getValue();
+        String mode;
+        switch (state) {
+            case 0:
+                mode = "Restarting";
+                break;
+            case 1:
+                mode = "Wireless reception enabled";
+                break;
+            case 2:
+                mode = "Wireless reception disabled";
+                break;
+            case 3:
+                mode = "Synchronization mode, wireless reception enabled";
+                break;
+            case 4:
+                mode = "Low battery state";
+                break;
+            default:
+                mode = "" + state;
+        }
+        return String.format("Device %d reported state: %s", ps.getAddress(), mode);
+    }
 
     private static class Entry {
 
