@@ -64,9 +64,15 @@ public class PanStampNode extends SWAPNode implements PanStampListener {
                 }
             }
             break;
-            case SYNC_STATE_CHANGE : {
+            case SYNC_STATE_CHANGE: {
                 System.out.printf("%s\n", ev.getDevice().getAddress());
             }
+            break;
+            case REGISTER_DETECTED:
+                Register reg = ev.getRegister();
+                if (nodes.get(reg) == null) {
+                    addNode(reg);
+                }
         }
     }
 
