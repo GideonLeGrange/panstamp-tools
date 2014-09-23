@@ -12,6 +12,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import me.legrange.panstamp.Endpoint;
+import me.legrange.panstamp.EndpointEvent;
+import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
@@ -20,6 +22,8 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampEvent;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.RegisterEvent;
+import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.impl.StandardEndpoint;
 import me.legrange.swap.Registers;
 
@@ -27,7 +31,7 @@ import me.legrange.swap.Registers;
  *
  * @author gideon
  */
-public class EndpointTableModel implements TableModel, GatewayListener, PanStampListener {
+public class EndpointTableModel implements TableModel, GatewayListener, PanStampListener, RegisterListener, EndpointListener {
 
     @Override
     public int getRowCount() {
@@ -125,6 +129,21 @@ public class EndpointTableModel implements TableModel, GatewayListener, PanStamp
     }
 
     @Override
+    public void endpointUpdated(EndpointEvent ev) {
+        try {
+            Endpoint ep = ev.getEndpoint();
+            switch (ev.getType()) {
+                case VALUE_RECEIVED:
+                    add(String.format("%s in address %d on node %d changed to %s",
+                            ep.getName(), ep.getRegister().getId(),
+                            ep.getRegister().getDevice().getAddress(), formatValue(ep)));
+            }
+        } catch (GatewayException ex) {
+            Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
     public void deviceUpdated(PanStampEvent ev) {
         switch (ev.getType()) {
             case PRODUCT_CODE_UPDATE: {
@@ -142,14 +161,32 @@ public class EndpointTableModel implements TableModel, GatewayListener, PanStamp
                     Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            break;
+            case REGISTER_DETECTED : {
+                    Register reg = ev.getRegister();
+                    reg.addListener(this);
+                    add(String.format("Learnt of register %d for device %d", reg.getId(), ev.getDevice().getAddress()));
+            }
+            break;
+        }
+    }
+
+    @Override
+    public void registerUpdated(RegisterEvent ev) {
+        switch (ev.getType()) {
+            case ENDPOINT_ADDED : 
+                Endpoint ep = ev.getEndpoint();
+                ep.addListener(this);
+                add(String.format("Learnt of endpoint '%s' for register %d on device %d", 
+                        ep.getName(), ep.getRegister().getId(), ep.getRegister().getDevice().getAddress()));
         }
     }
 
     private String productCodeMessage(PanStamp ps) throws GatewayException {
         Register reg = ps.getRegister(Registers.Register.PRODUCT_CODE.position());
         return String.format("Device %d identified as %s/%s", ps.getAddress(),
-                reg.getEndpoint(StandardEndpoint.MANUFACTURER_ID.getName()).getName(),
-                reg.getEndpoint(StandardEndpoint.PRODUCT_ID.getName()).getName());
+                reg.getEndpoint(StandardEndpoint.MANUFACTURER_ID.getName()).getValue(),
+                reg.getEndpoint(StandardEndpoint.PRODUCT_ID.getName()).getValue());
     }
 
     private String syncStateMessage(PanStamp ps) throws GatewayException {
@@ -177,6 +214,10 @@ public class EndpointTableModel implements TableModel, GatewayListener, PanStamp
                 mode = "" + state;
         }
         return String.format("Device %d reported state: %s", ps.getAddress(), mode);
+    }
+
+    private String formatValue(Endpoint ep) throws GatewayException {
+        return Format.formatValue(ep);
     }
 
     private static class Entry {

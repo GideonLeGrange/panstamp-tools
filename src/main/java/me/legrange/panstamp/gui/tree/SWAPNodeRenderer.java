@@ -20,6 +20,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.gui.Format;
 
 /**
  *
@@ -74,26 +75,7 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
     }
 
     private String formatValue(Endpoint ep) throws GatewayException {
-        List<String> units = ep.getUnits();
-        String unit = "";
-        Object val;
-        if (ep.hasValue()) {
-            val = ep.getValue();
-            if (!units.isEmpty()) {
-                unit = units.get(0);
-                val = ep.getValue(unit);
-            }
-            if (val instanceof Double) {
-                return String.format("%.1f %s", ((Double) val), unit);
-            }
-            if (val instanceof Boolean) {
-                return ((Boolean) val) ? "on" : "off";
-            }
-        }
-        else {
-            val = "<unknown>";
-        }
-        return String.format("%s%s", val.toString(), unit);
+        return Format.formatValue(ep);
     }
 
     private Icon getIcon(String name) {
