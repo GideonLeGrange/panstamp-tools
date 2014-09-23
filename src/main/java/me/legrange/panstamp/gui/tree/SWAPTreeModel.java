@@ -17,22 +17,23 @@ public class SWAPTreeModel extends DefaultTreeModel {
         wn.setModel(tm);
         return tm;
     }
-    
+
     public void addGateway(Gateway gw) {
-        ((WorldNode)getRoot()).addGateway(gw);
+        ((WorldNode) getRoot()).addGateway(gw);
     }
+
     private SWAPTreeModel(WorldNode wn) {
         super(wn);
     }
- 
-    synchronized void  addToTree(SWAPNode childNode, MutableTreeNode parentNode) {
+
+    synchronized void addToTree(SWAPNode childNode, MutableTreeNode parentNode) {
         insertNodeInto(childNode, parentNode, parentNode.getChildCount());
         reload(parentNode);
     }
 
     @Override
     public synchronized void reload(TreeNode node) {
-        super.reload(node); 
+        super.reload(node);
     }
-    
+
 }
