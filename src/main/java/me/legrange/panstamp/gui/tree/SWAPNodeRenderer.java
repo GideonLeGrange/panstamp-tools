@@ -21,6 +21,8 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.Format;
 import me.legrange.panstamp.impl.ModemException;
+import me.legrange.swap.ModemSetup;
+import me.legrange.swap.SWAPException;
 
 /**
  *
@@ -69,9 +71,10 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
     private Component renderGateway(GatewayNode gn) {
         String txt;
         try {
-            txt = String.format("Network %4x", gn.getGateway().getNetworkId());
-        } catch (ModemException ex) {
-            throw new RuntimeException(ex.getMessage(), ex);
+            ModemSetup setup = gn.getGateway().getSWAPModem().getSetup();
+            txt = String.format("Network %4x", setup.getNetworkID());
+        } catch (SWAPException ex) {
+            txt = "Network";
         }
         return new JLabel(txt, getIcon(ICON_NETWORK), JLabel.LEADING);
     }

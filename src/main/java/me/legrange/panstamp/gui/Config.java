@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -20,6 +21,10 @@ class Config {
     Config() {
         conf = Preferences.userRoot().node(Config.class.getPackage().getName());
         load();
+    }
+    
+    void addListener(ConfigListener l) {
+        listeners.add(l);
     }
     
     boolean hasChanged() {
@@ -130,6 +135,34 @@ class Config {
             }
         }
         conf.sync();
+        if (!set.equals(loaded)) {
+            
+            boolean netU = false;
+            boolean serU = false;
+            for (String key : set.keySet()) {
+                if (!set.get(key).equals(loaded.get(key))) {
+                    switch (key) {
+                    case CHANNEL :
+                    case DEVICE_ADDRESS : 
+                    case NETWORK_ID : 
+                        netU = true;
+                        break;
+                    case SERIAL_PORT : 
+                    case SERIAL_SPEED : 
+                        serU = true;
+                        break;
+                    }
+                }
+            }
+            for (ConfigListener l : listeners) {
+                if (serU) {
+                    l.configUpdated(new ConfigEvent(ConfigEvent.Type.SERIAL));
+                }
+                if (netU) {
+                    l.configUpdated(new ConfigEvent(ConfigEvent.Type.NETWORK));
+                }
+            }
+        }
         mapCopy(set, loaded);
     }
     
@@ -172,5 +205,5 @@ class Config {
     private final Preferences conf;
     private final Map<String, Object> loaded = new HashMap<>();
     private final Map<String, Object> set = new HashMap<>();
-
+    private final List<ConfigListener> listeners = new CopyOnWriteArrayList<>();
 }

@@ -9,13 +9,15 @@ import me.legrange.panstamp.gui.tree.SWAPNodeRenderer;
 import me.legrange.panstamp.gui.tree.SWAPTreeModel;
 import me.legrange.panstamp.impl.ModemException;
 import me.legrange.swap.MessageListener;
+import me.legrange.swap.ModemSetup;
+import me.legrange.swap.SWAPException;
 import me.legrange.swap.SwapMessage;
 
 /**
  *
  * @author gideon
  */
-public class MainWindow extends javax.swing.JFrame implements MessageListener {
+public class MainWindow extends javax.swing.JFrame implements MessageListener, ConfigListener {
 
     /**
      * @param args the command line arguments
@@ -52,6 +54,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
      */
     public MainWindow() {
         config = new Config();
+        config.addListener(this);
         stm = SWAPTreeModel.create();
         etm = EndpointTableModel.create();
         smm = SWAPMessageModel.create();
@@ -68,8 +71,23 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         displaySWAPMessage(msg, Direction.OUT);
     }
 
- 
+    @Override
+    public void configUpdated(ConfigEvent ev) {
+        switch (ev.getType()) {
+            case NETWORK: {
+                try {
+                    gw.getSWAPModem().setSetup(new ModemSetup(config.getChannel(), config.getNetworkID(), config.getDeviceAddress()));
+                } catch (SWAPException ex) {
+                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            break;
+            case SERIAL:
+                start();
+                break;
+        }
 
+    }
 
     /**
      * start the application
@@ -84,7 +102,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
             stm.addGateway(gw);
             etm.addGateway(gw);
             // add listener to capture SWAP messages
-            gw.getSWAPModem().addListener(MainWindow.this);
+            gw.getSWAPModem().addListener(this);
         } catch (ModemException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -297,7 +315,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
     }//GEN-LAST:event_configMenuItemActionPerformed
 
     private void swapMessagesTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_swapMessagesTablePropertyChange
-          // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_swapMessagesTablePropertyChange
 
     private final Config config;
