@@ -8,7 +8,6 @@ package me.legrange.panstamp.gui.tree;
 import java.awt.Component;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +20,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.Format;
+import me.legrange.panstamp.impl.ModemException;
 
 /**
  *
@@ -67,7 +67,13 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
     }
 
     private Component renderGateway(GatewayNode gn) {
-        return new JLabel("Network", getIcon(ICON_NETWORK), JLabel.LEADING);
+        String txt;
+        try {
+            txt = String.format("Network %4x", gn.getGateway().getNetworkId());
+        } catch (ModemException ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
+        return new JLabel(txt, getIcon(ICON_NETWORK), JLabel.LEADING);
     }
 
     private Component renderWorld(WorldNode wn) {
