@@ -18,7 +18,11 @@ import me.legrange.swap.SwapMessage;
  */
 class SWAPMessageModel implements TableModel {
 
-    SWAPMessageModel() {
+    static SWAPMessageModel create() { 
+        return new SWAPMessageModel();
+    }
+    
+    private SWAPMessageModel() {
         this.listeners = new LinkedList<>();
     }
 

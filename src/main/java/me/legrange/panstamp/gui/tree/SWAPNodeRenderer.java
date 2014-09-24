@@ -57,12 +57,12 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
     }
 
     private Component renderRegister(RegisterNode rn) {
-        return new JLabel(String.format("%d - %s", rn.getRegister().getId(), rn.getRegister().getName()), getIcon(ICON_REGISTER), JLabel.LEADING);
+        return new JLabel(String.format("Register %d: %s", rn.getRegister().getId(), rn.getRegister().getName()), getIcon(ICON_REGISTER), JLabel.LEADING);
 
     }
 
     private Component renderPanStamp(PanStampNode psn) {
-        return new JLabel("" + psn.getPanStamp().getAddress(), getIcon(ICON_DEVICE), JLabel.LEADING);
+        return new JLabel(String.format("Mote %d: %s", psn.getPanStamp().getAddress(), psn.getPanStamp().getName()), getIcon(ICON_DEVICE), JLabel.LEADING);
 
     }
 

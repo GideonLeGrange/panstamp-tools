@@ -31,7 +31,11 @@ public class EndpointNode extends SWAPNode implements EndpointListener {
     
     @Override
     public void endpointUpdated(EndpointEvent ev) {
-        reload();
+        switch (ev.getType()) {
+            case VALUE_RECEIVED : 
+                reload();
+                break;
+        }
     }
 
     @Override

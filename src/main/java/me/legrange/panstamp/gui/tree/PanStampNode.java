@@ -49,6 +49,7 @@ public class PanStampNode extends SWAPNode implements PanStampListener {
         switch (ev.getType()) {
             case PRODUCT_CODE_UPDATE: {
                 try {
+                    
                     for (Register reg : ev.getDevice().getRegisters()) {
                         RegisterNode rn = nodes.get(reg);
                         if (rn == null) {
@@ -62,10 +63,10 @@ public class PanStampNode extends SWAPNode implements PanStampListener {
                 } catch (GatewayException ex) {
                     Logger.getLogger(PanStampNode.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                reload();
             }
             break;
             case SYNC_STATE_CHANGE: {
-                System.out.printf("%s\n", ev.getDevice().getAddress());
             }
             break;
             case REGISTER_DETECTED:

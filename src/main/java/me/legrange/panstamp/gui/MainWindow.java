@@ -4,10 +4,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.SWAPMessageModel.Direction;
 import me.legrange.panstamp.gui.tree.SWAPNodeRenderer;
 import me.legrange.panstamp.gui.tree.SWAPTreeModel;
+import me.legrange.panstamp.impl.ModemException;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SwapMessage;
 
@@ -33,13 +33,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
@@ -60,6 +54,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         config = new Config();
         stm = SWAPTreeModel.create();
         etm = EndpointTableModel.create();
+        smm = SWAPMessageModel.create();
         initComponents();
     }
 
@@ -90,7 +85,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
             etm.addGateway(gw);
             // add listener to capture SWAP messages
             gw.getSWAPModem().addListener(MainWindow.this);
-        } catch (GatewayException ex) {
+        } catch (ModemException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -143,11 +138,20 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         swapMessagesLabel.setText("SWAP Messages");
 
         swapMessagesTable.setFont(new java.awt.Font("Courier", 0, 12)); // NOI18N
-        swapMessagesTable.setModel(new SWAPMessageModel());
+        swapMessagesTable.setModel(smm);
+        swapMessagesTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+        swapMessagesTable.getColumnModel().getColumn(1).setPreferredWidth(40);
+        swapMessagesTable.getColumnModel().getColumn(2).setPreferredWidth(80);
+        swapMessagesTable.getColumnModel().getColumn(3).setPreferredWidth(160);
+        swapMessagesTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
         swapMessagesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         swapMessagesTable.setShowGrid(false);
-        swapMessagesTable.getTableHeader().setResizingAllowed(false);
         swapMessagesTable.getTableHeader().setReorderingAllowed(false);
+        swapMessagesTable.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                swapMessagesTablePropertyChange(evt);
+            }
+        });
         swapMessagesPane.setViewportView(swapMessagesTable);
 
         org.jdesktop.layout.GroupLayout topPanelLayout = new org.jdesktop.layout.GroupLayout(topPanel);
@@ -292,10 +296,15 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener {
         cd.setVisible(true);
     }//GEN-LAST:event_configMenuItemActionPerformed
 
+    private void swapMessagesTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_swapMessagesTablePropertyChange
+          // TODO add your handling code here:
+    }//GEN-LAST:event_swapMessagesTablePropertyChange
+
     private final Config config;
     private Gateway gw;
     private final SWAPTreeModel stm;
     private final EndpointTableModel etm;
+    private final SWAPMessageModel smm;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomPanel;

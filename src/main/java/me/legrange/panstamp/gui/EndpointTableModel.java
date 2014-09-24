@@ -82,7 +82,6 @@ public class EndpointTableModel implements TableModel, GatewayListener, PanStamp
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        System.out.printf("set value at called: %s %d %d", aValue, rowIndex, columnIndex);
     }
 
     @Override
@@ -162,10 +161,10 @@ public class EndpointTableModel implements TableModel, GatewayListener, PanStamp
                 }
             }
             break;
-            case REGISTER_DETECTED : {
-                    Register reg = ev.getRegister();
-                    reg.addListener(this);
-                    add(String.format("Learnt of register %d for device %d", reg.getId(), ev.getDevice().getAddress()));
+            case REGISTER_DETECTED: {
+                Register reg = ev.getRegister();
+                reg.addListener(this);
+                add(String.format("Learnt of register %d for device %d", reg.getId(), ev.getDevice().getAddress()));
             }
             break;
         }
@@ -173,12 +172,18 @@ public class EndpointTableModel implements TableModel, GatewayListener, PanStamp
 
     @Override
     public void registerUpdated(RegisterEvent ev) {
+
+         System.out.println("Register updated: " + ev.getRegister().getName());
         switch (ev.getType()) {
-            case ENDPOINT_ADDED : 
+            case ENDPOINT_ADDED:
+                System.out.println("Endpoint added: " + ev.getEndpoint().getName());
                 Endpoint ep = ev.getEndpoint();
                 ep.addListener(this);
-                add(String.format("Learnt of endpoint '%s' for register %d on device %d", 
+                add(String.format("Learnt of endpoint '%s' for register %d on device %d",
                         ep.getName(), ep.getRegister().getId(), ep.getRegister().getDevice().getAddress()));
+                break;
+            case VALUE_RECEIVED:
+                break;
         }
     }
 
