@@ -1,8 +1,13 @@
 package me.legrange.panstamp.gui;
 
+import com.apple.eawt.Application;
+import com.apple.eawt.ApplicationAdapter;
+import com.apple.eawt.ApplicationEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.gui.SWAPMessageModel.Direction;
 import me.legrange.panstamp.gui.tree.SWAPNodeRenderer;
@@ -23,26 +28,58 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("System".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+            if (isOSX) {
+                System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
+                System.setProperty("apple.laf.useScreenMenuBar", "true");
+                Application.getApplication().setEnabledPreferencesMenu(true);
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            } else {
+                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                    if ("System".equals(info.getName())) {
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
+                    }
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 final MainWindow mw = new MainWindow();
+                if (isOSX) {
+                    Application.getApplication().addApplicationListener(new ApplicationAdapter() {
+
+                        @Override
+                        public void handleQuit(ApplicationEvent ae) {
+                            ae.setHandled(true);
+                            mw.quit();
+                        }
+
+                        @Override
+                        public void handlePreferences(ApplicationEvent ae) {
+                            ae.setHandled(true);
+                            mw.showPrefs();
+                        }
+
+                        @Override
+                        public void handleAbout(ApplicationEvent ae) {
+                            ae.setHandled(true);
+                            mw.showAbout();
+                        }
+                        
+                        
+
+                    });
+                    mw.panStampMenu.setVisible(false);
+                }
                 mw.setVisible(true);
                 mw.start();
             }
@@ -138,6 +175,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         networkTree = new javax.swing.JTree();
         mainMenu = new javax.swing.JMenuBar();
         panStampMenu = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         configMenuItem = new javax.swing.JMenuItem();
         quitItem = new javax.swing.JMenuItem();
 
@@ -259,6 +297,14 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
 
         panStampMenu.setText("panStamp");
 
+        jMenuItem1.setText("About");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        panStampMenu.add(jMenuItem1);
+
         configMenuItem.setText("Preferences");
         configMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -301,22 +347,40 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
     }// </editor-fold>//GEN-END:initComponents
 
     private void quitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitItemActionPerformed
+        quit();
+    }//GEN-LAST:event_quitItemActionPerformed
+
+    private void configMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configMenuItemActionPerformed
+        showPrefs();
+    }//GEN-LAST:event_configMenuItemActionPerformed
+
+    private void swapMessagesTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_swapMessagesTablePropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_swapMessagesTablePropertyChange
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        showAbout();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void quit() {
         try {
             config.save();
             System.exit(0);
         } catch (BackingStoreException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_quitItemActionPerformed
 
-    private void configMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configMenuItemActionPerformed
+    }
+
+    private void showPrefs() {
         ConfigDialog cd = new ConfigDialog(config, this);
         cd.setVisible(true);
-    }//GEN-LAST:event_configMenuItemActionPerformed
-
-    private void swapMessagesTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_swapMessagesTablePropertyChange
-        // TODO add your handling code here:
-    }//GEN-LAST:event_swapMessagesTablePropertyChange
+    }
+    
+    private void showAbout() { 
+        AboutDialog ad = new AboutDialog(this, true);
+        ad.setVisible(true);
+    }
 
     private final Config config;
     private Gateway gw;
@@ -330,6 +394,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
     private javax.swing.JLabel eventLabel;
     private javax.swing.JScrollPane eventPanel;
     private javax.swing.JTable eventTable;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel leftPanel;
     private javax.swing.JSplitPane leftRightSplitPane;
     private javax.swing.JMenuBar mainMenu;
@@ -344,5 +409,10 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
     private javax.swing.JSplitPane topBottomSplitPane;
     private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
+    static {
+      //  isOSX = System.getProperty("os.name", "").trim().equals("Mac OS X");
+        isOSX = false;
+    }
+    private static final boolean isOSX;
 
 }
