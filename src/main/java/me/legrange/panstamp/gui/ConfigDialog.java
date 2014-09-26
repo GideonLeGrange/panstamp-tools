@@ -31,7 +31,7 @@ class ConfigDialog extends javax.swing.JDialog {
         super(parent, true);
         this.config = config;
         initComponents();
-
+        setLocationRelativeTo(null);
     }
 
     private ComboBoxModel<String> portListModel() {

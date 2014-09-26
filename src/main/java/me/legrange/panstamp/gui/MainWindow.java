@@ -74,8 +74,6 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
                             ae.setHandled(true);
                             mw.showAbout();
                         }
-                        
-                        
 
                     });
                     mw.panStampMenu.setVisible(false);
@@ -96,6 +94,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         etm = EndpointTableModel.create();
         smm = SWAPMessageModel.create();
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     @Override
@@ -376,8 +375,8 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         ConfigDialog cd = new ConfigDialog(config, this);
         cd.setVisible(true);
     }
-    
-    private void showAbout() { 
+
+    private void showAbout() {
         AboutDialog ad = new AboutDialog(this, true);
         ad.setVisible(true);
     }
@@ -410,8 +409,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
     private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
     static {
-      //  isOSX = System.getProperty("os.name", "").trim().equals("Mac OS X");
-        isOSX = false;
+        isOSX = System.getProperty("os.name", "").trim().equals("Mac OS X");
     }
     private static final boolean isOSX;
 
