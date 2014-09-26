@@ -269,7 +269,6 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         swapNetworkLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         swapNetworkLabel.setText("SWAP Network");
 
-        networkTree.setModel(stm);
         networkTree.setCellRenderer(new SWAPNodeRenderer());
         swapNetworkPane.setViewportView(networkTree);
 

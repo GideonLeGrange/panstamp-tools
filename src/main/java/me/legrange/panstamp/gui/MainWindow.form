@@ -302,9 +302,6 @@
               <SubComponents>
                 <Component class="javax.swing.JTree" name="networkTree">
                   <Properties>
-                    <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="stm" type="code"/>
-                    </Property>
                     <Property name="cellRenderer" type="javax.swing.tree.TreeCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="new SWAPNodeRenderer()" type="code"/>
                     </Property>
