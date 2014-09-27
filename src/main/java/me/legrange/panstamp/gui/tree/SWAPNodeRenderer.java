@@ -80,6 +80,8 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
         switch (node.getType()) {
             case PANSTAMP:
                 return getPanStampPopupMenu((PanStampNode) node);
+            case ENDPOINT : 
+                return getEndpointPopupMenu((EndpointNode) node);
             default:
                 return null;
         }
@@ -87,7 +89,7 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
     }
 
     private JPopupMenu getPanStampPopupMenu(PanStampNode psn) {
-        JPopupMenu menu = new JPopupMenu();
+        JPopupMenu menu = new JPopupMenu(psn.toString());
         final JMenuItem settingsItem = new JMenuItem("Settings...");
         settingsItem.addActionListener(new ActionListener() {
 
@@ -105,34 +107,40 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
-        menu.add(settingsItem);
+        menu.add(graphItem);
+        return menu;
+    }
+    
+    private JPopupMenu getEndpointPopupMenu(EndpointNode epn) {
+         JPopupMenu menu = new JPopupMenu(epn.toString());
+        final JMenuItem graphItem = new JMenuItem("Data graph...");
+        graphItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        menu.add(graphItem);
         return menu;
     }
 
     private Component renderEndpoint(EndpointNode epn) throws GatewayException {
-        JLabel label = new JLabel(String.format("%s = %s", epn.getEndpoint().getName(), formatValue(epn.getEndpoint())), getIcon(ICON_ENDPOINT), JLabel.LEADING);
+        JLabel label = new JLabel(epn.toString(), getIcon(ICON_ENDPOINT), JLabel.LEADING);
         return label;
     }
 
     private Component renderRegister(RegisterNode rn) {
-        return new JLabel(String.format("Register %d: %s", rn.getRegister().getId(), rn.getRegister().getName()), getIcon(ICON_REGISTER), JLabel.LEADING);
+        return new JLabel(rn.toString(), getIcon(ICON_REGISTER), JLabel.LEADING);
 
     }
 
     private Component renderPanStamp(PanStampNode psn) {
-        JLabel label = new JLabel(String.format("Mote %d: %s", psn.getPanStamp().getAddress(), psn.getPanStamp().getName()), getIcon(ICON_DEVICE), JLabel.LEADING);
-        return label;
+        return new JLabel(psn.toString(), getIcon(ICON_DEVICE), JLabel.LEADING);
     }
 
     private Component renderGateway(GatewayNode gn) {
-        String txt;
-        try {
-            ModemSetup setup = gn.getGateway().getSWAPModem().getSetup();
-            txt = String.format("Network %4x", setup.getNetworkID());
-        } catch (SWAPException ex) {
-            txt = "Network";
-        }
-        return new JLabel(txt, getIcon(ICON_NETWORK), JLabel.LEADING);
+        return new JLabel(gn.toString(), getIcon(ICON_NETWORK), JLabel.LEADING);
     }
 
     private Component renderWorld(WorldNode wn) {

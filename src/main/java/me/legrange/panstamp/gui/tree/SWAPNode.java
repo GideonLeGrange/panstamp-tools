@@ -10,6 +10,9 @@ abstract class SWAPNode  extends DefaultMutableTreeNode {
     
     enum Type { WORLD, GATEWAY, PANSTAMP, REGISTER, ENDPOINT };
 
+    @Override
+    public abstract String toString();
+    
     protected SWAPNode(Object userObject) {
         super(userObject);
     }

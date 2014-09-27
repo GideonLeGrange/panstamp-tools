@@ -26,6 +26,11 @@ public class PanStampNode extends SWAPNode implements PanStampListener {
     }
 
     @Override
+    public String toString() {
+        return String.format("Mote %d: %s", getPanStamp().getAddress(), getPanStamp().getName());
+    }
+
+    @Override
     protected void start() {
         try {
             getPanStamp().addListener(this);

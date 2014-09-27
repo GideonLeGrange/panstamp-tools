@@ -6,9 +6,13 @@
 
 package me.legrange.panstamp.gui.tree;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
+import me.legrange.panstamp.GatewayException;
+import static me.legrange.panstamp.gui.Format.formatValue;
 
 /**
  *
@@ -22,6 +26,16 @@ public class EndpointNode extends SWAPNode implements EndpointListener {
     
     public Endpoint getEndpoint() {
         return (Endpoint)getUserObject();
+    }
+    
+    @Override
+    public String toString() { 
+        try {
+            return String.format("%s = %s", getEndpoint().getName(), formatValue(getEndpoint()));
+        } catch (GatewayException ex) {
+            Logger.getLogger(EndpointNode.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
     }
 
     @Override

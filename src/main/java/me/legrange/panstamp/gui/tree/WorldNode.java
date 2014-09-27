@@ -12,6 +12,8 @@ public class WorldNode extends SWAPNode {
         super("");
     }
 
+    public String toString() { return ""; }
+    
     @Override
     protected void start() {
     }

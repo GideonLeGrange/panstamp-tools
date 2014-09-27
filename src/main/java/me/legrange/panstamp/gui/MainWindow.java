@@ -430,7 +430,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
     private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
     static {
-        isOSX = System.getProperty("os.name", "").trim().equals("Mac OS X");
+      isOSX = System.getProperty("os.name", "").trim().equals("Mac OS X");
     }
     private static final boolean isOSX;
 

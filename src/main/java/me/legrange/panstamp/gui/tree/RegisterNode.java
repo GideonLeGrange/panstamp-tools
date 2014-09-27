@@ -28,6 +28,11 @@ public class RegisterNode extends SWAPNode implements RegisterListener {
     }
 
     @Override
+    public String toString() {
+        return String.format("Register %d: %s", getRegister().getId(), getRegister().getName());
+    }
+
+    @Override
     protected void start() {
         try {
             getRegister().addListener(this);

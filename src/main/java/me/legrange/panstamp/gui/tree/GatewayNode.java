@@ -5,6 +5,8 @@ import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampEvent;
+import me.legrange.swap.ModemSetup;
+import me.legrange.swap.SWAPException;
 
 /**
  *
@@ -18,6 +20,17 @@ public class GatewayNode extends SWAPNode implements GatewayListener {
 
     public Gateway getGateway() {
         return (Gateway) getUserObject();
+    }
+    @Override
+    public String toString() {
+                String txt;
+        try {
+            ModemSetup setup = getGateway().getSWAPModem().getSetup();
+            txt = String.format("Network %4x", setup.getNetworkID());
+        } catch (SWAPException ex) {
+            txt = "Network";
+        }
+        return txt;
     }
 
     @Override
