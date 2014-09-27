@@ -101,6 +101,11 @@ class SWAPMessageModel implements TableModel {
     void add(SwapMessage msg, long timestamp, Direction dir) {
         synchronized (data) {
             data.add(0, new Entry(msg, timestamp, dir));
+            if (data.size() > 1000) {
+                for (int i = 0; i < 100; ++i) {
+                    data.remove(data.size() - 1);
+                }
+            }
         }
         for (TableModelListener l : listeners) {
             l.tableChanged(new TableModelEvent(this, 0, 0, -1, TableModelEvent.INSERT));
