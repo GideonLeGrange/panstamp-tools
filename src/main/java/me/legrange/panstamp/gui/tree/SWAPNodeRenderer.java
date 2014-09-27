@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.Format;
@@ -62,7 +63,11 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
                         com = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
                         break;
                 }
-                return com;
+                JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+                panel.add(com);
+                panel.setBackground(sel ? backgroundSelectionColor : tree.getBackground());
+                com.setForeground(sel ? textSelectionColor : textNonSelectionColor);
+                return panel;
             } catch (GatewayException ex) {
                 Logger.getLogger(SWAPNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -70,18 +75,18 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
         return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
     }
 
-    private Component renderEndpoint(EndpointNode epn) throws GatewayException {
-        JLabel label = new JLabel(String.format("%s = %s", epn.getEndpoint().getName(), formatValue(epn.getEndpoint())), getIcon(ICON_ENDPOINT), JLabel.LEADING);
-        return label;
+    public JPopupMenu getPopupMenu(TreePath path) {
+        SWAPNode node = (SWAPNode) path.getLastPathComponent();
+        switch (node.getType()) {
+            case PANSTAMP:
+                return getPanStampPopupMenu((PanStampNode) node);
+            default:
+                return null;
+        }
+
     }
 
-    private Component renderRegister(RegisterNode rn) {
-        return new JLabel(String.format("Register %d: %s", rn.getRegister().getId(), rn.getRegister().getName()), getIcon(ICON_REGISTER), JLabel.LEADING);
-
-    }
-
-    private Component renderPanStamp(PanStampNode psn) {
-        JLabel label = new JLabel(String.format("Mote %d: %s", psn.getPanStamp().getAddress(), psn.getPanStamp().getName()), getIcon(ICON_DEVICE), JLabel.LEADING);
+    private JPopupMenu getPanStampPopupMenu(PanStampNode psn) {
         JPopupMenu menu = new JPopupMenu();
         final JMenuItem settingsItem = new JMenuItem("Settings...");
         settingsItem.addActionListener(new ActionListener() {
@@ -100,8 +105,22 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
-        menu.add(graphItem);
-        label.add(menu);
+        menu.add(settingsItem);
+        return menu;
+    }
+
+    private Component renderEndpoint(EndpointNode epn) throws GatewayException {
+        JLabel label = new JLabel(String.format("%s = %s", epn.getEndpoint().getName(), formatValue(epn.getEndpoint())), getIcon(ICON_ENDPOINT), JLabel.LEADING);
+        return label;
+    }
+
+    private Component renderRegister(RegisterNode rn) {
+        return new JLabel(String.format("Register %d: %s", rn.getRegister().getId(), rn.getRegister().getName()), getIcon(ICON_REGISTER), JLabel.LEADING);
+
+    }
+
+    private Component renderPanStamp(PanStampNode psn) {
+        JLabel label = new JLabel(String.format("Mote %d: %s", psn.getPanStamp().getAddress(), psn.getPanStamp().getName()), getIcon(ICON_DEVICE), JLabel.LEADING);
         return label;
     }
 

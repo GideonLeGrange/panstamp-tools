@@ -312,6 +312,10 @@
                       <Connection code="new DefaultTreeSelectionModel()" type="code"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="networkTreeMouseClicked"/>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="networkTreeMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

@@ -3,12 +3,16 @@ package me.legrange.panstamp.gui;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
+import java.awt.Component;
+import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
+import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.tree.DefaultTreeSelectionModel;
+import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.gui.SWAPMessageModel.Direction;
 import me.legrange.panstamp.gui.tree.SWAPNodeRenderer;
@@ -273,6 +277,14 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         networkTree.setModel(stm);
         networkTree.setCellRenderer(new SWAPNodeRenderer());
         networkTree.setSelectionModel(new DefaultTreeSelectionModel());
+        networkTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                networkTreeMouseClicked(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                networkTreeMouseClicked(evt);
+            }
+        });
         swapNetworkPane.setViewportView(networkTree);
 
         org.jdesktop.layout.GroupLayout leftPanelLayout = new org.jdesktop.layout.GroupLayout(leftPanel);
@@ -362,6 +374,13 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         showAbout();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void networkTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_networkTreeMouseClicked
+        TreePath path = networkTree.getClosestPathForLocation(evt.getX(), evt.getY());
+        SWAPNodeRenderer snr = (SWAPNodeRenderer) networkTree.getCellRenderer();
+        JPopupMenu menu = snr.getPopupMenu(path);
+        networkTree.setComponentPopupMenu(menu);
+    }//GEN-LAST:event_networkTreeMouseClicked
 
     private void quit() {
         try {
