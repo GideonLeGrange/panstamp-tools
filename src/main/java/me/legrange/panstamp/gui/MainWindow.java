@@ -15,6 +15,7 @@ import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.gui.SWAPMessageModel.Direction;
+import me.legrange.panstamp.gui.chart.SignalCollector;
 import me.legrange.panstamp.gui.tree.SWAPNodeRenderer;
 import me.legrange.panstamp.gui.tree.SWAPTreeModel;
 import me.legrange.panstamp.impl.ModemException;
@@ -144,6 +145,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
             etm.addGateway(gw);
             // add listener to capture SWAP messages
             gw.getSWAPModem().addListener(this);
+            gw.getSWAPModem().addListener(SignalCollector.getInstance());
         } catch (ModemException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -407,7 +409,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
     private final SWAPTreeModel stm;
     private final EndpointTableModel etm;
     private final SWAPMessageModel smm;
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JMenuItem configMenuItem;

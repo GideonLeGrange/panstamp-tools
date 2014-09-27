@@ -28,6 +28,7 @@ import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.Format;
+import me.legrange.panstamp.gui.chart.SignalChart;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 
@@ -88,7 +89,7 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
 
     }
 
-    private JPopupMenu getPanStampPopupMenu(PanStampNode psn) {
+    private JPopupMenu getPanStampPopupMenu(final PanStampNode psn) {
         JPopupMenu menu = new JPopupMenu(psn.toString());
         final JMenuItem settingsItem = new JMenuItem("Settings...");
         settingsItem.addActionListener(new ActionListener() {
@@ -104,7 +105,7 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                new SignalChart(psn.getPanStamp().getAddress()).setVisible(true);
             }
         });
         menu.add(graphItem);
