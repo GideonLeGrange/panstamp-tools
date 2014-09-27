@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.gui.SWAPMessageModel.Direction;
 import me.legrange.panstamp.gui.tree.SWAPNodeRenderer;
@@ -89,7 +90,6 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
      */
     public MainWindow() {
         config = new Config();
-        config.addListener(this);
         stm = SWAPTreeModel.create();
         etm = EndpointTableModel.create();
         smm = SWAPMessageModel.create();
@@ -129,6 +129,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
      * start the application
      */
     private void start() {
+        config.addListener(this);
         if (!config.hasValidPort()) {
             ConfigDialog cd = new ConfigDialog(config, this);
             cd.setVisible(true);
@@ -250,14 +251,14 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
                         .addContainerGap())
                     .add(bottomPanelLayout.createSequentialGroup()
                         .add(eventLabel)
-                        .add(0, 0, Short.MAX_VALUE))))
+                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         bottomPanelLayout.setVerticalGroup(
             bottomPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(bottomPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(eventLabel)
-                .add(10, 10, 10)
+                .add(24, 24, 24)
                 .add(eventPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 160, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -269,7 +270,9 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         swapNetworkLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         swapNetworkLabel.setText("SWAP Network");
 
+        networkTree.setModel(stm);
         networkTree.setCellRenderer(new SWAPNodeRenderer());
+        networkTree.setSelectionModel(new DefaultTreeSelectionModel());
         swapNetworkPane.setViewportView(networkTree);
 
         org.jdesktop.layout.GroupLayout leftPanelLayout = new org.jdesktop.layout.GroupLayout(leftPanel);

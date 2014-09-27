@@ -5,7 +5,9 @@
  */
 package me.legrange.panstamp.gui.tree;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -18,13 +20,13 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.Format;
-import me.legrange.panstamp.impl.ModemException;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 
@@ -33,52 +35,62 @@ import me.legrange.swap.SWAPException;
  * @author gideon
  */
 public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
-    
+
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         if (value instanceof SWAPNode) {
             try {
                 SWAPNode node = (SWAPNode) value;
+                Component com;
                 switch (node.getType()) {
                     case ENDPOINT:
-                        return renderEndpoint((EndpointNode) node);
+                        com = renderEndpoint((EndpointNode) node);
+                        break;
                     case REGISTER:
-                        return renderRegister((RegisterNode) node);
+                        com = renderRegister((RegisterNode) node);
+                        break;
                     case PANSTAMP:
-                        return renderPanStamp((PanStampNode) node);
+                        com = renderPanStamp((PanStampNode) node);
+                        break;
                     case GATEWAY:
-                        return renderGateway((GatewayNode) node);
+                        com = renderGateway((GatewayNode) node);
+                        break;
                     case WORLD:
-                        return renderWorld((WorldNode) node);
+                        com = renderWorld((WorldNode) node);
+                        break;
+                    default:
+                        com = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+                        break;
                 }
+                return com;
             } catch (GatewayException ex) {
                 Logger.getLogger(SWAPNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
     }
-    
+
     private Component renderEndpoint(EndpointNode epn) throws GatewayException {
         JLabel label = new JLabel(String.format("%s = %s", epn.getEndpoint().getName(), formatValue(epn.getEndpoint())), getIcon(ICON_ENDPOINT), JLabel.LEADING);
         return label;
     }
-    
+
     private Component renderRegister(RegisterNode rn) {
         return new JLabel(String.format("Register %d: %s", rn.getRegister().getId(), rn.getRegister().getName()), getIcon(ICON_REGISTER), JLabel.LEADING);
-        
+
     }
-    
+
     private Component renderPanStamp(PanStampNode psn) {
         JLabel label = new JLabel(String.format("Mote %d: %s", psn.getPanStamp().getAddress(), psn.getPanStamp().getName()), getIcon(ICON_DEVICE), JLabel.LEADING);
         JPopupMenu menu = new JPopupMenu();
         final JMenuItem settingsItem = new JMenuItem("Settings...");
-        settingsItem.addActionListener(new ActionListener(){
+        settingsItem.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-         });
+        });
         menu.add(settingsItem);
         final JMenuItem graphItem = new JMenuItem("RSSI/LQI Graph...");
         graphItem.addActionListener(new ActionListener() {
@@ -92,7 +104,7 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
         label.add(menu);
         return label;
     }
-    
+
     private Component renderGateway(GatewayNode gn) {
         String txt;
         try {
@@ -103,15 +115,15 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
         }
         return new JLabel(txt, getIcon(ICON_NETWORK), JLabel.LEADING);
     }
-    
+
     private Component renderWorld(WorldNode wn) {
         return new JLabel("", getIcon(ICON_WORLD), JLabel.LEADING);
     }
-    
+
     private String formatValue(Endpoint ep) throws GatewayException {
         return Format.formatValue(ep);
     }
-    
+
     private Icon getIcon(String name) {
         ImageIcon ico = icons.get(name);
         if (ico == null) {
@@ -122,19 +134,19 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
                  ico  = new ImageIcon(newimg);  // transform it back */
             } catch (IOException ex) {
                 Logger.getLogger(SWAPNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
-                
+
             }
             icons.put(name, ico);
         }
-        
+
         return ico;
     }
-    
+
     private static final String ICON_WORLD = "world16x16.png";
     private static final String ICON_NETWORK = "network16x16.png";
     private static final String ICON_DEVICE = "device16x16.png";
     private static final String ICON_REGISTER = "register16x16.png";
     private static final String ICON_ENDPOINT = "endpoint16x16.png";
     private final Map<String, ImageIcon> icons = new HashMap<>();
-    
+
 }
