@@ -107,6 +107,11 @@ public class EndpointTableModel implements TableModel, GatewayListener, PanStamp
         long timeStamp = System.currentTimeMillis();
         synchronized (data) {
             data.add(0, new Entry(timeStamp, msg));
+            if (data.size() > 1000) {
+                for (int i = 0; i < 100; ++i) {
+                    data.remove(data.size() - 1);
+                }
+            }
         }
         for (TableModelListener l : listeners) {
             l.tableChanged(new TableModelEvent(this, 0, 0, -1, TableModelEvent.INSERT));
@@ -173,7 +178,7 @@ public class EndpointTableModel implements TableModel, GatewayListener, PanStamp
     @Override
     public void registerUpdated(RegisterEvent ev) {
 
-         System.out.println("Register updated: " + ev.getRegister().getName());
+        System.out.println("Register updated: " + ev.getRegister().getName());
         switch (ev.getType()) {
             case ENDPOINT_ADDED:
                 System.out.println("Endpoint added: " + ev.getEndpoint().getName());
