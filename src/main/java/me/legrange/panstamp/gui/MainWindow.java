@@ -3,8 +3,6 @@ package me.legrange.panstamp.gui;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
-import java.awt.Component;
-import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -170,13 +168,10 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         topPanel = new javax.swing.JPanel();
         swapMessagesPane = new javax.swing.JScrollPane();
         swapMessagesTable = new javax.swing.JTable();
-        swapMessagesLabel = new javax.swing.JLabel();
         bottomPanel = new javax.swing.JPanel();
         eventPanel = new javax.swing.JScrollPane();
         eventTable = new javax.swing.JTable();
-        eventLabel = new javax.swing.JLabel();
         leftPanel = new javax.swing.JPanel();
-        swapNetworkLabel = new javax.swing.JLabel();
         swapNetworkPane = new javax.swing.JScrollPane();
         networkTree = new javax.swing.JTree();
         mainMenu = new javax.swing.JMenuBar();
@@ -187,24 +182,34 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("Courier", 0, 10)); // NOI18N
+        setMinimumSize(new java.awt.Dimension(800, 600));
 
         leftRightSplitPane.setBorder(null);
-        leftRightSplitPane.setDividerLocation(220);
-        leftRightSplitPane.setDividerSize(4);
+        leftRightSplitPane.setDividerLocation(290);
+        leftRightSplitPane.setDividerSize(0);
 
         topBottomSplitPane.setBorder(null);
-        topBottomSplitPane.setDividerLocation(340);
+        topBottomSplitPane.setDividerLocation(280);
+        topBottomSplitPane.setDividerSize(0);
         topBottomSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
+        topPanel.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder(null, "SWAP Messages", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 13)), javax.swing.BorderFactory.createEmptyBorder(2, 4, 2, 4))); // NOI18N
         topPanel.setLayout(new java.awt.BorderLayout());
 
         swapMessagesTable.setFont(new java.awt.Font("Courier", 0, 12)); // NOI18N
         swapMessagesTable.setModel(smm);
-        swapMessagesTable.getColumnModel().getColumn(0).setPreferredWidth(80);
-        swapMessagesTable.getColumnModel().getColumn(1).setPreferredWidth(40);
-        swapMessagesTable.getColumnModel().getColumn(2).setPreferredWidth(80);
+        swapMessagesTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+        swapMessagesTable.getColumnModel().getColumn(0).setMinWidth(100);
+        swapMessagesTable.getColumnModel().getColumn(0).setMaxWidth(100);
+        swapMessagesTable.getColumnModel().getColumn(1).setPreferredWidth(61);
+        swapMessagesTable.getColumnModel().getColumn(1).setMinWidth(61);
+        swapMessagesTable.getColumnModel().getColumn(1).setMaxWidth(61);
+        swapMessagesTable.getColumnModel().getColumn(2).setPreferredWidth(48);
+        swapMessagesTable.getColumnModel().getColumn(2).setMinWidth(48);
+        swapMessagesTable.getColumnModel().getColumn(2).setMaxWidth(48);
         swapMessagesTable.getColumnModel().getColumn(3).setPreferredWidth(160);
         swapMessagesTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        swapMessagesTable.setMinimumSize(new java.awt.Dimension(480, 250));
         swapMessagesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         swapMessagesTable.setShowGrid(false);
         swapMessagesTable.getTableHeader().setReorderingAllowed(false);
@@ -215,31 +220,31 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         });
         swapMessagesPane.setViewportView(swapMessagesTable);
 
-        topPanel.add(swapMessagesPane, java.awt.BorderLayout.PAGE_START);
-
-        swapMessagesLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
-        swapMessagesLabel.setText("SWAP Messages");
-        topPanel.add(swapMessagesLabel, java.awt.BorderLayout.CENTER);
+        topPanel.add(swapMessagesPane, java.awt.BorderLayout.CENTER);
 
         topBottomSplitPane.setTopComponent(topPanel);
 
+        bottomPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Network Events"));
         bottomPanel.setLayout(new java.awt.BorderLayout());
 
         eventTable.setModel(etm);
+        eventTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        eventTable.setMinimumSize(new java.awt.Dimension(480, 250));
+        eventTable.getColumnModel().getColumn(0).setMinWidth(100);
+        eventTable.getColumnModel().getColumn(0).setMaxWidth(100);
         eventPanel.setViewportView(eventTable);
 
         bottomPanel.add(eventPanel, java.awt.BorderLayout.CENTER);
-
-        eventLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
-        eventLabel.setText("Network Events");
-        bottomPanel.add(eventLabel, java.awt.BorderLayout.PAGE_START);
 
         topBottomSplitPane.setRightComponent(bottomPanel);
 
         leftRightSplitPane.setRightComponent(topBottomSplitPane);
 
-        swapNetworkLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
-        swapNetworkLabel.setText("SWAP Network");
+        leftPanel.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createTitledBorder(null, "SWAP Network", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 13)), javax.swing.BorderFactory.createEmptyBorder(2, 4, 2, 4))); // NOI18N
+        leftPanel.setPreferredSize(new java.awt.Dimension(0, 0));
+        leftPanel.setLayout(new java.awt.BorderLayout());
+
+        swapNetworkPane.setPreferredSize(null);
 
         networkTree.setModel(stm);
         networkTree.setCellRenderer(new SWAPNodeRenderer());
@@ -254,24 +259,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         });
         swapNetworkPane.setViewportView(networkTree);
 
-        org.jdesktop.layout.GroupLayout leftPanelLayout = new org.jdesktop.layout.GroupLayout(leftPanel);
-        leftPanel.setLayout(leftPanelLayout);
-        leftPanelLayout.setHorizontalGroup(
-            leftPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(leftPanelLayout.createSequentialGroup()
-                .add(swapNetworkLabel)
-                .add(0, 123, Short.MAX_VALUE))
-            .add(leftPanelLayout.createSequentialGroup()
-                .add(swapNetworkPane)
-                .addContainerGap())
-        );
-        leftPanelLayout.setVerticalGroup(
-            leftPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(leftPanelLayout.createSequentialGroup()
-                .add(swapNetworkLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(swapNetworkPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE))
-        );
+        leftPanel.add(swapNetworkPane, java.awt.BorderLayout.CENTER);
 
         leftRightSplitPane.setLeftComponent(leftPanel);
 
@@ -334,10 +322,6 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         showPrefs();
     }//GEN-LAST:event_configMenuItemActionPerformed
 
-    private void swapMessagesTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_swapMessagesTablePropertyChange
-        // TODO add your handling code here:
-    }//GEN-LAST:event_swapMessagesTablePropertyChange
-
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         showAbout();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -348,6 +332,10 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         JPopupMenu menu = snr.getPopupMenu(path);
         networkTree.setComponentPopupMenu(menu);
     }//GEN-LAST:event_networkTreeMouseClicked
+
+    private void swapMessagesTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_swapMessagesTablePropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_swapMessagesTablePropertyChange
 
     private void quit() {
         try {
@@ -378,7 +366,6 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JMenuItem configMenuItem;
-    private javax.swing.JLabel eventLabel;
     private javax.swing.JScrollPane eventPanel;
     private javax.swing.JTable eventTable;
     private javax.swing.JMenuItem jMenuItem1;
@@ -388,10 +375,8 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
     private javax.swing.JTree networkTree;
     private javax.swing.JMenu panStampMenu;
     private javax.swing.JMenuItem quitItem;
-    private javax.swing.JLabel swapMessagesLabel;
     private javax.swing.JScrollPane swapMessagesPane;
     private javax.swing.JTable swapMessagesTable;
-    private javax.swing.JLabel swapNetworkLabel;
     private javax.swing.JScrollPane swapNetworkPane;
     private javax.swing.JSplitPane topBottomSplitPane;
     private javax.swing.JPanel topPanel;
