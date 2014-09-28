@@ -34,14 +34,18 @@ public class PanStampNode extends SWAPNode implements PanStampListener {
     protected void start() {
         try {
             getPanStamp().addListener(this);
-            List<Register> regs = getPanStamp().getRegisters();
-            for (Register reg : regs) {
-                addNode(reg);
-
+            for (Register reg : getPanStamp().getRegisters()) {
+                addRegister(reg);
             }
         } catch (GatewayException ex) {
             Logger.getLogger(PanStampNode.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    protected void stop() {
+        getPanStamp().removeListener(this);
+        super.stop(); 
     }
 
     @Override
@@ -54,7 +58,6 @@ public class PanStampNode extends SWAPNode implements PanStampListener {
         switch (ev.getType()) {
             case PRODUCT_CODE_UPDATE: {
                 try {
-                    
                     for (Register reg : ev.getDevice().getRegisters()) {
                         RegisterNode rn = nodes.get(reg);
                         if (rn == null) {
@@ -72,6 +75,7 @@ public class PanStampNode extends SWAPNode implements PanStampListener {
             }
             break;
             case SYNC_STATE_CHANGE: {
+
             }
             break;
             case REGISTER_DETECTED:
@@ -82,7 +86,17 @@ public class PanStampNode extends SWAPNode implements PanStampListener {
         }
     }
 
+    private synchronized void addRegister(Register reg) {
+        if (nodes.get(reg) == null) {
+            addNode(reg);
+        }
+    }
+
     private void addNode(Register reg) {
+        RegisterNode old = nodes.remove(reg);
+        if (old != null) {
+            old.stop();
+        }
         RegisterNode rn = new RegisterNode(reg);
         addToTree(rn, this);
         rn.start();

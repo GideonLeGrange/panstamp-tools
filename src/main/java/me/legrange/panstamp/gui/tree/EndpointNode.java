@@ -42,6 +42,14 @@ public class EndpointNode extends SWAPNode implements EndpointListener {
     protected void start() {
         getEndpoint().addListener(this);
     }
+
+    @Override
+    protected void stop() {
+        getEndpoint().removeListener(this);
+        super.stop(); 
+    }
+    
+    
     
     @Override
     public void endpointUpdated(EndpointEvent ev) {

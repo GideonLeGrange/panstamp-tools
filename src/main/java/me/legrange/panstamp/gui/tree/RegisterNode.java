@@ -33,7 +33,7 @@ public class RegisterNode extends SWAPNode implements RegisterListener {
     }
 
     @Override
-    protected void start() {
+    protected synchronized void start() {
         try {
             getRegister().addListener(this);
             for (Endpoint ep : getRegister().getEndpoints()) {
@@ -45,6 +45,14 @@ public class RegisterNode extends SWAPNode implements RegisterListener {
             Logger.getLogger(RegisterNode.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    protected void stop() {
+        getRegister().removeListener(this);
+        super.stop();
+    }
+    
+    
 
     void update(Register reg) {
         try {

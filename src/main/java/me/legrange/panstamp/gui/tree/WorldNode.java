@@ -18,6 +18,9 @@ public class WorldNode extends SWAPNode {
     protected void start() {
     }
 
+
+    
+
     @Override
     Type getType() {
         return Type.WORLD;

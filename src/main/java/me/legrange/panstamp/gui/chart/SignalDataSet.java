@@ -98,7 +98,7 @@ public class SignalDataSet implements XYDataset {
     }
     
     private void fire()    {
-        for (DatasetChangeListener l : listeners) {
+        for (DatasetChangeListener l :   listeners) {
             l.datasetChanged(new DatasetChangeEvent(this, this));
         }
     }    

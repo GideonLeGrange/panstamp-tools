@@ -168,9 +168,9 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         leftRightSplitPane = new javax.swing.JSplitPane();
         topBottomSplitPane = new javax.swing.JSplitPane();
         topPanel = new javax.swing.JPanel();
-        swapMessagesLabel = new javax.swing.JLabel();
         swapMessagesPane = new javax.swing.JScrollPane();
         swapMessagesTable = new javax.swing.JTable();
+        swapMessagesLabel = new javax.swing.JLabel();
         bottomPanel = new javax.swing.JPanel();
         eventPanel = new javax.swing.JScrollPane();
         eventTable = new javax.swing.JTable();
@@ -196,8 +196,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         topBottomSplitPane.setDividerLocation(340);
         topBottomSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        swapMessagesLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
-        swapMessagesLabel.setText("SWAP Messages");
+        topPanel.setLayout(new java.awt.BorderLayout());
 
         swapMessagesTable.setFont(new java.awt.Font("Courier", 0, 12)); // NOI18N
         swapMessagesTable.setModel(smm);
@@ -216,58 +215,24 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         });
         swapMessagesPane.setViewportView(swapMessagesTable);
 
-        org.jdesktop.layout.GroupLayout topPanelLayout = new org.jdesktop.layout.GroupLayout(topPanel);
-        topPanel.setLayout(topPanelLayout);
-        topPanelLayout.setHorizontalGroup(
-            topPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(topPanelLayout.createSequentialGroup()
-                .add(swapMessagesLabel)
-                .add(0, 0, Short.MAX_VALUE))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, topPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(swapMessagesPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        topPanelLayout.setVerticalGroup(
-            topPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(topPanelLayout.createSequentialGroup()
-                .add(swapMessagesLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(swapMessagesPane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 296, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(0, 0, Short.MAX_VALUE))
-        );
+        topPanel.add(swapMessagesPane, java.awt.BorderLayout.PAGE_START);
+
+        swapMessagesLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        swapMessagesLabel.setText("SWAP Messages");
+        topPanel.add(swapMessagesLabel, java.awt.BorderLayout.CENTER);
 
         topBottomSplitPane.setTopComponent(topPanel);
+
+        bottomPanel.setLayout(new java.awt.BorderLayout());
 
         eventTable.setModel(etm);
         eventPanel.setViewportView(eventTable);
 
+        bottomPanel.add(eventPanel, java.awt.BorderLayout.CENTER);
+
         eventLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         eventLabel.setText("Network Events");
-
-        org.jdesktop.layout.GroupLayout bottomPanelLayout = new org.jdesktop.layout.GroupLayout(bottomPanel);
-        bottomPanel.setLayout(bottomPanelLayout);
-        bottomPanelLayout.setHorizontalGroup(
-            bottomPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(bottomPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(bottomPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(bottomPanelLayout.createSequentialGroup()
-                        .add(eventPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .add(bottomPanelLayout.createSequentialGroup()
-                        .add(eventLabel)
-                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-        );
-        bottomPanelLayout.setVerticalGroup(
-            bottomPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(bottomPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(eventLabel)
-                .add(24, 24, 24)
-                .add(eventPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 160, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        bottomPanel.add(eventLabel, java.awt.BorderLayout.PAGE_START);
 
         topBottomSplitPane.setRightComponent(bottomPanel);
 
@@ -305,7 +270,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
             .add(leftPanelLayout.createSequentialGroup()
                 .add(swapNetworkLabel)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(swapNetworkPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE))
+                .add(swapNetworkPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE))
         );
 
         leftRightSplitPane.setLeftComponent(leftPanel);
@@ -347,14 +312,14 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(leftRightSplitPane)
+                .add(leftRightSplitPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(leftRightSplitPane)
+                .add(leftRightSplitPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
