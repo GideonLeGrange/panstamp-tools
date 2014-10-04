@@ -244,8 +244,6 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         leftPanel.setPreferredSize(new java.awt.Dimension(0, 0));
         leftPanel.setLayout(new java.awt.BorderLayout());
 
-        swapNetworkPane.setPreferredSize(null);
-
         networkTree.setModel(stm);
         networkTree.setCellRenderer(new SWAPNodeRenderer());
         networkTree.setSelectionModel(new DefaultTreeSelectionModel());

@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package me.legrange.panstamp.gui.tree;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -18,6 +12,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -29,8 +24,6 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.Format;
 import me.legrange.panstamp.gui.chart.SignalChart;
-import me.legrange.swap.ModemSetup;
-import me.legrange.swap.SWAPException;
 
 /**
  *
@@ -105,7 +98,9 @@ public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                new SignalChart(psn.getPanStamp().getAddress()).setVisible(true);
+                JFrame frame = new JFrame();
+                frame.setContentPane(new SignalChart(psn.getPanStamp().getAddress()));
+                frame.setVisible(true);
             }
         });
         menu.add(graphItem);
