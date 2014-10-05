@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.tree;
+package me.legrange.panstamp.gui.model;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +15,7 @@ import me.legrange.panstamp.Register;
  *
  * @author gideon
  */
-public class PanStampNode extends SWAPNode implements PanStampListener {
+class PanStampNode extends SWAPNode implements PanStampListener {
 
     public PanStampNode(PanStamp ps) {
         super(ps);

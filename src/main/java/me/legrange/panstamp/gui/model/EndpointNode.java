@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package me.legrange.panstamp.gui.tree;
+package me.legrange.panstamp.gui.model;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,13 +12,13 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
-import static me.legrange.panstamp.gui.Format.formatValue;
+import static me.legrange.panstamp.gui.model.Format.formatValue;
 
 /**
  *
  * @author gideon
  */
-public class EndpointNode extends SWAPNode implements EndpointListener {
+class EndpointNode extends SWAPNode implements EndpointListener {
 
     public EndpointNode(Endpoint ep) {
         super(ep);

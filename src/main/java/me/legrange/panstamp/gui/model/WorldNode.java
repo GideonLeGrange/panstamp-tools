@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.tree;
+package me.legrange.panstamp.gui.model;
 
 import me.legrange.panstamp.Gateway;
 
@@ -6,12 +6,13 @@ import me.legrange.panstamp.Gateway;
  *
  * @author gideon
  */
-public class WorldNode extends SWAPNode {
+class WorldNode extends SWAPNode {
 
     public WorldNode() {
         super("");
     }
 
+    @Override
     public String toString() { return ""; }
     
     @Override

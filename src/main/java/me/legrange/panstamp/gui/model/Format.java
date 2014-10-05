@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui;
+package me.legrange.panstamp.gui.model;
 
 import java.util.List;
 import me.legrange.panstamp.Endpoint;
@@ -8,7 +8,7 @@ import me.legrange.panstamp.GatewayException;
  *
  * @author gideon
  */
-public final class Format {
+final class Format {
     
     public static  String formatValue(Endpoint ep) throws GatewayException {
         List<String> units = ep.getUnits();

@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.tree;
+package me.legrange.panstamp.gui.model;
 
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
@@ -11,7 +11,7 @@ import me.legrange.swap.SWAPException;
  *
  * @author gideon
  */
-public class GatewayNode extends SWAPNode implements GatewayListener {
+class GatewayNode extends SWAPNode implements GatewayListener {
 
     public GatewayNode(Gateway gw) {
         super(gw);

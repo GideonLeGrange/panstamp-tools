@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.tree;
+package me.legrange.panstamp.gui.model;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -9,7 +9,7 @@ import me.legrange.panstamp.Gateway;
  *
  * @author gideon
  */
-public class SWAPTreeModel extends DefaultTreeModel {
+class SWAPTreeModel extends DefaultTreeModel {
 
     public static SWAPTreeModel create() {
         WorldNode wn = new WorldNode();

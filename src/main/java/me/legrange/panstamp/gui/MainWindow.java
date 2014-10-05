@@ -6,18 +6,13 @@ import com.apple.eawt.ApplicationEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
-import javax.swing.JPopupMenu;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.gui.SWAPMessageModel.Direction;
-import me.legrange.panstamp.gui.chart.SignalCollector;
-import me.legrange.panstamp.gui.tree.SWAPNodeRenderer;
-import me.legrange.panstamp.gui.tree.SWAPTreeModel;
+import me.legrange.panstamp.gui.model.DataModel;
 import me.legrange.panstamp.impl.ModemException;
-import me.legrange.swap.MessageListener;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SwapMessage;
@@ -26,7 +21,7 @@ import me.legrange.swap.SwapMessage;
  *
  * @author gideon
  */
-public class MainWindow extends javax.swing.JFrame implements MessageListener, ConfigListener {
+public class MainWindow extends javax.swing.JFrame implements ConfigListener {
 
     /**
      * @param args the command line arguments
@@ -93,32 +88,20 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
      */
     public MainWindow() {
         config = new Config();
-        stm = SWAPTreeModel.create();
-        etm = EndpointTableModel.create();
-        smm = SWAPMessageModel.create();
+        model = new DataModel();
         initComponents();
         setLocationRelativeTo(null);
-    }
-
-    @Override
-    public void messageReceived(SwapMessage msg) {
-        displaySWAPMessage(msg, Direction.IN);
-    }
-
-    @Override
-    public void messageSent(SwapMessage msg) {
-        displaySWAPMessage(msg, Direction.OUT);
     }
 
     @Override
     public void configUpdated(ConfigEvent ev) {
         switch (ev.getType()) {
             case NETWORK: {
-                try {
-                    gw.getSWAPModem().setSetup(new ModemSetup(config.getChannel(), config.getNetworkID(), config.getDeviceAddress()));
-                } catch (SWAPException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            try {
+                gw.getSWAPModem().setSetup(new ModemSetup(config.getChannel(), config.getNetworkID(), config.getDeviceAddress()));
+            } catch (SWAPException ex) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
             }
             break;
             case SERIAL:
@@ -139,21 +122,11 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         }
         try {
             gw = Gateway.openSerial(config.getPortName(), config.getPortSpeed());
-            stm.addGateway(gw);
-            etm.addGateway(gw);
-            // add listener to capture SWAP messages
-            gw.getSWAPModem().addListener(this);
-            gw.getSWAPModem().addListener(SignalCollector.getInstance());
+            model.addGateway(gw);
         } catch (ModemException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    private void displaySWAPMessage(SwapMessage msg, Direction dir) {
-        SWAPMessageModel mod = (SWAPMessageModel) swapMessagesTable.getModel();
-        mod.add(msg, System.currentTimeMillis(), dir);
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -197,7 +170,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         topPanel.setLayout(new java.awt.BorderLayout());
 
         swapMessagesTable.setFont(new java.awt.Font("Courier", 0, 12)); // NOI18N
-        swapMessagesTable.setModel(smm);
+        swapMessagesTable.setModel(model.getSWAPTableModel());
         swapMessagesTable.getColumnModel().getColumn(0).setPreferredWidth(100);
         swapMessagesTable.getColumnModel().getColumn(0).setMinWidth(100);
         swapMessagesTable.getColumnModel().getColumn(0).setMaxWidth(100);
@@ -227,7 +200,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         bottomPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Network Events"));
         bottomPanel.setLayout(new java.awt.BorderLayout());
 
-        eventTable.setModel(etm);
+        eventTable.setModel(model.getEndpointTableModel());
         eventTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
         eventTable.setMinimumSize(new java.awt.Dimension(480, 250));
         eventTable.getColumnModel().getColumn(0).setMinWidth(100);
@@ -244,8 +217,8 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
         leftPanel.setPreferredSize(new java.awt.Dimension(0, 0));
         leftPanel.setLayout(new java.awt.BorderLayout());
 
-        networkTree.setModel(stm);
-        networkTree.setCellRenderer(new SWAPNodeRenderer());
+        networkTree.setModel(model.getTreeModel());
+        networkTree.setCellRenderer(model.getTreeCellRenderer());
         networkTree.setSelectionModel(new DefaultTreeSelectionModel());
         networkTree.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -326,9 +299,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
 
     private void networkTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_networkTreeMouseClicked
         TreePath path = networkTree.getClosestPathForLocation(evt.getX(), evt.getY());
-        SWAPNodeRenderer snr = (SWAPNodeRenderer) networkTree.getCellRenderer();
-        JPopupMenu menu = snr.getPopupMenu(path);
-        networkTree.setComponentPopupMenu(menu);
+        networkTree.setComponentPopupMenu(model.getTreePopupMenu(path));
     }//GEN-LAST:event_networkTreeMouseClicked
 
     private void swapMessagesTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_swapMessagesTablePropertyChange
@@ -357,10 +328,8 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
 
     private final Config config;
     private Gateway gw;
-    private final SWAPTreeModel stm;
-    private final EndpointTableModel etm;
-    private final SWAPMessageModel smm;
-    
+    private final DataModel model;
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JMenuItem configMenuItem;
@@ -380,7 +349,7 @@ public class MainWindow extends javax.swing.JFrame implements MessageListener, C
     private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
     static {
-      isOSX = System.getProperty("os.name", "").trim().equals("Mac OS X");
+        isOSX = System.getProperty("os.name", "").trim().equals("Mac OS X");
     }
     private static final boolean isOSX;
 

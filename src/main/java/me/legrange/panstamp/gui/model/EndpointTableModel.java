@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui;
+package me.legrange.panstamp.gui.model;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,7 +31,7 @@ import me.legrange.swap.Registers;
  *
  * @author gideon
  */
-public class EndpointTableModel implements TableModel, GatewayListener, PanStampListener, RegisterListener, EndpointListener {
+class EndpointTableModel implements TableModel, GatewayListener, PanStampListener, RegisterListener, EndpointListener {
 
     @Override
     public int getRowCount() {

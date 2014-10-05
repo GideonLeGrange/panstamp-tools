@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.tree;
+package me.legrange.panstamp.gui.model;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 

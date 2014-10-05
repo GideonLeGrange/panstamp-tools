@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.legrange.panstamp.gui.tree;
+package me.legrange.panstamp.gui.model;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +17,7 @@ import me.legrange.panstamp.RegisterListener;
  *
  * @author gideon
  */
-public class RegisterNode extends SWAPNode implements RegisterListener {
+class RegisterNode extends SWAPNode implements RegisterListener {
 
     public RegisterNode(Register reg) {
         super(reg);

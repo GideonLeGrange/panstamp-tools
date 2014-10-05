@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.tree;
+package me.legrange.panstamp.gui.model;
 
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -22,14 +22,13 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.gui.Format;
 import me.legrange.panstamp.gui.chart.SignalChart;
 
 /**
  *
  * @author gideon
  */
-public class SWAPNodeRenderer extends DefaultTreeCellRenderer {
+class SWAPNodeRenderer extends DefaultTreeCellRenderer {
 
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
