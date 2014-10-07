@@ -1,5 +1,8 @@
 package me.legrange.panstamp.gui;
 
+import me.legrange.panstamp.gui.config.ConfigEvent;
+import me.legrange.panstamp.gui.config.Config;
+import me.legrange.panstamp.gui.config.ConfigListener;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
@@ -15,7 +18,6 @@ import me.legrange.panstamp.gui.model.DataModel;
 import me.legrange.panstamp.impl.ModemException;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
-import me.legrange.swap.SwapMessage;
 
 /**
  *

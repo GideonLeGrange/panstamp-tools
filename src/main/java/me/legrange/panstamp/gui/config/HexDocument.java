@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui;
+package me.legrange.panstamp.gui.config;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -8,10 +8,9 @@ import javax.swing.text.PlainDocument;
  * An extension of PlainDocument that restricts the text to integers in a range.
  * @author gideon
  */
-public class IntegerDocument extends PlainDocument {
+public class HexDocument extends PlainDocument {
 
-    public IntegerDocument(int min, int max) {
-        super();
+    public HexDocument(int min, int max) {
         this.min = min;
         this.max = max;
     }
@@ -29,7 +28,8 @@ public class IntegerDocument extends PlainDocument {
                 val = val.substring(0, offs) + str + val.substring(offs);
             }
             try {
-                int newVal = Integer.parseInt(val);
+                val = val.trim();
+                int newVal = Integer.parseInt(val, 16);
                 if ((newVal >= min) && (newVal <= max)) {
                     super.insertString(offs, str, a); 
                 }
@@ -37,6 +37,9 @@ public class IntegerDocument extends PlainDocument {
             }
         }
     }
+    
+    
+    
 
     private final int min;
     private final int max;

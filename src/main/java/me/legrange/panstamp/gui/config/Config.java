@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui;
+package me.legrange.panstamp.gui.config;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
@@ -16,18 +16,18 @@ import java.util.prefs.Preferences;
  *
  * @author gideon
  */
-class Config {
+public class Config {
 
-    Config() {
+    public Config() {
         conf = Preferences.userRoot().node(Config.class.getPackage().getName());
         load();
     }
-    
-    void addListener(ConfigListener l) {
+
+    public void addListener(ConfigListener l) {
         listeners.add(l);
     }
-    
-    boolean hasChanged() {
+
+    public boolean hasChanged() {
         for (String key : set.keySet()) {
             if (!set.get(key).equals(loaded.get(key))) {
                 return false;
@@ -39,7 +39,7 @@ class Config {
     /**
      * return the list of serial ports
      */
-    String[] getPorts() {
+    public String[] getPorts() {
         List<String> serials = new LinkedList<>();
         Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
         while (ports.hasMoreElements()) {
@@ -51,7 +51,7 @@ class Config {
         return serials.toArray(new String[]{});
     }
 
-    boolean hasValidPort() {
+    public boolean hasValidPort() {
         if (!getPortName().equals("")) {
             try {
                 CommPortIdentifier.getPortIdentifier(getPortName());
@@ -62,35 +62,35 @@ class Config {
         return false;
     }
 
-    Integer[] getSpeeds() {
+    public Integer[] getSpeeds() {
         return new Integer[]{38400, 19200, 9600};
     }
 
-    Integer getPortSpeed() {
+    public Integer getPortSpeed() {
         return getInt(SERIAL_SPEED);
     }
 
-    void setPortSpeed(int portSpeed) {
+    public void setPortSpeed(int portSpeed) {
         setInt(SERIAL_SPEED, portSpeed);
     }
 
-    String getPortName() {
+    public String getPortName() {
         return getString(SERIAL_PORT);
     }
 
-    void setPortName(String portName) {
+    public void setPortName(String portName) {
         setString(SERIAL_PORT, portName);
     }
 
-    int getChannel() {
+    public int getChannel() {
         return getInt(CHANNEL);
     }
 
-    void setChannel(int channel) {
+    public void setChannel(int channel) {
         setInt(CHANNEL, channel);
     }
 
-    int getNetworkID() {
+    public int getNetworkID() {
         return getInt(NETWORK_ID);
     }
 
@@ -98,23 +98,23 @@ class Config {
         setInt(NETWORK_ID, networkID);
     }
 
-    int getDeviceAddress() {
+    public int getDeviceAddress() {
         return getInt(DEVICE_ADDRESS);
     }
 
-    void setDeviceAddress(int deviceAddress) {
+    public void setDeviceAddress(int deviceAddress) {
         setInt(DEVICE_ADDRESS, deviceAddress);
     }
 
-    int getSecurityOption() {
+    public int getSecurityOption() {
         return getInt(SECURITY);
     }
 
-    void setSecurityOption(int securityOption) {
+    public void setSecurityOption(int securityOption) {
         setInt(SECURITY, securityOption);
     }
 
-    final void load() {
+    public final void load() {
         setPortName(conf.get(SERIAL_PORT, ""));
         setPortSpeed(conf.getInt(SERIAL_SPEED, 38400));
         setChannel(conf.getInt(CHANNEL, 0));
@@ -124,33 +124,32 @@ class Config {
         mapCopy(set, loaded);
     }
 
-    final void save() throws BackingStoreException {
+    public final void save() throws BackingStoreException {
         for (String key : set.keySet()) {
             Object val = set.get(key);
             if (val instanceof String) {
-                conf.put(key, (String)val);
-            }
-            else if (val instanceof Integer) {
-                conf.putInt(key, (Integer)val);
+                conf.put(key, (String) val);
+            } else if (val instanceof Integer) {
+                conf.putInt(key, (Integer) val);
             }
         }
         conf.sync();
         if (!set.equals(loaded)) {
-            
+
             boolean netU = false;
             boolean serU = false;
             for (String key : set.keySet()) {
                 if (!set.get(key).equals(loaded.get(key))) {
                     switch (key) {
-                    case CHANNEL :
-                    case DEVICE_ADDRESS : 
-                    case NETWORK_ID : 
-                        netU = true;
-                        break;
-                    case SERIAL_PORT : 
-                    case SERIAL_SPEED : 
-                        serU = true;
-                        break;
+                        case CHANNEL:
+                        case DEVICE_ADDRESS:
+                        case NETWORK_ID:
+                            netU = true;
+                            break;
+                        case SERIAL_PORT:
+                        case SERIAL_SPEED:
+                            serU = true;
+                            break;
                     }
                 }
             }
@@ -165,8 +164,8 @@ class Config {
         }
         mapCopy(set, loaded);
     }
-    
-    final void revert() {
+
+    public final void revert() {
         mapCopy(loaded, set);
     }
 
@@ -185,7 +184,7 @@ class Config {
     private void setString(String name, String val) {
         set.put(name, val);
     }
-    
+
     private void mapCopy(Map<String, Object> src, Map<String, Object> dst) {
         dst.clear();
         for (String key : src.keySet()) {

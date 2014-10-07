@@ -1,5 +1,8 @@
 package me.legrange.panstamp.gui;
 
+import me.legrange.panstamp.gui.config.Config;
+import me.legrange.panstamp.gui.config.HexDocument;
+import me.legrange.panstamp.gui.config.IntegerDocument;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;

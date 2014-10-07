@@ -1,18 +1,18 @@
-package me.legrange.panstamp.gui;
+package me.legrange.panstamp.gui.config;
 
 /**
  *
  * @author gideon
  */
-final class ConfigEvent {
+public final class ConfigEvent {
     
-    enum Type { SERIAL, NETWORK; }
+    public enum Type { SERIAL, NETWORK; }
     
     ConfigEvent(Type type) {
         this.type = type;
     }
     
-    Type getType() {
+    public Type getType() {
         return type;
     }
     
