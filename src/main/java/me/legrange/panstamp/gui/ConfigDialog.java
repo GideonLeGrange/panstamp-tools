@@ -87,6 +87,7 @@ class ConfigDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Preferences");
         setModal(true);
         setResizable(false);
         setSize(new java.awt.Dimension(320, 200));
