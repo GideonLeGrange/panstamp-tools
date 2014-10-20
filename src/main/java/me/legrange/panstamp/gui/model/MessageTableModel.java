@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import me.legrange.swap.MessageListener;
 import me.legrange.swap.SwapMessage;
 
 /**
@@ -16,14 +17,24 @@ import me.legrange.swap.SwapMessage;
  *
  * @author gideon
  */
-class SWAPMessageModel implements TableModel {
+class MessageTableModel implements TableModel, MessageListener{
 
-    static SWAPMessageModel create() { 
-        return new SWAPMessageModel();
+    static MessageTableModel create() { 
+        return new MessageTableModel();
     }
     
-    private SWAPMessageModel() {
+    MessageTableModel() {
         this.listeners = new LinkedList<>();
+    }
+
+    @Override
+    public void messageReceived(SwapMessage msg) {
+        add(msg, System.currentTimeMillis(), Direction.IN);
+    }
+
+    @Override
+    public void messageSent(SwapMessage msg) {
+        add(msg, System.currentTimeMillis(), Direction.OUT);
     }
 
     enum Direction {

@@ -6,7 +6,7 @@ import me.legrange.panstamp.Gateway;
  *
  * @author gideon
  */
-class WorldNode extends SWAPNode {
+class WorldNode extends NetworkTreeNode {
 
     public WorldNode() {
         super("");
@@ -35,20 +35,20 @@ class WorldNode extends SWAPNode {
     
     
     @Override
-    protected void addToTree(SWAPNode childNode, SWAPNode parentNode) {
+    protected void addToTree(NetworkTreeNode childNode, NetworkTreeNode parentNode) {
             tm.addToTree(childNode, parentNode);
     }
 
     @Override
-    protected void reload(SWAPNode childNode) {
+    protected void reload(NetworkTreeNode childNode) {
         tm.reload(childNode);
     }
     
-    void setModel(SWAPTreeModel tm) {
+    void setModel(NetworkTreeModel tm) {
         this.tm = tm;
     }
    
-    private  SWAPTreeModel tm;
+    private  NetworkTreeModel tm;
 
     
 }

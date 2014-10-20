@@ -17,7 +17,7 @@ import me.legrange.panstamp.RegisterListener;
  *
  * @author gideon
  */
-class RegisterNode extends SWAPNode implements RegisterListener {
+class RegisterNode extends NetworkTreeNode implements RegisterListener {
 
     public RegisterNode(Register reg) {
         super(reg);

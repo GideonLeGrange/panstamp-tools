@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -22,19 +21,19 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.gui.chart.SignalChart;
+import me.legrange.panstamp.gui.chart.ChartFactory;
 
 /**
  *
  * @author gideon
  */
-class SWAPNodeRenderer extends DefaultTreeCellRenderer {
+class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
 
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-        if (value instanceof SWAPNode) {
+        if (value instanceof NetworkTreeNode) {
             try {
-                SWAPNode node = (SWAPNode) value;
+                NetworkTreeNode node = (NetworkTreeNode) value;
                 Component com;
                 switch (node.getType()) {
                     case ENDPOINT:
@@ -62,23 +61,27 @@ class SWAPNodeRenderer extends DefaultTreeCellRenderer {
                 com.setForeground(sel ? textSelectionColor : textNonSelectionColor);
                 return panel;
             } catch (GatewayException ex) {
-                Logger.getLogger(SWAPNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
     }
 
     public JPopupMenu getPopupMenu(TreePath path) {
-        SWAPNode node = (SWAPNode) path.getLastPathComponent();
+        NetworkTreeNode node = (NetworkTreeNode) path.getLastPathComponent();
         switch (node.getType()) {
             case PANSTAMP:
                 return getPanStampPopupMenu((PanStampNode) node);
-            case ENDPOINT : 
+            case ENDPOINT:
                 return getEndpointPopupMenu((EndpointNode) node);
             default:
                 return null;
         }
 
+    }
+
+    NetworkTreeNodeRenderer(DataModel model) {
+        this.model = model;
     }
 
     private JPopupMenu getPanStampPopupMenu(final PanStampNode psn) {
@@ -97,23 +100,22 @@ class SWAPNodeRenderer extends DefaultTreeCellRenderer {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame frame = new JFrame();
-                frame.setContentPane(new SignalChart(psn.getPanStamp().getAddress()));
-                frame.setVisible(true);
+                ChartFactory.getFactory(model).getSignalChart(psn.getPanStamp()).setVisible(true);
             }
         });
         menu.add(graphItem);
         return menu;
     }
-    
+
+
     private JPopupMenu getEndpointPopupMenu(EndpointNode epn) {
-         JPopupMenu menu = new JPopupMenu(epn.toString());
+        JPopupMenu menu = new JPopupMenu(epn.toString());
         final JMenuItem graphItem = new JMenuItem("Data graph...");
         graphItem.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                ChartFactory.getFactory(model).getEndpointChart(epn);
             }
         });
         menu.add(graphItem);
@@ -155,7 +157,7 @@ class SWAPNodeRenderer extends DefaultTreeCellRenderer {
                  Image newimg = image.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
                  ico  = new ImageIcon(newimg);  // transform it back */
             } catch (IOException ex) {
-                Logger.getLogger(SWAPNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
 
             }
             icons.put(name, ico);
@@ -170,5 +172,5 @@ class SWAPNodeRenderer extends DefaultTreeCellRenderer {
     private static final String ICON_REGISTER = "register16x16.png";
     private static final String ICON_ENDPOINT = "endpoint16x16.png";
     private final Map<String, ImageIcon> icons = new HashMap<>();
-
+    private final DataModel model;
 }

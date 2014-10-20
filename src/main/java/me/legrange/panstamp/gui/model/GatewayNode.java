@@ -11,7 +11,7 @@ import me.legrange.swap.SWAPException;
  *
  * @author gideon
  */
-class GatewayNode extends SWAPNode implements GatewayListener {
+class GatewayNode extends NetworkTreeNode implements GatewayListener {
 
     public GatewayNode(Gateway gw) {
         super(gw);

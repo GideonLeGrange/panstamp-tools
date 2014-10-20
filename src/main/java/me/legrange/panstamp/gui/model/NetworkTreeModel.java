@@ -9,24 +9,17 @@ import me.legrange.panstamp.Gateway;
  *
  * @author gideon
  */
-class SWAPTreeModel extends DefaultTreeModel {
-
-    public static SWAPTreeModel create() {
-        WorldNode wn = new WorldNode();
-        SWAPTreeModel tm = new SWAPTreeModel(wn);
-        wn.setModel(tm);
-        return tm;
-    }
+class NetworkTreeModel extends DefaultTreeModel {
 
     public void addGateway(Gateway gw) {
         ((WorldNode) getRoot()).addGateway(gw);
     }
 
-    private SWAPTreeModel(WorldNode wn) {
+    private NetworkTreeModel(WorldNode wn) {
         super(wn);
     }
 
-    synchronized void addToTree(SWAPNode childNode, MutableTreeNode parentNode) {
+    synchronized void addToTree(NetworkTreeNode childNode, MutableTreeNode parentNode) {
         insertNodeInto(childNode, parentNode, parentNode.getChildCount());
         reload(parentNode);
     }
@@ -36,4 +29,10 @@ class SWAPTreeModel extends DefaultTreeModel {
         super.reload(node);
     }
 
+    static NetworkTreeModel create() {
+        WorldNode wn = new WorldNode();
+        NetworkTreeModel tm = new NetworkTreeModel(wn);
+        wn.setModel(tm);
+        return tm;
+    }
 }

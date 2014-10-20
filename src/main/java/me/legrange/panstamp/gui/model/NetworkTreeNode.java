@@ -6,7 +6,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author gideon
  */
-abstract class SWAPNode extends DefaultMutableTreeNode {
+abstract class NetworkTreeNode extends DefaultMutableTreeNode {
 
     enum Type {
 
@@ -16,7 +16,7 @@ abstract class SWAPNode extends DefaultMutableTreeNode {
     @Override
     public abstract String toString();
 
-    protected SWAPNode(Object userObject) {
+    protected NetworkTreeNode(Object userObject) {
         super(userObject);
     }
 
@@ -25,17 +25,17 @@ abstract class SWAPNode extends DefaultMutableTreeNode {
     protected void stop() {
         int c = getChildCount();
         for (int i = 0; i < c; ++i) {
-            SWAPNode sn = (SWAPNode) getChildAt(c);
+            NetworkTreeNode sn = (NetworkTreeNode) getChildAt(c);
             sn.stop();
         }
     }
 
-    protected void addToTree(SWAPNode childNode, SWAPNode parentNode) {
-        ((SWAPNode) getParent()).addToTree(childNode, parentNode);
+    protected void addToTree(NetworkTreeNode childNode, NetworkTreeNode parentNode) {
+        ((NetworkTreeNode) getParent()).addToTree(childNode, parentNode);
     }
 
-    protected void reload(SWAPNode childNode) {
-        ((SWAPNode) getParent()).reload(childNode);
+    protected void reload(NetworkTreeNode childNode) {
+        ((NetworkTreeNode) getParent()).reload(childNode);
     }
 
     protected final void reload() {

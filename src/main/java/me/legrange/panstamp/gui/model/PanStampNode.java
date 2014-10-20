@@ -15,7 +15,7 @@ import me.legrange.panstamp.Register;
  *
  * @author gideon
  */
-class PanStampNode extends SWAPNode implements PanStampListener {
+class PanStampNode extends NetworkTreeNode implements PanStampListener {
 
     public PanStampNode(PanStamp ps) {
         super(ps);

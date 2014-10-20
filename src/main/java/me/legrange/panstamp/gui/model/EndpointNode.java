@@ -18,7 +18,7 @@ import static me.legrange.panstamp.gui.model.Format.formatValue;
  *
  * @author gideon
  */
-class EndpointNode extends SWAPNode implements EndpointListener {
+class EndpointNode extends NetworkTreeNode implements EndpointListener {
 
     public EndpointNode(Endpoint ep) {
         super(ep);

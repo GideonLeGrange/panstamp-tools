@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.chart;
+package me.legrange.panstamp.gui.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +11,6 @@ import me.legrange.swap.SwapMessage;
  */
 public class SignalCollector implements MessageListener {
 
-    public static SignalCollector getInstance() {
-        return sc;
-    }
 
     public SignalDataSet getDataSet(int addr) {
         SignalDataSet sd = sets.get(addr);
@@ -36,10 +33,9 @@ public class SignalCollector implements MessageListener {
     public void messageSent(SwapMessage msg) {
     }
 
-    private SignalCollector() {
+    public SignalCollector() {
     }
 
-    private static final SignalCollector sc = new SignalCollector();
     private final Map<Integer, SignalDataSet> sets = new HashMap<>();
 
 }

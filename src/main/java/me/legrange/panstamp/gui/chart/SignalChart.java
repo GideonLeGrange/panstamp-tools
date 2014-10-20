@@ -1,12 +1,14 @@
 package me.legrange.panstamp.gui.chart;
 
+import me.legrange.panstamp.gui.model.SignalDataSet;
+
 /**
  *
  * @author gideon
  */
 public class SignalChart extends Chart {
 
-    public SignalChart(int addr) {
-        super(String.format("Mote %2x RSSI/LQI", addr), SignalCollector.getInstance().getDataSet(addr));
+     SignalChart(int addr, SignalDataSet sds) {
+        super(String.format("Mote %2x RSSI/LQI", addr), sds);
     }
 }
