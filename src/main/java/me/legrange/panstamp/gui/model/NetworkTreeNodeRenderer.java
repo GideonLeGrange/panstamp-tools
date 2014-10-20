@@ -108,14 +108,14 @@ class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
     }
 
 
-    private JPopupMenu getEndpointPopupMenu(EndpointNode epn) {
+    private JPopupMenu getEndpointPopupMenu(final EndpointNode epn) {
         JPopupMenu menu = new JPopupMenu(epn.toString());
         final JMenuItem graphItem = new JMenuItem("Data graph...");
         graphItem.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                ChartFactory.getFactory(model).getEndpointChart(epn);
+                ChartFactory.getFactory(model).getEndpointChart(epn.getEndpoint());
             }
         });
         menu.add(graphItem);

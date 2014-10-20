@@ -1,9 +1,7 @@
 package me.legrange.panstamp.gui.model;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import javax.swing.JPopupMenu;
 import javax.swing.table.TableModel;
 import javax.swing.tree.TreeCellRenderer;
@@ -13,7 +11,7 @@ import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.PanStamp;
 
 /**
- *
+ * A data model that provides the different view models required. 
  * @author gideon
  */
 public final class DataModel {
@@ -30,7 +28,7 @@ public final class DataModel {
         gw.getSWAPModem().addListener(smm);
         
     }
-    
+   
     public TreeModel getTreeModel() {
         return ntm;
     }
@@ -61,4 +59,5 @@ public final class DataModel {
     private final NetworkTreeModel ntm = NetworkTreeModel.create();
     private final EndpointTableModel etm = EndpointTableModel.create();
     private final NetworkTreeNodeRenderer snr = new NetworkTreeNodeRenderer(this);
+
 }
