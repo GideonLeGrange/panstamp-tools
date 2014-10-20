@@ -5,67 +5,26 @@ import javax.swing.table.TableModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-import me.legrange.panstamp.EndpointEvent;
-import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStampEvent;
 import me.legrange.panstamp.PanStampListener;
-import me.legrange.panstamp.RegisterEvent;
-import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.gui.chart.SignalCollector;
 import me.legrange.panstamp.gui.model.SWAPMessageModel.Direction;
 import me.legrange.swap.MessageListener;
 import me.legrange.swap.SwapMessage;
 
 /**
- *
+ * A data model that provides the different view models required. 
  * @author gideon
  */
-public final class DataModel  implements GatewayListener, PanStampListener, RegisterListener, EndpointListener {
+public final class DataModel implements GatewayListener, PanStampListener  {
     
     public DataModel() { 
     }
-        
-    @Override
-    public void gatewayUpdated(GatewayEvent ev) {
-        switch (ev.getType()) {
-            case DEVICE_DETECTED : 
-                break;
-        }
-    }
-
-    @Override
-    public void deviceUpdated(PanStampEvent ev) {
-        switch (ev.getType()) {
-            case PRODUCT_CODE_UPDATE : 
-                break;
-            case REGISTER_DETECTED : 
-                break;
-            case SYNC_STATE_CHANGE : 
-                break;
-        }
-    }
-
-    @Override
-    public void registerUpdated(RegisterEvent ev) {
-        switch (ev.getType()) {
-            case ENDPOINT_ADDED : 
-                break;
-            case VALUE_RECEIVED : 
-                break;
-        }
-    }
-
-    @Override
-    public void endpointUpdated(EndpointEvent ep) {
-        switch (ep.getType()) {
-            case VALUE_RECEIVED : 
-                break;
-        }
-    }
-
+       
+    /** Add a gateway to the model */
     public void addGateway(Gateway gw) {
         stm.addGateway(gw);
         etm.addGateway(gw);
@@ -83,7 +42,27 @@ public final class DataModel  implements GatewayListener, PanStampListener, Regi
             }
         });
     }
-    
+ 
+    @Override
+    public void gatewayUpdated(GatewayEvent ev) {
+        switch (ev.getType()) {
+            case DEVICE_DETECTED : 
+                ev.getDevice().addListener(this);
+        }
+    }
+
+    @Override
+    public void deviceUpdated(PanStampEvent ev) {
+        switch (ev.getType()) {
+            case PRODUCT_CODE_UPDATE : 
+                break;
+            case REGISTER_DETECTED : 
+                break;
+            case SYNC_STATE_CHANGE : 
+                
+        }
+    }
+
     public TreeModel getTreeModel() {
         return stm;
     }
@@ -109,5 +88,6 @@ public final class DataModel  implements GatewayListener, PanStampListener, Regi
     private final EndpointTableModel etm = new EndpointTableModel();
     private final SWAPNodeRenderer snr = new SWAPNodeRenderer();
     private final SignalCollector sc = SignalCollector.getInstance();
+
 
 }
