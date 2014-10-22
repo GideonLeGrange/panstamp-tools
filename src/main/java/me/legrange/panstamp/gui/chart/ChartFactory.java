@@ -36,7 +36,7 @@ public class ChartFactory {
         JFrame frame = endpointCharts.get(ep);
         if (frame == null) {
             frame = new JFrame();
-            frame.setContentPane(new EndpointChart(ps.getAddress(), model.getEndpointDataSet(ep)));
+            frame.setContentPane(new EndpointChart(model.getEndpointDataSet(ep)));
             endpointCharts.put(ep, frame);
         }
         return frame;
@@ -48,6 +48,6 @@ public class ChartFactory {
     
     private final DataModel model;
     private final Map<PanStamp, JFrame> signalCharts = new HashMap<>();
-    private final Map<PanStamp, JFrame> endpointCharts = new HashMap<>();
+    private final Map<Endpoint, JFrame> endpointCharts = new HashMap<>();
     private final static Map<DataModel, ChartFactory> facts = new HashMap<>();
 }

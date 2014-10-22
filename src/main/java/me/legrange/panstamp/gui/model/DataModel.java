@@ -7,57 +7,67 @@ import javax.swing.table.TableModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.PanStamp;
 
 /**
- * A data model that provides the different view models required. 
+ * A data model that provides the different view models required.
+ *
  * @author gideon
  */
 public final class DataModel {
-    
-    public DataModel() { 
+
+    public DataModel() {
     }
 
     public synchronized void addGateway(Gateway gw) {
         SignalCollector sc = new SignalCollector();
         gw.getSWAPModem().addListener(sc);
-        collectors.put(gw, sc);
+        signalCollectors.put(gw, sc);
+        endpointCollectors.put(gw, new EndpointCollector(gw));
         ntm.addGateway(gw);
         etm.addGateway(gw);
         gw.getSWAPModem().addListener(smm);
-        
+
     }
-   
+
     public TreeModel getTreeModel() {
         return ntm;
     }
-    
-    public TableModel getEndpointTableModel() { 
+
+    public TableModel getEndpointTableModel() {
         return etm;
     }
-    
+
     public TableModel getSWAPTableModel() {
         return smm;
     }
-    
+
     public TreeCellRenderer getTreeCellRenderer() {
         return snr;
     }
-    
+
     public JPopupMenu getTreePopupMenu(TreePath path) {
         return snr.getPopupMenu(path);
     }
-    
+
     public SignalDataSet getSignalDataSet(PanStamp ps) {
-       SignalCollector sc = collectors.get(ps);
-       return sc.getDataSet(ps.getAddress());
+        SignalCollector sc = signalCollectors.get(ps.getGateway());
+        return sc.getDataSet(ps.getAddress());
     }
-        
-    private final Map<Gateway, SignalCollector> collectors = new HashMap<>();
+
+    public EndpointDataSet getEndpointDataSet(Endpoint ep) {
+        EndpointCollector ec = endpointCollectors.get(ep.getRegister().getDevice().getGateway());
+        return ec.getDataSet(ep);
+    }
+
+    private final Map<Gateway, SignalCollector> signalCollectors = new HashMap<>();
+    private final Map<Gateway, EndpointCollector> endpointCollectors = new HashMap<>();
     private final MessageTableModel smm = new MessageTableModel();
     private final NetworkTreeModel ntm = NetworkTreeModel.create();
     private final EndpointTableModel etm = EndpointTableModel.create();
     private final NetworkTreeNodeRenderer snr = new NetworkTreeNodeRenderer(this);
+    private final Map<Endpoint, EndpointDataSet> epds = new HashMap<>();
 
 }

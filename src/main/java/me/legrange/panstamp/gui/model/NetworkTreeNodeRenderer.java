@@ -115,7 +115,7 @@ class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                ChartFactory.getFactory(model).getEndpointChart(epn.getEndpoint());
+                ChartFactory.getFactory(model).getEndpointChart(epn.getEndpoint()).setVisible(true);
             }
         });
         menu.add(graphItem);

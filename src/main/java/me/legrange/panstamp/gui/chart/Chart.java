@@ -19,6 +19,7 @@ abstract class Chart extends JPanel {
         JFreeChart chart = createChart(data, title);
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+        chartPanel.setSize(500, 270);
         add(chartPanel);
         setMinimumSize(new Dimension(320, 200));
         setSize(new Dimension(320,200));

@@ -26,14 +26,13 @@ public class SignalCollector implements MessageListener {
         int addr = msg.getSender();
         SignalDataSet sd = getDataSet(addr);
         sd.addSample(msg.getRssi(), msg.getLqi());
-        System.out.printf("addr: 5 rssi/lqi = %d/%d\n", msg.getSender(), msg.getRssi(), msg.getLqi());
     }
 
     @Override
     public void messageSent(SwapMessage msg) {
     }
 
-    public SignalCollector() {
+    SignalCollector() {
     }
 
     private final Map<Integer, SignalDataSet> sets = new HashMap<>();
