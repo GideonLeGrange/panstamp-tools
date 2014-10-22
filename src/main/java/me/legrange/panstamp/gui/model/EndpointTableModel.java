@@ -126,8 +126,7 @@ class EndpointTableModel implements TableModel, GatewayListener, PanStampListene
     public void gatewayUpdated(GatewayEvent ev) {
         switch (ev.getType()) {
             case DEVICE_DETECTED:
-                ev.getDevice().addListener(this);
-                add(String.format("Detected new device with address %d", ev.getDevice().getAddress()));
+                add(ev.getDevice());
                 break;
         }
     }
@@ -167,9 +166,7 @@ class EndpointTableModel implements TableModel, GatewayListener, PanStampListene
             }
             break;
             case REGISTER_DETECTED: {
-                Register reg = ev.getRegister();
-                reg.addListener(this);
-                add(String.format("Learnt of register %d for device %d", reg.getId(), ev.getDevice().getAddress()));
+                add(ev.getRegister());
             }
             break;
         }
@@ -177,15 +174,9 @@ class EndpointTableModel implements TableModel, GatewayListener, PanStampListene
 
     @Override
     public void registerUpdated(RegisterEvent ev) {
-
-        System.out.println("Register updated: " + ev.getRegister().getName());
         switch (ev.getType()) {
             case ENDPOINT_ADDED:
-                System.out.println("Endpoint added: " + ev.getEndpoint().getName());
-                Endpoint ep = ev.getEndpoint();
-                ep.addListener(this);
-                add(String.format("Learnt of endpoint '%s' for register %d on device %d",
-                        ep.getName(), ep.getRegister().getId(), ep.getRegister().getDevice().getAddress()));
+                add(ev.getEndpoint());
                 break;
             case VALUE_RECEIVED:
                 break;
@@ -229,6 +220,38 @@ class EndpointTableModel implements TableModel, GatewayListener, PanStampListene
     private String formatValue(Endpoint ep) throws GatewayException {
         return Format.formatValue(ep);
     }
+
+    private void add(PanStamp ps) {
+        add(String.format("Detected new device with address %d", ps.getAddress()));
+        ps.addListener(this);
+        try {
+            for (Register reg : ps.getRegisters()) {
+                add(reg);
+            }
+        } catch (GatewayException ex) {
+            Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void add(Register reg) {
+        add(String.format("Learnt of register %d for device %d", reg.getId(), reg.getDevice().getAddress()));
+        reg.addListener(this);
+        try {
+            for (Endpoint ep : reg.getEndpoints()) {
+                add(ep);
+            }
+        } catch (GatewayException ex) {
+            Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void add(Endpoint ep) {
+        add(String.format("Learnt of endpoint '%s' for register %d on device %d",
+                ep.getName(), ep.getRegister().getId(), ep.getRegister().getDevice().getAddress()));
+        ep.addListener(this);
+
+    }
+    
 
     private static class Entry {
 
