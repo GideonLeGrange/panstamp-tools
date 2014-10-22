@@ -9,6 +9,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
+import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 
 /**
@@ -21,7 +22,7 @@ public final class DataModel {
     public DataModel() {
     }
 
-    public synchronized void addGateway(Gateway gw) {
+    public synchronized void addGateway(Gateway gw) throws GatewayException {
         SignalCollector sc = new SignalCollector();
         gw.getSWAPModem().addListener(sc);
         signalCollectors.put(gw, sc);
