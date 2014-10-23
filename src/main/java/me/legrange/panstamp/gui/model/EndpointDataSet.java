@@ -1,7 +1,6 @@
 package me.legrange.panstamp.gui.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import me.legrange.panstamp.Endpoint;
@@ -21,7 +20,7 @@ import org.jfree.data.xy.XYDataset;
 public class EndpointDataSet implements XYDataset, EndpointListener {
 
     public String getName() {
-        return ep.getName();
+       return unit != null ? String.format("%s (%s)", ep.getName(), unit) : ep.getName();
     }
     
     @Override
@@ -116,6 +115,12 @@ public class EndpointDataSet implements XYDataset, EndpointListener {
     
     EndpointDataSet(Endpoint ep, String unit) {
         this.ep = ep;
+        if (unit == null) { 
+            List<String> units = ep.getUnits();
+            if (!units.isEmpty()) {
+                unit = units.get(0);
+            }
+        }
         this.unit = unit;
         ep.addListener(this);
     }
