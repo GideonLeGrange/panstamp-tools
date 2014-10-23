@@ -31,7 +31,10 @@ public class EndpointChart extends JPanel {
         setPreferredSize(new java.awt.Dimension(500, 270));
         setSize(500, 270);
         setMinimumSize(new Dimension(320, 200));
+        
     }
+    
+    
 
     private final JFreeChart chart;
 

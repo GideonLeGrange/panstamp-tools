@@ -1,5 +1,6 @@
 package me.legrange.panstamp.gui.chart;
 
+import java.awt.BorderLayout;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFrame;
@@ -27,6 +28,8 @@ public class ChartFactory {
         if (frame == null) {
             frame = new JFrame();
             frame.setContentPane(new SignalChart(ps.getAddress(), model.getSignalDataSet(ps)));
+            frame.setSize(frame.getContentPane().getSize());
+            frame.setResizable(false);
             signalCharts.put(ps, frame);
         }
         return frame;
@@ -36,7 +39,10 @@ public class ChartFactory {
         JFrame frame = endpointCharts.get(ep);
         if (frame == null) {
             frame = new JFrame();
+            frame.setLayout(new BorderLayout());
             frame.setContentPane(new EndpointChart(model.getEndpointDataSet(ep)));
+            frame.setSize(frame.getContentPane().getSize());
+            frame.setResizable(false);
             endpointCharts.put(ep, frame);
         }
         return frame;
