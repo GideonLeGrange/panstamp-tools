@@ -45,11 +45,6 @@
             <artifactId>swing-layout</artifactId>
             <version>1.0.3</version>
         </dependency>
-        <dependency>
-            <groupId>org.bidib.com.neuronrobotics</groupId>
-            <artifactId>nrjavaserial</artifactId>
-            <version>3.9.2.1</version>
-        </dependency>
       
         <dependency>
             <groupId>${project.groupId}</groupId>
