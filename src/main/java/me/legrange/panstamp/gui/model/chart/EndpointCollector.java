@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.chart;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +54,7 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
         }
     }
 
-    EndpointCollector(Gateway gw) throws GatewayException {
+    public EndpointCollector(Gateway gw) throws GatewayException {
         add(gw);
     }
 

@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.chart;
 
 import java.util.ArrayList;
 import java.util.List;

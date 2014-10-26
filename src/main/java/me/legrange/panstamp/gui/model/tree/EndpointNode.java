@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.tree;
 
+import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;

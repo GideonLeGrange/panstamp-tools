@@ -1,5 +1,7 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.tree;
 
+import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
+import me.legrange.panstamp.gui.model.tree.PanStampNode;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayListener;

@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.tree;
 
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -22,12 +22,14 @@ import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.chart.ChartFactory;
+import me.legrange.panstamp.gui.model.DataModel;
+import me.legrange.panstamp.gui.model.Format;
 
 /**
  *
  * @author gideon
  */
-class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
+public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
 
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
@@ -80,7 +82,7 @@ class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
 
     }
 
-    NetworkTreeNodeRenderer(DataModel model) {
+    public NetworkTreeNodeRenderer(DataModel model) {
         this.model = model;
     }
 

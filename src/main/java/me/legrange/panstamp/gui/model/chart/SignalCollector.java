@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.chart;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class SignalCollector implements MessageListener {
     public void messageSent(SwapMessage msg) {
     }
 
-    SignalCollector() {
+    public SignalCollector() {
     }
 
     private final Map<Integer, SignalDataSet> sets = new HashMap<>();

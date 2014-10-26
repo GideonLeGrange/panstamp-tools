@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.tree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -6,7 +6,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author gideon
  */
-abstract class NetworkTreeNode extends DefaultMutableTreeNode {
+public abstract class NetworkTreeNode extends DefaultMutableTreeNode {
 
     enum Type {
 

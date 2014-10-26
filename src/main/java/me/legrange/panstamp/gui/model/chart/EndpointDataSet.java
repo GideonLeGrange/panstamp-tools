@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.chart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +19,8 @@ import org.jfree.data.xy.XYDataset;
  */
 public class EndpointDataSet implements XYDataset, EndpointListener {
 
-    public String getName() {
-       return unit != null ? String.format("%s (%s)", ep.getName(), unit) : ep.getName();
+    public Endpoint getEndpoint() {
+        return ep;
     }
     
     @Override
@@ -109,11 +109,11 @@ public class EndpointDataSet implements XYDataset, EndpointListener {
         this.group = dg;
     }
 
-    EndpointDataSet(Endpoint ep) {
+    public EndpointDataSet(Endpoint ep) {
         this(ep, null);
     }
     
-    EndpointDataSet(Endpoint ep, String unit) {
+    public EndpointDataSet(Endpoint ep, String unit) {
         this.ep = ep;
         if (unit == null) { 
             List<String> units = ep.getUnits();

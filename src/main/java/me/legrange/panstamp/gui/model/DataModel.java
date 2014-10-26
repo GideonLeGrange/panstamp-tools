@@ -1,5 +1,11 @@
 package me.legrange.panstamp.gui.model;
 
+import me.legrange.panstamp.gui.model.tree.NetworkTreeModel;
+import me.legrange.panstamp.gui.model.tree.NetworkTreeNodeRenderer;
+import me.legrange.panstamp.gui.model.chart.EndpointDataSet;
+import me.legrange.panstamp.gui.model.chart.SignalDataSet;
+import me.legrange.panstamp.gui.model.chart.EndpointCollector;
+import me.legrange.panstamp.gui.model.chart.SignalCollector;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JPopupMenu;

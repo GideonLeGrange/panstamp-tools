@@ -14,6 +14,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
+import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.model.DataModel;
 import me.legrange.panstamp.impl.ModemException;
 import me.legrange.swap.ModemSetup;
@@ -126,6 +127,8 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
             gw = Gateway.openSerial(config.getPortName(), config.getPortSpeed());
             model.addGateway(gw);
         } catch (ModemException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (GatewayException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
