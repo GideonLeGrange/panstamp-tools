@@ -27,8 +27,10 @@ public class ChartFactory {
         JFrame frame = signalCharts.get(ps);
         if (frame == null) {
             frame = new JFrame();
-            frame.setContentPane(new SignalChart(ps.getAddress(), model.getSignalDataSet(ps)));
-            frame.setSize(frame.getContentPane().getSize());
+            Chart chart = new SignalChart(ps.getAddress(), model.getSignalDataSet(ps));
+            frame.setContentPane(chart);
+            frame.setTitle(chart.getTitle());
+            frame.setSize(chart.getSize());
             frame.setResizable(false);
             signalCharts.put(ps, frame);
         }
@@ -40,8 +42,10 @@ public class ChartFactory {
         if (frame == null) {
             frame = new JFrame();
             frame.setLayout(new BorderLayout());
-            frame.setContentPane(new EndpointChart(model.getEndpointDataSet(ep)));
-            frame.setSize(frame.getContentPane().getSize());
+            Chart chart = new EndpointChart(model.getEndpointDataSet(ep));
+            frame.setTitle(chart.getTitle())    ;
+            frame.setContentPane(chart);
+            frame.setSize(chart.getSize());
             frame.setResizable(false);
             endpointCharts.put(ep, frame);
         }
