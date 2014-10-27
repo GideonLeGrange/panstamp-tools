@@ -13,9 +13,12 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSeparator;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
@@ -106,9 +109,41 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
             }
         });
         menu.add(graphItem);
+        // register selection
+        menu.add(new JSeparator());
+        final JMenu regsMenu = new JMenu("Show Standard Registers");
+        final JRadioButtonMenuItem allItem = new JRadioButtonMenuItem("All");
+        final JRadioButtonMenuItem intItem = new JRadioButtonMenuItem("Interesting");
+        final JRadioButtonMenuItem noneItem = new JRadioButtonMenuItem("None", true);
+        ActionListener regL = new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                allItem.setSelected(false);
+                noneItem.setSelected(false);
+                intItem.setSelected(false);
+                if (e.getSource().equals(noneItem)) {
+                    noneItem.setSelected(true);
+                }
+                if (e.getSource().equals(allItem)) {
+                    allItem.setSelected(true);
+                }
+                if (e.getSource().equals(intItem)) {
+                    intItem.setSelected(true);
+                }
+            }
+
+        };
+        allItem.addActionListener(regL);
+        noneItem.addActionListener(regL);
+        intItem.addActionListener(regL);
+
+        regsMenu.add(allItem);
+        regsMenu.add(intItem);
+        regsMenu.add(noneItem);
+        menu.add(regsMenu);
         return menu;
     }
-
 
     private JPopupMenu getEndpointPopupMenu(final EndpointNode epn) {
         JPopupMenu menu = new JPopupMenu(epn.toString());
