@@ -1,9 +1,12 @@
 package me.legrange.panstamp.gui.chart;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.gui.model.chart.EndpointDataSet;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 
 /**
  *
@@ -13,6 +16,14 @@ public class EndpointChart extends Chart {
 
     EndpointChart(EndpointDataSet eds) {
         super(title(eds.getEndpoint()), "Time", yAxisName(eds.getEndpoint()), eds);
+    }
+
+    @Override
+    protected ValueAxis[] getYAxisFormat() {
+        NumberAxis domainAxis = new NumberAxis();
+        domainAxis.setNumberFormatOverride(new DecimalFormat("0.0"));
+        domainAxis.setAutoRange(true);
+        return new ValueAxis[]{domainAxis};
     }
 
     private static String title(Endpoint ep) {

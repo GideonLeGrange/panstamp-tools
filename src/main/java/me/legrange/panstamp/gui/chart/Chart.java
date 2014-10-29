@@ -1,15 +1,16 @@
 package me.legrange.panstamp.gui.chart;
 
 import java.awt.Dimension;
-import java.awt.Font;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.title.TextTitle;
 import org.jfree.data.xy.XYDataset;
 
 /**
@@ -26,10 +27,11 @@ abstract class Chart extends JPanel {
         this.title = title;
         chart = org.jfree.chart.ChartFactory.createXYLineChart("", yAxisLabel, xAxisLabel,
                 ds, PlotOrientation.HORIZONTAL, true, false, false);
+        XYPlot plot = (XYPlot) chart.getPlot();
         DateAxis rangeAxis = new DateAxis();
         rangeAxis.setDateFormatOverride(new SimpleDateFormat("HH:mm:ss"));
-        XYPlot plot = (XYPlot) chart.getPlot();
         plot.setRangeAxis(rangeAxis);
+        plot.setDomainAxes(getYAxisFormat());
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(_WIDTH, _HEIGHT));
         chartPanel.setSize(_WIDTH, _HEIGHT);
@@ -38,6 +40,8 @@ abstract class Chart extends JPanel {
         setSize(new Dimension(_WIDTH, _HEIGHT+35));
     }
 
+    protected abstract ValueAxis[] getYAxisFormat();
+    
     private final String title;
     private final JFreeChart chart;    
     private static final int _WIDTH = 500;
