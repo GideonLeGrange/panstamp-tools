@@ -111,8 +111,7 @@ public class SignalDataSet implements XYDataset {
         public Entry(int rssi, int lqi) {
             this.rssi = rssi;
             this.lqi = lqi;
-            this.time = tick; 
-            tick++;
+            this.time = System.currentTimeMillis(); 
         }
         
         final int rssi;
@@ -120,7 +119,6 @@ public class SignalDataSet implements XYDataset {
         final long time;
     }
     
-    private int tick = 0;
     private static final int RSSI = 0;
     private static final int LQI = 1;
 }
