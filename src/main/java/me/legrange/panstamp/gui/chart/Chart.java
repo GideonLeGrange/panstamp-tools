@@ -1,20 +1,18 @@
 package me.legrange.panstamp.gui.chart;
 
 import java.awt.Dimension;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYDataset;
 
 /**
- *
+ * Abstract super class for a panel with a chart.
  * @author gideon
  */
 abstract class Chart extends JPanel {

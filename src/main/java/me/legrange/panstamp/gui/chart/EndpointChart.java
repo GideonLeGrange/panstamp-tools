@@ -26,7 +26,7 @@ public class EndpointChart extends Chart {
         return new ValueAxis[]{domainAxis};
     }
 
-    private static String title(Endpoint ep) {
+    protected String title(Endpoint ep) {
         PanStamp dev = ep.getRegister().getDevice();
         return String.format("%s[%d] - %s - %s", dev.getName(), dev.getAddress(), ep.getRegister().getName(), ep.getName());
     }
@@ -38,5 +38,7 @@ public class EndpointChart extends Chart {
         }
         return String.format("%s (%s)", ep.getName(), units.get(0));
     }
+    
+    private final Endpoint ep;
 
 }
