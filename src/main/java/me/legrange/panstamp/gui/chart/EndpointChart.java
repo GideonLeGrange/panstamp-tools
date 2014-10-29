@@ -12,10 +12,11 @@ import org.jfree.chart.axis.ValueAxis;
  *
  * @author gideon
  */
-public class EndpointChart extends Chart {
+public final class EndpointChart extends Chart {
 
     EndpointChart(EndpointDataSet eds) {
         super(title(eds.getEndpoint()), "Time", yAxisName(eds.getEndpoint()), eds);
+        ep = eds.getEndpoint();
     }
 
     @Override
@@ -26,7 +27,7 @@ public class EndpointChart extends Chart {
         return new ValueAxis[]{domainAxis};
     }
 
-    protected String title(Endpoint ep) {
+    private static String title(Endpoint ep) {
         PanStamp dev = ep.getRegister().getDevice();
         return String.format("%s[%d] - %s - %s", dev.getName(), dev.getAddress(), ep.getRegister().getName(), ep.getName());
     }
