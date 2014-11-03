@@ -24,6 +24,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.gui.PanStampSettingsDialog;
 import me.legrange.panstamp.gui.chart.ChartFactory;
 import me.legrange.panstamp.gui.model.DataModel;
 import me.legrange.panstamp.gui.model.Format;
@@ -95,8 +96,8 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
         settingsItem.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            public void actionPerformed(ActionEvent e) {    
+                new PanStampSettingsDialog(null, psn.getPanStamp()).setVisible(true);
             }
         });
         menu.add(settingsItem);
@@ -190,9 +191,6 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
         if (ico == null) {
             try {
                 ico = new ImageIcon(ImageIO.read(ClassLoader.getSystemResourceAsStream("images/" + name)));
-                /*                    Image image = ico.getImage(); // transform it 
-                 Image newimg = image.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-                 ico  = new ImageIcon(newimg);  // transform it back */
             } catch (IOException ex) {
                 Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
 

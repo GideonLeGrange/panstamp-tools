@@ -1,11 +1,14 @@
 package me.legrange.panstamp.gui.model.tree;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
 import me.legrange.panstamp.gui.model.tree.PanStampNode;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.impl.ModemException;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 
@@ -27,9 +30,9 @@ class GatewayNode extends NetworkTreeNode implements GatewayListener {
     public String toString() {
         String txt;
         try {
-            ModemSetup setup = getGateway().getSWAPModem().getSetup();
-            txt = String.format("Network %4x", setup.getNetworkID());
-        } catch (SWAPException ex) {
+            txt = String.format("Network %4x", getGateway().getNetworkId());
+        } catch (ModemException ex) {
+            Logger.getLogger(GatewayNode.class.getName()).log(Level.SEVERE, null, ex);
             txt = "Network";
         }
         return txt;
