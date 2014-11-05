@@ -157,12 +157,12 @@ public class EndpointDataSet implements XYDataset, EndpointListener {
     }
 
     private void addSample(double sample) {
-        data.add(new Entry(sample));
+         data.add(new Entry(sample));
         for (DatasetChangeListener l : listeners) {
             l.datasetChanged(new DatasetChangeEvent(this, this));
         }
     }
-    private final List<Entry> data = new ArrayList<>();
+    private final List<Entry> data = new CopyOnWriteArrayList<>();
     private final List<DatasetChangeListener> listeners = new CopyOnWriteArrayList<>();
     private final Endpoint ep;
     private final String unit;

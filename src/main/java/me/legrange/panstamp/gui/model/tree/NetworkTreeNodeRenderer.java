@@ -97,7 +97,7 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
 
             @Override
             public void actionPerformed(ActionEvent e) {    
-                new PanStampSettingsDialog(null, psn.getPanStamp()).setVisible(true);
+                new PanStampSettingsDialog(null, model, psn.getPanStamp()).setVisible(true);
             }
         });
         menu.add(settingsItem);

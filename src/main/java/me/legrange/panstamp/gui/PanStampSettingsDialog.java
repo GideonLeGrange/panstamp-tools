@@ -27,7 +27,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
 
     private String getChannel() {
         try {
-            return "" + ps.getChannel();
+            return "" + ps.getConfig().getChannel();
         } catch (GatewayException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -36,7 +36,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
 
     private String getSecurityOption() {
         try {
-            return "" + ps.getSecurityOption();
+            return "" + ps.getConfig().getSecurityOption();
         } catch (GatewayException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -46,7 +46,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
     
     private String getTxInterval() {
         try {
-            return "" + ps.getTxInterval();
+            return "" + ps.getConfig().getTxInterval();
         } catch (GatewayException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -55,7 +55,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
         
     private String getNetwork() {
         try {
-            return String.format("%4x", ps.getNetwork());
+            return String.format("%4x", ps.getConfig().getNetwork());
         } catch (GatewayException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -226,9 +226,10 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         int addr = getIntValue(addressField);
         int net = getIntValue(networkField);
-        int cha = getIntValue(channelField);
+        int cha = Integer.parseInt(channelField.getText(), 16);
         int sec = getIntValue(securityField);
         int txi = getIntValue(intervalField);
+        dispose();
         
     }//GEN-LAST:event_okButtonActionPerformed
 
