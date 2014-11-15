@@ -225,8 +225,8 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         int addr = getIntValue(addressField);
-        int net = getIntValue(networkField);
-        int cha = Integer.parseInt(channelField.getText(), 16);
+        int net = Integer.parseInt(networkField.getText(), 16);
+        int cha = getIntValue(channelField);
         int sec = getIntValue(securityField);
         int txi = getIntValue(intervalField);
         dispose();
