@@ -3,6 +3,7 @@ package me.legrange.panstamp.gui;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
+import me.legrange.panstamp.DeviceConfig;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.gui.config.HexDocument;
@@ -188,6 +189,11 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
         });
 
         cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -224,14 +230,23 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_networkFieldActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        int addr = getIntValue(addressField);
-        int net = Integer.parseInt(networkField.getText(), 16);
-        int cha = getIntValue(channelField);
-        int sec = getIntValue(securityField);
-        int txi = getIntValue(intervalField);
-        dispose();
+        try {
+            DeviceConfig con = ps.getConfig();
+            con.setAddress(getIntValue(addressField));
+            con.setChannel(getIntValue(channelField));
+            con.setNetwork(Integer.parseInt(networkField.getText(), 16));
+            con.setSecurityOption(getIntValue(securityField));
+            con.setTxInterva(getIntValue(intervalField));
+            dispose();
+        } catch (GatewayException ex) {
+            Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }//GEN-LAST:event_okButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
     private int getIntValue(JTextField field) {
         return Integer.parseInt(field.getText());
