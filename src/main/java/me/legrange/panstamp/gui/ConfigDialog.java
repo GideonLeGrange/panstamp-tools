@@ -74,6 +74,11 @@ class ConfigDialog extends javax.swing.JDialog {
         speedLabel = new javax.swing.JLabel();
         speedComboBox = new javax.swing.JComboBox();
         portComboBox = new javax.swing.JComboBox();
+        tcpTab = new javax.swing.JPanel();
+        hostLabel = new javax.swing.JLabel();
+        hostTextField = new javax.swing.JTextField();
+        tcpPortLabel = new javax.swing.JLabel();
+        tcpPortTextField = new javax.swing.JTextField();
         networkTab = new javax.swing.JPanel();
         networkIDLabel = new javax.swing.JLabel();
         frequencyLabel = new javax.swing.JLabel();
@@ -141,6 +146,60 @@ class ConfigDialog extends javax.swing.JDialog {
 
         configTabs.addTab("Serial port", serialTab);
 
+        hostLabel.setText("Host name/address:");
+        hostLabel.setToolTipText("");
+
+        hostTextField.setColumns(4);
+        hostTextField.setDocument(new IntegerDocument(0,255));
+        hostTextField.setText(String.format("%d", config.getChannel()));
+        hostTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                hostTextFieldPropertyChange(evt);
+            }
+        });
+
+        tcpPortLabel.setText("TCP Port:");
+        tcpPortLabel.setToolTipText("");
+
+        tcpPortTextField.setColumns(4);
+        tcpPortTextField.setDocument(new IntegerDocument(0,255));
+        tcpPortTextField.setText(String.format("%d", config.getChannel()));
+        tcpPortTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                tcpPortTextFieldPropertyChange(evt);
+            }
+        });
+
+        javax.swing.GroupLayout tcpTabLayout = new javax.swing.GroupLayout(tcpTab);
+        tcpTab.setLayout(tcpTabLayout);
+        tcpTabLayout.setHorizontalGroup(
+            tcpTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tcpTabLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(tcpTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(hostLabel)
+                    .addComponent(tcpPortLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(tcpTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tcpPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(hostTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
+        tcpTabLayout.setVerticalGroup(
+            tcpTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tcpTabLayout.createSequentialGroup()
+                .addGroup(tcpTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(hostLabel)
+                    .addComponent(hostTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tcpTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tcpPortLabel)
+                    .addComponent(tcpPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 90, Short.MAX_VALUE))
+        );
+
+        configTabs.addTab("TCP Host", tcpTab);
+
         networkIDLabel.setText("Network ID:");
 
         frequencyLabel.setText("Frequency channel:");
@@ -195,13 +254,13 @@ class ConfigDialog extends javax.swing.JDialog {
                     .addComponent(networkIDLabel)
                     .addComponent(addressLabel)
                     .addComponent(securityLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addGroup(networkTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(networkTextField)
                     .addComponent(securityTextField)
                     .addComponent(addressTextField)
                     .addComponent(channelTextField))
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
         networkTabLayout.setVerticalGroup(
             networkTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -324,6 +383,14 @@ class ConfigDialog extends javax.swing.JDialog {
         }
      }//GEN-LAST:event_securityTextFieldPropertyChange
 
+    private void hostTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_hostTextFieldPropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_hostTextFieldPropertyChange
+
+    private void tcpPortTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tcpPortTextFieldPropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tcpPortTextFieldPropertyChange
+
     private final Config config;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel addressLabel;
@@ -332,6 +399,8 @@ class ConfigDialog extends javax.swing.JDialog {
     private javax.swing.JTextField channelTextField;
     private javax.swing.JTabbedPane configTabs;
     private javax.swing.JLabel frequencyLabel;
+    private javax.swing.JLabel hostLabel;
+    private javax.swing.JTextField hostTextField;
     private javax.swing.JLabel networkIDLabel;
     private javax.swing.JPanel networkTab;
     private javax.swing.JTextField networkTextField;
@@ -343,6 +412,9 @@ class ConfigDialog extends javax.swing.JDialog {
     private javax.swing.JPanel serialTab;
     private javax.swing.JComboBox speedComboBox;
     private javax.swing.JLabel speedLabel;
+    private javax.swing.JLabel tcpPortLabel;
+    private javax.swing.JTextField tcpPortTextField;
+    private javax.swing.JPanel tcpTab;
     // End of variables declaration//GEN-END:variables
 
 }
