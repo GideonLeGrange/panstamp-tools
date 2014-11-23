@@ -124,7 +124,8 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
             cd.setVisible(true);
         }
         try {
-            gw = Gateway.openSerial(config.getPortName(), config.getPortSpeed());
+//            gw = Gateway.openSerial(config.getPortName(), config.getPortSpeed());
+            gw  = Gateway.openTcp("127.0.0.1", 3333);
             model.addGateway(gw);
         } catch (ModemException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
