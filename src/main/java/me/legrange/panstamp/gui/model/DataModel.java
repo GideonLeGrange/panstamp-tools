@@ -1,11 +1,5 @@
 package me.legrange.panstamp.gui.model;
 
-import me.legrange.panstamp.gui.model.tree.NetworkTreeModel;
-import me.legrange.panstamp.gui.model.tree.NetworkTreeNodeRenderer;
-import me.legrange.panstamp.gui.model.chart.EndpointDataSet;
-import me.legrange.panstamp.gui.model.chart.SignalDataSet;
-import me.legrange.panstamp.gui.model.chart.EndpointCollector;
-import me.legrange.panstamp.gui.model.chart.SignalCollector;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JPopupMenu;
@@ -17,6 +11,14 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.Parameter;
+import me.legrange.panstamp.Register;
+import me.legrange.panstamp.gui.model.chart.EndpointCollector;
+import me.legrange.panstamp.gui.model.chart.EndpointDataSet;
+import me.legrange.panstamp.gui.model.chart.SignalCollector;
+import me.legrange.panstamp.gui.model.chart.SignalDataSet;
+import me.legrange.panstamp.gui.model.tree.NetworkTreeModel;
+import me.legrange.panstamp.gui.model.tree.NetworkTreeNodeRenderer;
 
 /**
  * A data model that provides the different view models required.
@@ -76,5 +78,6 @@ public final class DataModel {
     private final EndpointTableModel etm = EndpointTableModel.create();
     private final NetworkTreeNodeRenderer snr = new NetworkTreeNodeRenderer(this);
     private final Map<Endpoint, EndpointDataSet> epds = new HashMap<>();
+    private final Map<PanStamp, Boolean> hasParams = new HashMap<>();
 
 }

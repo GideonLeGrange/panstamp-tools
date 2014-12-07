@@ -24,6 +24,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.gui.PanStampParamDialog;
 import me.legrange.panstamp.gui.PanStampSettingsDialog;
 import me.legrange.panstamp.gui.chart.ChartFactory;
 import me.legrange.panstamp.gui.model.DataModel;
@@ -93,7 +94,9 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
     private JPopupMenu getPanStampPopupMenu(final PanStampNode psn) {
         JPopupMenu menu = popupMenus.get(psn);
         if (menu == null) {
+            
             menu = new JPopupMenu(psn.toString());
+            
             final JMenuItem settingsItem = new JMenuItem("Settings...");
             settingsItem.addActionListener(new ActionListener() {
 
@@ -103,6 +106,18 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
                 }
             });
             menu.add(settingsItem);
+            
+            final JMenuItem paramItem = new JMenuItem("Parameters...");
+            paramItem.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new PanStampParamDialog(null, model, psn.getPanStamp()).setVisible(true);
+                }
+            });
+            menu.add(paramItem);
+            
+            
             final JMenuItem graphItem = new JMenuItem("RSSI/LQI Graph...");
             graphItem.addActionListener(new ActionListener() {
 

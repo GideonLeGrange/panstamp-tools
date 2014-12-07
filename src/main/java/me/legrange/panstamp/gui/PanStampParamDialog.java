@@ -1,9 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package me.legrange.panstamp.gui;
+
+import java.awt.Component;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.Parameter;
+import me.legrange.panstamp.Register;
+import me.legrange.panstamp.gui.model.DataModel;
 
 /**
  *
@@ -14,9 +24,83 @@ public class PanStampParamDialog extends javax.swing.JDialog {
     /**
      * Creates new form PanStampParamDialog
      */
-    public PanStampParamDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public PanStampParamDialog(java.awt.Frame parent, DataModel model, PanStamp ps) {
+        super(parent, true);
+        this.ps = ps;
+        this.model = model;
         initComponents();
+        try {
+            addParamComponents();
+        } catch (GatewayException ex) {
+            Logger.getLogger(PanStampParamDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void addParamComponents() throws GatewayException {
+        for (Register reg : ps.getRegisters()) {
+            List<Parameter> pars = reg.getParameters();
+            if (!pars.isEmpty()) {
+                paramTabbedPane.add(reg.getName(), registerPanel(reg));
+            }
+        }
+    }
+
+    private JPanel registerPanel(Register reg) throws GatewayException {
+        JPanel panel = new JPanel();
+        for (Parameter par : reg.getParameters()) {
+            JLabel label = new JLabel(par.getName(), SwingConstants.LEFT);
+            panel.add(label);
+            Component com = null;
+            switch (par.getType()) {
+                case NUMBER:
+                    com = makeNumberField(par);
+                    break;
+                case INTEGER:
+                    com = makeIntegerField(par);
+                    break;
+                case BINARY: {
+                    com = makeBinaryField(par);
+                    break;
+                }
+                case STRING: {
+                    com = makeStringField(par);
+                    break;
+                }
+            }
+            panel.add(com);
+        }
+        return panel;
+    }
+
+    private Component makeTextField(Parameter par) throws GatewayException {
+        JTextField field = new JTextField();
+        if (par.getRegister().hasValue()) {
+            field.setText(par.getValue().toString());
+        } else {
+            field.setText(par.getDefault().toString());
+        }
+        return field;
+    }
+    private Component makeStringField(Parameter<String> par) throws GatewayException {
+        return makeTextField(par);
+    }
+
+    private Component makeBinaryField(Parameter<Boolean> par) throws GatewayException {
+        JCheckBox field = new JCheckBox();
+        if (par.getRegister().hasValue()) {
+            field.setSelected(par.getValue());
+        } else {
+            field.setSelected(false);
+        }
+        return field;
+    }
+
+    private Component makeIntegerField(Parameter<Integer> par) throws GatewayException {
+        return makeTextField(par);
+    }
+
+    private Component makeNumberField(Parameter<Double> par) throws GatewayException {
+        return makeTextField(par);
     }
 
     /**
@@ -28,64 +112,63 @@ public class PanStampParamDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        paramTabbedPane = new javax.swing.JTabbedPane();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        okButton.setText("Ok");
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 556, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(paramTabbedPane)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(okButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cancelButton)
+                        .addGap(17, 17, 17))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 411, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(paramTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cancelButton)
+                    .addComponent(okButton))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PanStampParamDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PanStampParamDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PanStampParamDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PanStampParamDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PanStampParamDialog dialog = new PanStampParamDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton okButton;
+    private javax.swing.JTabbedPane paramTabbedPane;
     // End of variables declaration//GEN-END:variables
+    private final PanStamp ps;
+    private final DataModel model;
+
 }

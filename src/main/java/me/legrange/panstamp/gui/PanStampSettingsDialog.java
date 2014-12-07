@@ -20,7 +20,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
      * Creates new form PanStampSettingsDialog
      */
     public PanStampSettingsDialog(java.awt.Frame parent, DataModel model, PanStamp ps) {
-        super(parent, false);
+        super(parent, true);
         this.ps = ps;
         this.model = model;
         initComponents();
@@ -179,7 +179,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
-        configTabs.addTab("Network Settings", networkPanel);
+        configTabs.addTab("Settings", networkPanel);
 
         okButton.setText("OK");
         okButton.addActionListener(new java.awt.event.ActionListener() {
