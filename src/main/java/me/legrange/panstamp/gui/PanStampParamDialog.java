@@ -1,14 +1,21 @@
 package me.legrange.panstamp.gui;
 
 import java.awt.Component;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import javax.swing.InputVerifier;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Parameter;
@@ -72,13 +79,22 @@ public class PanStampParamDialog extends javax.swing.JDialog {
         return panel;
     }
 
-    private Component makeTextField(Parameter par) throws GatewayException {
-        JTextField field = new JTextField();
+    private Component makeTextField(final Parameter par) throws GatewayException {
+        final JTextField field = new JTextField();
         if (par.getRegister().hasValue()) {
             field.setText(par.getValue().toString());
         } else {
             field.setText(par.getDefault().toString());
         }
+        field.setInputVerifier(new InputVerifier() {
+            
+            private Pattern pattern = Pattern.compile(par.getPattern());
+
+            @Override
+            public boolean verify(JComponent input) {
+                return pattern.matcher(field.getText()).matches();
+            }
+        });
         return field;
     }
     private Component makeStringField(Parameter<String> par) throws GatewayException {
