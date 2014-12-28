@@ -15,6 +15,7 @@ public class IntegerDocument extends PlainDocument {
         this.min = min;
         this.max = max;
     }
+    
 
     @Override
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {

@@ -2,11 +2,21 @@ package me.legrange.panstamp.gui.network;
 
 import java.awt.CardLayout;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
+import javax.swing.text.Document;
+import me.legrange.panstamp.Gateway;
+import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.gui.config.HexDocument;
 import me.legrange.panstamp.gui.config.IntegerDocument;
 import me.legrange.panstamp.gui.model.DataModel;
+import me.legrange.panstamp.impl.ModemException;
+import me.legrange.swap.ModemSetup;
+import me.legrange.swap.SWAPException;
+import me.legrange.swap.SWAPModem;
 
 /**
  *
@@ -14,7 +24,7 @@ import me.legrange.panstamp.gui.model.DataModel;
  */
 public class NetworkAddDialog extends javax.swing.JDialog {
     
-    private enum State { SELECT_TYPE, SELECT_COM, SELECT_TCP, END; };
+    private enum State { SELECT_TYPE, SELECT_SERIAL, ENTER_TCP, ENTER_NETWORK, END; };
 
     /**
      * Creates new form PanStampSettingsDialog
@@ -37,13 +47,14 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         typeButtonGroup = new javax.swing.ButtonGroup();
+        jLabel2 = new javax.swing.JLabel();
         outerSplitPane = new javax.swing.JSplitPane();
         headerPanel = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         innerSplitPane = new javax.swing.JSplitPane();
         contentPanel = new javax.swing.JPanel();
         createNetworkPanel = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         configTcpPanel = new javax.swing.JPanel();
         hostLabel = new javax.swing.JLabel();
         tcpPortLabel = new javax.swing.JLabel();
@@ -60,11 +71,22 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         speedComboBox = new javax.swing.JComboBox();
         portComboBox = new javax.swing.JComboBox();
         jLabel4 = new javax.swing.JLabel();
+        configNetworkPanel = new javax.swing.JPanel();
+        frequencyLabel = new javax.swing.JLabel();
+        channelTextField = new javax.swing.JTextField();
+        networkIDLabel = new javax.swing.JLabel();
+        networkTextField = new javax.swing.JTextField();
+        addressLabel = new javax.swing.JLabel();
+        addressTextField = new javax.swing.JTextField();
+        securityLabel = new javax.swing.JLabel();
+        securityTextField = new javax.swing.JTextField();
         buttonPanel = new javax.swing.JPanel();
         backButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         finishButton = new javax.swing.JButton();
+
+        jLabel2.setText("Add a PanStamp network:");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Add Network");
@@ -74,10 +96,6 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         outerSplitPane.setBorder(null);
         outerSplitPane.setDividerSize(0);
         outerSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-
-        jLabel2.setText("Add a PanStamp network:");
-        headerPanel.add(jLabel2);
-
         outerSplitPane.setRightComponent(headerPanel);
 
         innerSplitPane.setBorder(null);
@@ -88,23 +106,30 @@ public class NetworkAddDialog extends javax.swing.JDialog {
 
         createNetworkPanel.setName("create-network-panel"); // NOI18N
 
-        jLabel3.setText("Create netwotk");
+        jLabel6.setText("Network Summary");
+
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("To create your new network, click 'Finish'");
 
         javax.swing.GroupLayout createNetworkPanelLayout = new javax.swing.GroupLayout(createNetworkPanel);
         createNetworkPanel.setLayout(createNetworkPanelLayout);
         createNetworkPanelLayout.setHorizontalGroup(
             createNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(createNetworkPanelLayout.createSequentialGroup()
-                .addGap(80, 80, 80)
-                .addComponent(jLabel3)
-                .addContainerGap(736, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(createNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
+                .addContainerGap())
         );
         createNetworkPanelLayout.setVerticalGroup(
             createNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(createNetworkPanelLayout.createSequentialGroup()
-                .addGap(61, 61, 61)
-                .addComponent(jLabel3)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel7)
+                .addContainerGap(162, Short.MAX_VALUE))
         );
 
         contentPanel.add(createNetworkPanel, "create-network-panel");
@@ -118,7 +143,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         tcpPortLabel.setToolTipText("");
 
         tcpPortTextField.setColumns(4);
-        tcpPortTextField.setDocument(new IntegerDocument(0,255));
+        tcpPortTextField.setDocument(new IntegerDocument(1,65535));
         tcpPortTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tcpPortTextFieldActionPerformed(evt);
@@ -130,8 +155,8 @@ public class NetworkAddDialog extends javax.swing.JDialog {
             }
         });
 
-        hostTextField.setColumns(4);
-        hostTextField.setDocument(new IntegerDocument(0,255));
+        hostTextField.setColumns(127);
+        hostTextField.setText("localhost");
         hostTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 hostTextFieldPropertyChange(evt);
@@ -202,7 +227,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
             .addGroup(selectTypePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(selectTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 899, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(selectTypePanelLayout.createSequentialGroup()
                         .addGroup(selectTypePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tcpRadioButton)
@@ -219,7 +244,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
                 .addComponent(serialRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tcpRadioButton)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         contentPanel.add(selectTypePanel, "select-type-panel");
@@ -266,7 +291,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
                         .addGroup(configSerialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(speedComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(portComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(574, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         configSerialPanelLayout.setVerticalGroup(
             configSerialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,10 +306,97 @@ public class NetworkAddDialog extends javax.swing.JDialog {
                 .addGroup(configSerialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(speedLabel)
                     .addComponent(speedComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         contentPanel.add(configSerialPanel, "config-serial-panel");
+
+        configNetworkPanel.setName("config-network-panel"); // NOI18N
+
+        frequencyLabel.setText("Frequency channel:");
+        frequencyLabel.setToolTipText("");
+
+        channelTextField.setColumns(4);
+        channelTextField.setDocument(new IntegerDocument(0,255));
+        channelTextField.setText(String.format("%d", model.getConfig().getChannel()));
+        channelTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                channelTextFieldPropertyChange(evt);
+            }
+        });
+
+        networkIDLabel.setText("Network ID:");
+
+        networkTextField.setDocument(new HexDocument(0,65535));
+        networkTextField.setText(String.format("%4x",model.getConfig().getNetworkID()));
+        networkTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                networkTextFieldPropertyChange(evt);
+            }
+        });
+
+        addressLabel.setText("Device address:");
+
+        addressTextField.setDocument(new IntegerDocument(0, 255));
+        addressTextField.setText(String.format("%d", model.getConfig().getDeviceAddress()));
+        addressTextField.setToolTipText("Local device address in decimal");
+        addressTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                addressTextFieldPropertyChange(evt);
+            }
+        });
+
+        securityLabel.setText("Security option:");
+
+        securityTextField.setDocument(new IntegerDocument(0,255));
+        securityTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                securityTextFieldPropertyChange(evt);
+            }
+        });
+
+        javax.swing.GroupLayout configNetworkPanelLayout = new javax.swing.GroupLayout(configNetworkPanel);
+        configNetworkPanel.setLayout(configNetworkPanelLayout);
+        configNetworkPanelLayout.setHorizontalGroup(
+            configNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(configNetworkPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(configNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(frequencyLabel)
+                    .addComponent(networkIDLabel)
+                    .addComponent(addressLabel)
+                    .addComponent(securityLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+                .addGroup(configNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(networkTextField)
+                    .addComponent(securityTextField)
+                    .addComponent(addressTextField)
+                    .addComponent(channelTextField))
+                .addContainerGap(139, Short.MAX_VALUE))
+        );
+        configNetworkPanelLayout.setVerticalGroup(
+            configNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(configNetworkPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(configNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(frequencyLabel)
+                    .addComponent(channelTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(configNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(networkIDLabel)
+                    .addComponent(networkTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(configNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addressLabel)
+                    .addComponent(addressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(configNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(securityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(securityLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        contentPanel.add(configNetworkPanel, "config-network-panel");
 
         innerSplitPane.setLeftComponent(contentPanel);
 
@@ -365,7 +477,14 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
-        // TODO add your handling code here:
+        try {
+            createNetwork();
+        } catch (ModemException | SWAPException ex) {
+            Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (GatewayException ex) {
+            Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dispose();
     }//GEN-LAST:event_finishButtonActionPerformed
 
     private void serialRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serialRadioButtonActionPerformed
@@ -392,19 +511,51 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         //config.setPortSpeed((Integer) speedComboBox.getModel().getSelectedItem());
     }//GEN-LAST:event_speedComboBoxActionPerformed
 
+    private void channelTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_channelTextFieldPropertyChange
+        String text = channelTextField.getText().trim();
+        if ((text != null) && !text.equals("")) {
+       //     config.setChannel(Integer.parseInt(text));
+        }
+    }//GEN-LAST:event_channelTextFieldPropertyChange
+
+    private void networkTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_networkTextFieldPropertyChange
+        String text = networkTextField.getText().trim();
+        if ((text != null) && !text.equals("")) {
+       //     config.setNetworkID(Integer.parseInt(text, 16));
+        }
+    }//GEN-LAST:event_networkTextFieldPropertyChange
+
+    private void addressTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_addressTextFieldPropertyChange
+        String text = addressTextField.getText().trim();
+        if ((text != null) && !text.equals("")) {
+      //      config.setDeviceAddress(Integer.parseInt(text));
+        }
+    }//GEN-LAST:event_addressTextFieldPropertyChange
+
+    private void securityTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_securityTextFieldPropertyChange
+        String text = securityTextField.getText().trim();
+        if ((text != null) && !text.equals("")) {
+      //      config.setSecurityOption(Integer.parseInt(text));
+        }
+    }//GEN-LAST:event_securityTextFieldPropertyChange
+
     private void forward() {
         switch (getState()) {
-            case SELECT_TCP :
-            case SELECT_COM : 
-                state.push(State.END);
+            case ENTER_TCP :
+            case SELECT_SERIAL : 
+                state.push(State.ENTER_NETWORK);
                 break;
             case SELECT_TYPE : 
-                if (serialRadioButton.isSelected()) {
-                    state.push(State.SELECT_COM);
+                if (typeIsSerial()) {
+                    state.push(State.SELECT_SERIAL);
                 }
                 else {
-                    state.push(State.SELECT_TCP);
+                    state.push(State.ENTER_TCP);
                 }
+                break;
+            case ENTER_NETWORK : 
+                state.push(State.END);
+                break;
         }
         applyState();
     }
@@ -424,11 +575,14 @@ public class NetworkAddDialog extends javax.swing.JDialog {
             case SELECT_TYPE :
                 content = selectTypePanel;
                 break;
-            case SELECT_TCP : 
+            case ENTER_TCP : 
                 content = configTcpPanel;
                 break;
-            case SELECT_COM : 
+            case SELECT_SERIAL : 
                 content = configSerialPanel;
+                break;
+            case ENTER_NETWORK : 
+                content = configNetworkPanel;
                 break;
             case END : 
                 content = createNetworkPanel;
@@ -442,7 +596,55 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     private State getState() {
         return state.peek();
     }
- 
+    
+    private void createNetwork() throws ModemException, SWAPException, GatewayException  {
+        Gateway gw;
+        if (typeIsSerial()) {
+            gw = Gateway.openSerial(getSerialPort(), getSerialSpeed());
+        }
+        else {
+            gw = Gateway.openTcp(getTcpHost(), getTcpPort());
+        }
+        ModemSetup setup = gw.getSWAPModem().getSetup();
+        setup.setChannel(getChannel());
+        setup.setDeviceAddress(getDeviceAddress());
+        setup.setNetworkID(getNetworkID());
+        gw.getSWAPModem().setSetup(setup);
+        model.addGateway(gw);
+    }  
+    
+    private String getSerialPort() {
+        return portComboBox.getSelectedItem().toString();
+    }
+    
+    private int getSerialSpeed() { 
+        return Integer.parseInt(speedComboBox.getSelectedItem().toString());
+    }
+    
+    private String getTcpHost() {
+        return hostTextField.getText();
+    }
+    
+    private int getTcpPort() {
+        return Integer.parseInt(tcpPortTextField.getText());
+    }
+    
+    private boolean typeIsSerial() {
+        return serialRadioButton.isSelected();
+    }
+    
+    private int getChannel() { 
+        return Integer.parseInt(channelTextField.getText());
+    }
+
+    private int getDeviceAddress() { 
+        return Integer.parseInt(addressTextField.getText());
+    }
+    
+    private int getNetworkID() { 
+        return Integer.parseInt(networkTextField.getText(),16);
+    }
+    
     private ComboBoxModel<String> portListModel() {
         DefaultComboBoxModel<String> mod = new DefaultComboBoxModel<>();
         for (String port : model.getConfig().getPorts()) {
@@ -466,27 +668,37 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel addressLabel;
+    private javax.swing.JTextField addressTextField;
     private javax.swing.JButton backButton;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JTextField channelTextField;
+    private javax.swing.JPanel configNetworkPanel;
     private javax.swing.JPanel configSerialPanel;
     private javax.swing.JPanel configTcpPanel;
     private javax.swing.JPanel contentPanel;
     private javax.swing.JPanel createNetworkPanel;
     private javax.swing.JButton finishButton;
+    private javax.swing.JLabel frequencyLabel;
     private javax.swing.JPanel headerPanel;
     private javax.swing.JLabel hostLabel;
     private javax.swing.JTextField hostTextField;
     private javax.swing.JSplitPane innerSplitPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel networkIDLabel;
+    private javax.swing.JTextField networkTextField;
     private javax.swing.JButton nextButton;
     private javax.swing.JSplitPane outerSplitPane;
     private javax.swing.JComboBox portComboBox;
     private javax.swing.JLabel portLabel;
+    private javax.swing.JLabel securityLabel;
+    private javax.swing.JTextField securityTextField;
     private javax.swing.JPanel selectTypePanel;
     private javax.swing.JRadioButton serialRadioButton;
     private javax.swing.JComboBox speedComboBox;
