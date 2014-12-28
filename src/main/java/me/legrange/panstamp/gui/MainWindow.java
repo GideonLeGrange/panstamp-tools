@@ -91,7 +91,7 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
      */
     public MainWindow() {
         config = new Config();
-        model = new DataModel();
+        model = new DataModel(config);
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -123,7 +123,7 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
             ConfigDialog cd = new ConfigDialog(config, this);
             cd.setVisible(true);
         }
-        try {
+/*        try {
            gw = Gateway.openSerial(config.getPortName(), config.getPortSpeed());
  //           gw  = Gateway.openTcp("192.168.1.128", 3333);
             model.addGateway(gw);
@@ -131,7 +131,7 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         } catch (GatewayException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } */
     }
     /**
      * This method is called from within the constructor to initialize the form.

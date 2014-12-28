@@ -11,8 +11,7 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.Parameter;
-import me.legrange.panstamp.Register;
+import me.legrange.panstamp.gui.config.Config;
 import me.legrange.panstamp.gui.model.chart.EndpointCollector;
 import me.legrange.panstamp.gui.model.chart.EndpointDataSet;
 import me.legrange.panstamp.gui.model.chart.SignalCollector;
@@ -26,9 +25,16 @@ import me.legrange.panstamp.gui.model.tree.NetworkTreeNodeRenderer;
  * @author gideon
  */
 public final class DataModel {
-
-    public DataModel() {
+ 
+    public DataModel(Config config) {
+        this.config = config;
     }
+    
+    
+    public Config getConfig() {
+        return config;
+    }
+
 
     public synchronized void addGateway(Gateway gw) throws GatewayException {
         SignalCollector sc = new SignalCollector();
@@ -79,5 +85,6 @@ public final class DataModel {
     private final NetworkTreeNodeRenderer snr = new NetworkTreeNodeRenderer(this);
     private final Map<Endpoint, EndpointDataSet> epds = new HashMap<>();
     private final Map<PanStamp, Boolean> hasParams = new HashMap<>();
+   private final Config config;
 
 }

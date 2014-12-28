@@ -24,6 +24,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.gui.network.NetworkAddDialog;
 import me.legrange.panstamp.gui.PanStampParamDialog;
 import me.legrange.panstamp.gui.PanStampSettingsDialog;
 import me.legrange.panstamp.gui.chart.ChartFactory;
@@ -77,6 +78,8 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
     public JPopupMenu getPopupMenu(TreePath path) {
         NetworkTreeNode node = (NetworkTreeNode) path.getLastPathComponent();
         switch (node.getType()) {
+            case WORLD : 
+                return getWorldPopupMenu((WorldNode) node);
             case PANSTAMP:
                 return getPanStampPopupMenu((PanStampNode) node);
             case ENDPOINT:
@@ -89,6 +92,23 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
 
     public NetworkTreeNodeRenderer(DataModel model) {
         this.model = model;
+    }
+    
+    private JPopupMenu getWorldPopupMenu(final WorldNode wn) { 
+        JPopupMenu menu = popupMenus.get(wn);
+        if (menu == null) {
+            menu = new JPopupMenu(wn.toString());
+            final JMenuItem addSerialItem = new JMenuItem("Add network...");
+            addSerialItem.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new NetworkAddDialog(null, model).setVisible(true);
+                }
+            });
+            menu.add(addSerialItem);
+        }
+        return menu;
     }
 
     private JPopupMenu getPanStampPopupMenu(final PanStampNode psn) {

@@ -2,15 +2,11 @@ package me.legrange.panstamp.gui.model.tree;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
-import me.legrange.panstamp.gui.model.tree.PanStampNode;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.impl.ModemException;
-import me.legrange.swap.ModemSetup;
-import me.legrange.swap.SWAPException;
 
 /**
  *

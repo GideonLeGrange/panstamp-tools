@@ -1,8 +1,6 @@
 package me.legrange.panstamp.gui;
 
 import java.awt.Component;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,8 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Parameter;
@@ -88,11 +84,11 @@ public class PanStampParamDialog extends javax.swing.JDialog {
         }
         field.setInputVerifier(new InputVerifier() {
             
-            private Pattern pattern = Pattern.compile(par.getPattern());
+            private final Pattern pattern = Pattern.compile(par.getPattern());
 
             @Override
             public boolean verify(JComponent input) {
-                return pattern.matcher(field.getText()).matches();
+                return (pattern.matcher(field.getText()).matches());
             }
         });
         return field;
