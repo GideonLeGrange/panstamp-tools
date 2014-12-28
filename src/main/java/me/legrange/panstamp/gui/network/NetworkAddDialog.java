@@ -349,6 +349,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         securityLabel.setText("Security option:");
 
         securityTextField.setDocument(new IntegerDocument(0,255));
+        securityTextField.setText("0");
         securityTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 securityTextFieldPropertyChange(evt);

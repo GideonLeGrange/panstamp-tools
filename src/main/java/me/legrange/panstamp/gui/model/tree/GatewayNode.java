@@ -7,6 +7,8 @@ import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.impl.ModemException;
+import me.legrange.swap.SWAPModem;
+import me.legrange.swap.serial.SerialModem;
 
 /**
  *
@@ -26,7 +28,14 @@ class GatewayNode extends NetworkTreeNode implements GatewayListener {
     public String toString() {
         String txt;
         try {
-            txt = String.format("Network %4x", getGateway().getNetworkId());
+            Gateway gw = getGateway();
+            SWAPModem sm = gw.getSWAPModem();
+            if (sm instanceof SerialModem) {
+              txt = String.format("Serial Network - %4x",  getGateway().getNetworkId());  
+            }
+            else {
+                txt = String.format("TCP/IP Network - %4x", getGateway().getNetworkId());
+            }
         } catch (ModemException ex) {
             Logger.getLogger(GatewayNode.class.getName()).log(Level.SEVERE, null, ex);
             txt = "Network";

@@ -14,9 +14,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.model.DataModel;
-import me.legrange.panstamp.impl.ModemException;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 
@@ -68,7 +66,7 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
                         @Override
                         public void handlePreferences(ApplicationEvent ae) {
                             ae.setHandled(true);
-                            mw.showPrefs();
+//                            mw.showPrefs();
                         }
 
                         @Override
@@ -119,10 +117,6 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
      */
     private void start() {
         config.addListener(this);
-        if (!config.hasValidPort()) {
-            ConfigDialog cd = new ConfigDialog(config, this);
-            cd.setVisible(true);
-        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -287,7 +281,7 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
     }//GEN-LAST:event_quitItemActionPerformed
 
     private void configMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configMenuItemActionPerformed
-        showPrefs();
+//        showPrefs();
     }//GEN-LAST:event_configMenuItemActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -313,10 +307,6 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
 
     }
 
-    private void showPrefs() {
-        ConfigDialog cd = new ConfigDialog(config, this);
-        cd.setVisible(true);
-    }
 
     private void showAbout() {
         AboutDialog ad = new AboutDialog(this, true);

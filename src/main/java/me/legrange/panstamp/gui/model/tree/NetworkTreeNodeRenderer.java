@@ -78,8 +78,10 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
     public JPopupMenu getPopupMenu(TreePath path) {
         NetworkTreeNode node = (NetworkTreeNode) path.getLastPathComponent();
         switch (node.getType()) {
-            case WORLD : 
+            case WORLD:
                 return getWorldPopupMenu((WorldNode) node);
+            case GATEWAY:
+                return getGatewayPopupMenu((GatewayNode) node);
             case PANSTAMP:
                 return getPanStampPopupMenu((PanStampNode) node);
             case ENDPOINT:
@@ -93,8 +95,8 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
     public NetworkTreeNodeRenderer(DataModel model) {
         this.model = model;
     }
-    
-    private JPopupMenu getWorldPopupMenu(final WorldNode wn) { 
+
+    private JPopupMenu getWorldPopupMenu(final WorldNode wn) {
         JPopupMenu menu = popupMenus.get(wn);
         if (menu == null) {
             menu = new JPopupMenu(wn.toString());
@@ -111,12 +113,23 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
         return menu;
     }
 
+    private JPopupMenu getGatewayPopupMenu(final GatewayNode gn) {
+        JPopupMenu menu = popupMenus.get(gn);
+        if (menu == null) {
+            
+            menu = new JPopupMenu(gn.toString());
+            
+            popupMenus.put(gn, menu);
+        }
+        return menu;
+    }
+
     private JPopupMenu getPanStampPopupMenu(final PanStampNode psn) {
         JPopupMenu menu = popupMenus.get(psn);
         if (menu == null) {
-            
+
             menu = new JPopupMenu(psn.toString());
-            
+
             final JMenuItem settingsItem = new JMenuItem("Settings...");
             settingsItem.addActionListener(new ActionListener() {
 
@@ -126,7 +139,7 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
                 }
             });
             menu.add(settingsItem);
-            
+
             final JMenuItem paramItem = new JMenuItem("Parameters...");
             paramItem.addActionListener(new ActionListener() {
 
@@ -136,8 +149,7 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
                 }
             });
             menu.add(paramItem);
-            
-            
+
             final JMenuItem graphItem = new JMenuItem("RSSI/LQI Graph...");
             graphItem.addActionListener(new ActionListener() {
 
@@ -226,7 +238,7 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
     }
 
     private Component renderWorld(WorldNode wn) {
-        return new JLabel("", getIcon(ICON_WORLD), JLabel.LEADING);
+        return new JLabel(wn.toString(), getIcon(ICON_WORLD), JLabel.LEADING);
     }
 
     private String formatValue(Endpoint ep) throws GatewayException {

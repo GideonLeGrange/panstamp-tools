@@ -14,7 +14,7 @@ class WorldNode extends NetworkTreeNode {
 
     @Override
     public String toString() {
-        return "";
+        return "SWAP Networks";
     }
 
     @Override
