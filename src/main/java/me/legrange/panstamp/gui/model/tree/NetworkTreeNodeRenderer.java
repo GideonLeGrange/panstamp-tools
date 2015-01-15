@@ -119,6 +119,15 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
             
             menu = new JPopupMenu(gn.toString());
             
+            final JMenuItem exportItem = new JMenuItem("Export...");
+            exportItem.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    /// put code here to select file/place to export to. 
+                }
+            });
+            
             popupMenus.put(gn, menu);
         }
         return menu;
