@@ -30,10 +30,6 @@ import me.legrange.panstamp.gui.PanStampSettingsDialog;
 import me.legrange.panstamp.gui.chart.ChartFactory;
 import me.legrange.panstamp.gui.model.DataModel;
 import me.legrange.panstamp.gui.model.Format;
-import me.legrange.panstamp.json.JsonException;
-import me.legrange.panstamp.json.JsonLoad;
-import me.legrange.panstamp.json.JsonStore;
-import me.legrange.swap.SWAPException;
 
 /**
  *
@@ -128,19 +124,6 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
-                        try {
-                            //System.out.println(JsonStore.networkAsJson(gn.getGateway()));
-                            new JsonLoad().loadJson(JsonStore.networkAsJson(gn.getGateway()));
-                            /// put code here to select file/place to export to. 
-                        } catch (JsonException ex) {
-                            Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    } catch (SWAPException ex) {
-                        Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (GatewayException ex) {
-                        Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                 }
             });
             menu.add(exportItem);
