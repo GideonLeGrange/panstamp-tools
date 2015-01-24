@@ -3,7 +3,6 @@ package me.legrange.panstamp.gui;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
-import me.legrange.panstamp.DeviceConfig;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.gui.config.HexDocument;
@@ -28,7 +27,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
 
     private String getChannel() {
         try {
-            return "" + ps.getConfig().getChannel();
+            return "" + ps.getChannel();
         } catch (GatewayException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -37,7 +36,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
 
     private String getSecurityOption() {
         try {
-            return "" + ps.getConfig().getSecurityOption();
+            return "" + ps.getSecurityOption();
         } catch (GatewayException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -47,7 +46,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
     
     private String getTxInterval() {
         try {
-            return "" + ps.getConfig().getTxInterval();
+            return "" + ps.getTxInterval();
         } catch (GatewayException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,7 +55,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
         
     private String getNetwork() {
         try {
-            return String.format("%4x", ps.getConfig().getNetwork());
+            return String.format("%4x", ps.getNetwork());
         } catch (GatewayException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -231,12 +230,11 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         try {
-            DeviceConfig con = ps.getConfig();
-            con.setAddress(getIntValue(addressField));
-            con.setChannel(getIntValue(channelField));
-            con.setNetwork(Integer.parseInt(networkField.getText(), 16));
-            con.setSecurityOption(getIntValue(securityField));
-            con.setTxInterva(getIntValue(intervalField));
+            ps.setAddress(getIntValue(addressField));
+            ps.setChannel(getIntValue(channelField));
+            ps.setNetwork(Integer.parseInt(networkField.getText(), 16));
+            ps.setSecurityOption(getIntValue(securityField));
+            ps.setTxInterval(getIntValue(intervalField));
             dispose();
         } catch (GatewayException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
