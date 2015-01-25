@@ -24,7 +24,7 @@ import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterListener;
-import me.legrange.panstamp.impl.StandardEndpoint;
+import me.legrange.panstamp.StandardEndpoint;
 import me.legrange.swap.Registers;
 
 /**
