@@ -2,6 +2,7 @@ package me.legrange.panstamp.gui.model.tree;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.tree.TreeNode;
@@ -188,6 +189,6 @@ class PanStampNode extends NetworkTreeNode implements PanStampListener {
         nodes.put(reg, rn);
     }
 
-    private final Map<Register, RegisterNode> nodes = new HashMap<>();
+    private final Map<Register, RegisterNode> nodes = new ConcurrentHashMap<>();
     private RegisterDisplay registerDisplay = RegisterDisplay.NONE; 
 }

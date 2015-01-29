@@ -1,7 +1,9 @@
 package me.legrange.panstamp.gui;
 
 import java.awt.Component;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -43,7 +45,7 @@ public class PanStampParamDialog extends javax.swing.JDialog {
         for (Register reg : ps.getRegisters()) {
             List<Parameter> pars = reg.getParameters();
             if (!pars.isEmpty()) {
-                scrollPane.add(reg.getName(), registerPanel(reg));
+                paramTabbedPane.add(reg.getName(), registerPanel(reg));
             }
         }
     }
@@ -71,6 +73,7 @@ public class PanStampParamDialog extends javax.swing.JDialog {
                 }
             }
             panel.add(com);
+            paramMap.put(com, par);
         }
         return panel;
     }
@@ -126,11 +129,16 @@ public class PanStampParamDialog extends javax.swing.JDialog {
 
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        scrollPane = new javax.swing.JScrollPane();
+        paramTabbedPane = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         okButton.setText("Ok");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -147,7 +155,7 @@ public class PanStampParamDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(scrollPane)
+                        .addComponent(paramTabbedPane)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(okButton)
@@ -159,8 +167,8 @@ public class PanStampParamDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(paramTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
@@ -174,13 +182,68 @@ public class PanStampParamDialog extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+       for (Component com : paramMap.keySet()) {
+           Parameter par = paramMap.get(com);
+           updateFromComponent(par, com);
+       }
+    }//GEN-LAST:event_okButtonActionPerformed
+
+    private void updateFromComponent(Parameter par, Component com) {
+        try {
+            switch (par.getType()) {
+                case NUMBER:
+                    JTextField text = (JTextField)com;
+                    double dVal = Double.parseDouble(text.getText());
+                    Parameter<Double> dPar = par;
+                    if (dVal != dPar.getValue()) {
+                        dPar.setValue(dVal);
+                    }
+                    break;
+                case INTEGER:
+                    com = makeIntegerField(par);
+                    text = (JTextField)com;
+                    int iVal = Integer.parseInt(text.getText());
+                    Parameter<Integer> iPar = par;
+                    if (iVal != iPar.getValue()) {
+                        iPar.setValue(iVal);
+                    }
+                    break;
+                case BINARY: {
+                    com = makeBinaryField(par);
+                    JCheckBox check = (JCheckBox)com;
+                    boolean bVal = check.isSelected();
+                    Parameter<Boolean> bPar = par;
+                    if (bVal != bPar.getValue()) {
+                        bPar.setValue(bVal);
+                    }
+                    break;
+                }
+                case STRING: {
+                    com = makeStringField(par);
+                    text = (JTextField)com;
+                    String val = text.getText();
+                    Parameter<String> sPar = par;
+                    if (!val.equals(sPar.getValue())) {
+                        sPar.setValue(val);
+                    } 
+                    break;
+                }
+            }
+            
+            // Variables declaration - do not modify
+        } catch (GatewayException ex) {
+            Logger.getLogger(PanStampParamDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dispose();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton okButton;
-    private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JTabbedPane paramTabbedPane;
     // End of variables declaration//GEN-END:variables
     private final PanStamp ps;
     private final DataModel model;
-
+    private final Map<Component, Parameter> paramMap = new HashMap<>();
 }
