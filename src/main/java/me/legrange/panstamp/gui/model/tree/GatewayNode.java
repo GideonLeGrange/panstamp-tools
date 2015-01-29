@@ -4,9 +4,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayEvent;
+import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.impl.ModemException;
+import me.legrange.panstamp.core.ModemException;
 import me.legrange.swap.SWAPModem;
 import me.legrange.swap.serial.SerialModem;
 
@@ -37,6 +38,9 @@ class GatewayNode extends NetworkTreeNode implements GatewayListener {
                 txt = String.format("TCP/IP Network - %4x", getGateway().getNetworkId());
             }
         } catch (ModemException ex) {
+            Logger.getLogger(GatewayNode.class.getName()).log(Level.SEVERE, null, ex);
+            txt = "Network";
+        } catch (GatewayException ex) {
             Logger.getLogger(GatewayNode.class.getName()).log(Level.SEVERE, null, ex);
             txt = "Network";
         }

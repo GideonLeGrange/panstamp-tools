@@ -24,6 +24,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.Register;
 import me.legrange.panstamp.gui.network.NetworkAddDialog;
 import me.legrange.panstamp.gui.PanStampParamDialog;
 import me.legrange.panstamp.gui.PanStampSettingsDialog;
@@ -157,6 +158,18 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
                 }
             });
             menu.add(paramItem);
+            boolean hasParams = false;
+            try {
+                for (Register reg : psn.getPanStamp().getRegisters()) {
+                    if (!reg.getParameters().isEmpty()) {
+                        hasParams = true;
+                        break;
+                    }
+                }
+            } catch (GatewayException ex) {
+                Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+             paramItem.setEnabled(hasParams);
 
             final JMenuItem graphItem = new JMenuItem("RSSI/LQI Graph...");
             graphItem.addActionListener(new ActionListener() {

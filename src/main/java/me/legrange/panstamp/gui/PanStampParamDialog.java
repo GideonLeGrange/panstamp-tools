@@ -43,7 +43,7 @@ public class PanStampParamDialog extends javax.swing.JDialog {
         for (Register reg : ps.getRegisters()) {
             List<Parameter> pars = reg.getParameters();
             if (!pars.isEmpty()) {
-                paramTabbedPane.add(reg.getName(), registerPanel(reg));
+                scrollPane.add(reg.getName(), registerPanel(reg));
             }
         }
     }
@@ -124,9 +124,9 @@ public class PanStampParamDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        paramTabbedPane = new javax.swing.JTabbedPane();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        scrollPane = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -147,11 +147,11 @@ public class PanStampParamDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(paramTabbedPane)
+                        .addComponent(scrollPane)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(okButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
                         .addComponent(cancelButton)
                         .addGap(17, 17, 17))))
         );
@@ -159,12 +159,12 @@ public class PanStampParamDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(paramTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cancelButton)
                     .addComponent(okButton))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -178,7 +178,7 @@ public class PanStampParamDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton okButton;
-    private javax.swing.JTabbedPane paramTabbedPane;
+    private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
     private final PanStamp ps;
     private final DataModel model;

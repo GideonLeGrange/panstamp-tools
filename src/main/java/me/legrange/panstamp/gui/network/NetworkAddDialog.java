@@ -7,17 +7,15 @@ import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
-import javax.swing.text.Document;
 import me.legrange.panstamp.Factory;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.config.HexDocument;
 import me.legrange.panstamp.gui.config.IntegerDocument;
 import me.legrange.panstamp.gui.model.DataModel;
-import me.legrange.panstamp.impl.ModemException;
+import me.legrange.panstamp.core.ModemException;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
-import me.legrange.swap.SWAPModem;
 
 /**
  *
