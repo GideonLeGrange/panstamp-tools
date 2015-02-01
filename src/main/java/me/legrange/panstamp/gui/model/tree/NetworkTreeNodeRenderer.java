@@ -120,14 +120,19 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
             
             menu = new JPopupMenu(gn.toString());
             
-            final JMenuItem exportItem = new JMenuItem("Export...");
-            exportItem.addActionListener(new ActionListener() {
+            final JMenuItem activateItem = new JMenuItem("Activate");
+            activateItem.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    try {
+                        gn.getGateway().open();
+                    } catch (GatewayException ex) {
+                        Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             });
-            menu.add(exportItem);
+            menu.add(activateItem);
             popupMenus.put(gn, menu);
         }
         return menu;
@@ -138,7 +143,7 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
         if (menu == null) {
 
             menu = new JPopupMenu(psn.toString());
-
+            
             final JMenuItem settingsItem = new JMenuItem("Settings...");
             settingsItem.addActionListener(new ActionListener() {
 

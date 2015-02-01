@@ -14,7 +14,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
+import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.model.DataModel;
+import me.legrange.panstamp.tools.store.DataStoreException;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 
@@ -53,33 +55,40 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                final MainWindow mw = new MainWindow();
-                if (isOSX) {
-                    Application.getApplication().addApplicationListener(new ApplicationAdapter() {
 
-                        @Override
-                        public void handleQuit(ApplicationEvent ae) {
-                            ae.setHandled(true);
-                            mw.quit();
-                        }
+                try {
+                    final MainWindow mw = new MainWindow();
+                    if (isOSX) {
+                        Application.getApplication().addApplicationListener(new ApplicationAdapter() {
 
-                        @Override
-                        public void handlePreferences(ApplicationEvent ae) {
-                            ae.setHandled(true);
+                            @Override
+                            public void handleQuit(ApplicationEvent ae) {
+                                ae.setHandled(true);
+                                mw.quit();
+                            }
+
+                            @Override
+                            public void handlePreferences(ApplicationEvent ae) {
+                                ae.setHandled(true);
 //                            mw.showPrefs();
-                        }
+                            }
 
-                        @Override
-                        public void handleAbout(ApplicationEvent ae) {
-                            ae.setHandled(true);
-                            mw.showAbout();
-                        }
+                            @Override
+                            public void handleAbout(ApplicationEvent ae) {
+                                ae.setHandled(true);
+                                mw.showAbout();
+                            }
 
-                    });
-                    mw.panStampMenu.setVisible(false);
+                        });
+                        mw.panStampMenu.setVisible(false);
+                    }
+                    mw.setVisible(true);
+                    mw.start();
+                } catch (DataStoreException ex) {
+                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (GatewayException ex) {
+                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                mw.setVisible(true);
-                mw.start();
             }
         });
     }
@@ -87,7 +96,7 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
     /**
      * Creates new form MainWindow
      */
-    public MainWindow() {
+    public MainWindow() throws DataStoreException {
         config = new Config();
         model = new DataModel(config);
         initComponents();
@@ -98,15 +107,15 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
     public void configUpdated(ConfigEvent ev) {
         switch (ev.getType()) {
             case NETWORK: {
-            try {
-                gw.getSWAPModem().setSetup(new ModemSetup(config.getChannel(), config.getNetworkID(), config.getDeviceAddress()));
-            } catch (SWAPException ex) {
-                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                try {
+                    gw.getSWAPModem().setSetup(new ModemSetup(config.getChannel(), config.getNetworkID(), config.getDeviceAddress()));
+                } catch (SWAPException ex) {
+                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             break;
             case SERIAL:
-                start();
+//                start();
                 break;
         }
 
@@ -115,9 +124,11 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
     /**
      * start the application
      */
-    private void start() {
+    private void start() throws GatewayException {
         config.addListener(this);
+        model.start();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -306,7 +317,6 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
         }
 
     }
-
 
     private void showAbout() {
         AboutDialog ad = new AboutDialog(this, true);

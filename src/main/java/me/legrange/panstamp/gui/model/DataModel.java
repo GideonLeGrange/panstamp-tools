@@ -1,7 +1,11 @@
 package me.legrange.panstamp.gui.model;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPopupMenu;
 import javax.swing.table.TableModel;
 import javax.swing.tree.TreeCellRenderer;
@@ -18,6 +22,9 @@ import me.legrange.panstamp.gui.model.chart.SignalCollector;
 import me.legrange.panstamp.gui.model.chart.SignalDataSet;
 import me.legrange.panstamp.gui.model.tree.NetworkTreeModel;
 import me.legrange.panstamp.gui.model.tree.NetworkTreeNodeRenderer;
+import me.legrange.panstamp.tools.store.DataStoreException;
+import me.legrange.panstamp.tools.store.DataUpdater;
+import me.legrange.panstamp.tools.store.Store;
 
 /**
  * A data model that provides the different view models required.
@@ -25,16 +32,24 @@ import me.legrange.panstamp.gui.model.tree.NetworkTreeNodeRenderer;
  * @author gideon
  */
 public final class DataModel {
- 
-    public DataModel(Config config) {
+
+    public DataModel(Config config) throws DataStoreException {
         this.config = config;
+        store = Store.openFile(dataFileName());
+        updater = new DataUpdater(store);
     }
-    
-    
+
+    public void start() throws DataStoreException, GatewayException {
+        List<Gateway> stored = store.load();
+        for (Gateway gw : stored) {
+            addGateway(gw);
+        }
+
+    }
+
     public Config getConfig() {
         return config;
     }
-
 
     public synchronized void addGateway(Gateway gw) throws GatewayException {
         SignalCollector sc = new SignalCollector();
@@ -44,7 +59,7 @@ public final class DataModel {
         ntm.addGateway(gw);
         etm.addGateway(gw);
         gw.getSWAPModem().addListener(smm);
-
+        updater.addGateway(gw);
     }
 
     public TreeModel getTreeModel() {
@@ -77,6 +92,20 @@ public final class DataModel {
         return ec.getDataSet(ep);
     }
 
+    private static String dataFileName() {
+        String name = System.getProperty("user.home") + File.separator;
+        if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+            name = name + DATA_PATH;
+        } else {
+            name = name + "." + DATA_PATH;
+        }
+        File path = new File(name);
+        if (!path.exists()) {
+            path.mkdir();
+        }
+        return name + File.separator + "panstamp.json";
+    }
+
     private final Map<Gateway, SignalCollector> signalCollectors = new HashMap<>();
     private final Map<Gateway, EndpointCollector> endpointCollectors = new HashMap<>();
     private final MessageTableModel smm = new MessageTableModel();
@@ -85,6 +114,9 @@ public final class DataModel {
     private final NetworkTreeNodeRenderer snr = new NetworkTreeNodeRenderer(this);
     private final Map<Endpoint, EndpointDataSet> epds = new HashMap<>();
     private final Map<PanStamp, Boolean> hasParams = new HashMap<>();
-   private final Config config;
+    private final Store store;
+    private final DataUpdater updater;
+    private final Config config;
+    private static final String DATA_PATH = "panstamp";
 
 }

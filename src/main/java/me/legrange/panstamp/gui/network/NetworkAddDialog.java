@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
+import me.legrange.panstamp.DeviceLibrary;
 import me.legrange.panstamp.Factory;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
@@ -14,6 +15,7 @@ import me.legrange.panstamp.gui.config.HexDocument;
 import me.legrange.panstamp.gui.config.IntegerDocument;
 import me.legrange.panstamp.gui.model.DataModel;
 import me.legrange.panstamp.core.ModemException;
+import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 
@@ -599,11 +601,12 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     
     private void createNetwork() throws ModemException, SWAPException, GatewayException  {
         Gateway gw;
+        DeviceLibrary lib = new ClassLoaderLibrary();
         if (typeIsSerial()) {
-            gw = Factory.createSerial(getSerialPort(), getSerialSpeed());
+            gw = Factory.createSerial(getSerialPort(), getSerialSpeed(), lib);
         }
         else {
-            gw = Factory.createTcp(getTcpHost(), getTcpPort());
+            gw = Factory.createTcp(getTcpHost(), getTcpPort(), lib);
         }
         gw.open();
         ModemSetup setup = gw.getSWAPModem().getSetup();
