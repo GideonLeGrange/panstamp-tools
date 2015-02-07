@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPopupMenu;
 import javax.swing.table.TableModel;
 import javax.swing.tree.TreeCellRenderer;
@@ -44,7 +42,6 @@ public final class DataModel {
         for (Gateway gw : stored) {
             addGateway(gw);
         }
-
     }
 
     public Config getConfig() {
