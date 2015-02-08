@@ -13,6 +13,7 @@ import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.mvc.DataModel;
+import me.legrange.panstamp.gui.mvc.View;
 import me.legrange.panstamp.tools.store.DataStoreException;
 
 /**
@@ -94,6 +95,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() throws DataStoreException {
         model = new DataModel();
+        view = new View(this, model);
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -297,7 +299,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void networkTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_networkTreeMouseClicked
         TreePath path = networkTree.getClosestPathForLocation(evt.getX(), evt.getY());
-        networkTree.setComponentPopupMenu(model.getTreePopupMenu(path));
+        networkTree.setComponentPopupMenu(view.getTreePopupMenu(path));
     }//GEN-LAST:event_networkTreeMouseClicked
 
     private void swapMessagesTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_swapMessagesTablePropertyChange
@@ -319,7 +321,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private Gateway gw;
     private final DataModel model;
-
+private final View view;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem addNetworkItem;

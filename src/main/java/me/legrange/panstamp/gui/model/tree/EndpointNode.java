@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package me.legrange.panstamp.gui.model.tree;
 
-import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
@@ -19,7 +13,7 @@ import static me.legrange.panstamp.gui.mvc.Format.formatValue;
  *
  * @author gideon
  */
-class EndpointNode extends NetworkTreeNode implements EndpointListener {
+public class EndpointNode extends NetworkTreeNode implements EndpointListener {
 
     public EndpointNode(Endpoint ep) {
         super(ep);
@@ -62,7 +56,7 @@ class EndpointNode extends NetworkTreeNode implements EndpointListener {
     }
 
     @Override
-    Type getType() {
+    public Type getType() {
         return Type.ENDPOINT;
     }
 

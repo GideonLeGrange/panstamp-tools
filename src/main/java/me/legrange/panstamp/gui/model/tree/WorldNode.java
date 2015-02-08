@@ -6,7 +6,7 @@ import me.legrange.panstamp.Gateway;
  *
  * @author gideon
  */
-class WorldNode extends NetworkTreeNode {
+public class WorldNode extends NetworkTreeNode {
 
     public WorldNode() {
         super("");
@@ -22,7 +22,7 @@ class WorldNode extends NetworkTreeNode {
     }
 
     @Override
-    Type getType() {
+    public Type getType() {
         return Type.WORLD;
     }
 

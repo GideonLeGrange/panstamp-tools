@@ -66,14 +66,6 @@ public final class DataModel {
         return smm;
     }
 
-    public TreeCellRenderer getTreeCellRenderer() {
-        return snr;
-    }
-
-    public JPopupMenu getTreePopupMenu(TreePath path) {
-        return snr.getPopupMenu(path);
-    }
-
     public SignalDataSet getSignalDataSet(PanStamp ps) {
         SignalCollector sc = signalCollectors.get(ps.getGateway());
         return sc.getDataSet(ps.getAddress());
@@ -103,7 +95,6 @@ public final class DataModel {
     private final MessageTableModel smm = new MessageTableModel();
     private final NetworkTreeModel ntm = NetworkTreeModel.create();
     private final EndpointTableModel etm = EndpointTableModel.create();
-    private final NetworkTreeNodeRenderer snr = new NetworkTreeNodeRenderer(this);
     private final Map<Endpoint, EndpointDataSet> epds = new HashMap<>();
     private final Map<PanStamp, Boolean> hasParams = new HashMap<>();
     private final Store store;
