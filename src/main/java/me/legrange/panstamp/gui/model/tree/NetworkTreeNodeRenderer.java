@@ -23,6 +23,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
+import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.gui.network.NetworkAddDialog;
@@ -120,20 +121,26 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
             
             menu = new JPopupMenu(gn.toString());
             
-            final JMenuItem activateItem = new JMenuItem("Activate");
+            final JMenuItem activateItem = new JMenuItem();
             activateItem.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        gn.getGateway().open();
-                        activateItem.setEnabled(!gn.getGateway().isOpen());
+                        Gateway gw = gn.getGateway();
+                        if (gw.isOpen()) {
+                            gw.close();
+                        }
+                        else {
+                            gw.open();
+                        }
+                        activateItem.setText(gw.isOpen() ? "Close" : "Open");
                     } catch (GatewayException ex) {
                         Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });
-            activateItem.setEnabled(!gn.getGateway().isOpen());
+            activateItem.setText(gn.getGateway().isOpen() ? "Close" : "Open");
             menu.add(activateItem);
             popupMenus.put(gn, menu);
         }
