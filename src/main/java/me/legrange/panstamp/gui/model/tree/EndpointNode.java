@@ -13,7 +13,7 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
-import static me.legrange.panstamp.gui.model.Format.formatValue;
+import static me.legrange.panstamp.gui.mvc.Format.formatValue;
 
 /**
  *

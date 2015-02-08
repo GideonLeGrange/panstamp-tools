@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.mvc;
 
 import java.util.List;
 import me.legrange.panstamp.Endpoint;

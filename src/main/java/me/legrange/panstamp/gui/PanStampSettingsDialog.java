@@ -7,7 +7,7 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.gui.config.HexDocument;
 import me.legrange.panstamp.gui.config.IntegerDocument;
-import me.legrange.panstamp.gui.model.DataModel;
+import me.legrange.panstamp.gui.mvc.DataModel;
 
 /**
  *

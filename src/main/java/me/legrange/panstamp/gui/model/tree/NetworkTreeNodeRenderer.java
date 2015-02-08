@@ -26,12 +26,12 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.gui.network.NetworkAddDialog;
 import me.legrange.panstamp.gui.PanStampParamDialog;
 import me.legrange.panstamp.gui.PanStampSettingsDialog;
 import me.legrange.panstamp.gui.chart.ChartFactory;
-import me.legrange.panstamp.gui.model.DataModel;
-import me.legrange.panstamp.gui.model.Format;
+import me.legrange.panstamp.gui.mvc.DataModel;
+import me.legrange.panstamp.gui.mvc.Format;
+import me.legrange.panstamp.gui.mvc.View;
 
 /**
  *
@@ -94,8 +94,9 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
 
     }
 
-    public NetworkTreeNodeRenderer(DataModel model) {
+    public NetworkTreeNodeRenderer(DataModel model, View view) {
         this.model = model;
+        this.view =view;
     }
 
     private JPopupMenu getWorldPopupMenu(final WorldNode wn) {
@@ -107,7 +108,8 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    new NetworkAddDialog(null, model).setVisible(true);
+                    view.showNetworkAddDialog();
+//                    new NetworkAddDialog(null, model).setVisible(true);
                 }
             });
             menu.add(addSerialItem);
@@ -303,4 +305,5 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
     private final Map<String, ImageIcon> icons = new HashMap<>();
     private final Map<NetworkTreeNode, JPopupMenu> popupMenus = new HashMap<>();
     private final DataModel model;
+    private final View view;
 }

@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.mvc;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -12,7 +12,7 @@ import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.gui.model.DataModel;
+import me.legrange.panstamp.gui.mvc.DataModel;
 import me.legrange.panstamp.tools.store.DataStoreException;
 
 /**
@@ -114,6 +114,8 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         leftRightSplitPane = new javax.swing.JSplitPane();
         topBottomSplitPane = new javax.swing.JSplitPane();
         topPanel = new javax.swing.JPanel();
@@ -127,9 +129,15 @@ public class MainWindow extends javax.swing.JFrame {
         networkTree = new javax.swing.JTree();
         mainMenu = new javax.swing.JMenuBar();
         panStampMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        aboutMenuItem = new javax.swing.JMenuItem();
         configMenuItem = new javax.swing.JMenuItem();
         quitItem = new javax.swing.JMenuItem();
+        networkMenu = new javax.swing.JMenu();
+        addNetworkItem = new javax.swing.JMenuItem();
+
+        jMenuItem2.setText("jMenuItem2");
+
+        jMenuItem3.setText("jMenuItem3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("Courier", 0, 10)); // NOI18N
@@ -214,13 +222,13 @@ public class MainWindow extends javax.swing.JFrame {
 
         panStampMenu.setText("panStamp");
 
-        jMenuItem1.setText("About");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        aboutMenuItem.setText("About");
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                aboutMenuItemActionPerformed(evt);
             }
         });
-        panStampMenu.add(jMenuItem1);
+        panStampMenu.add(aboutMenuItem);
 
         configMenuItem.setText("Preferences");
         configMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -240,6 +248,18 @@ public class MainWindow extends javax.swing.JFrame {
         panStampMenu.add(quitItem);
 
         mainMenu.add(panStampMenu);
+
+        networkMenu.setText("Network");
+
+        addNetworkItem.setText("Add network");
+        addNetworkItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addNetworkItemActionPerformed(evt);
+            }
+        });
+        networkMenu.add(addNetworkItem);
+
+        mainMenu.add(networkMenu);
 
         setJMenuBar(mainMenu);
 
@@ -271,9 +291,9 @@ public class MainWindow extends javax.swing.JFrame {
 //        showPrefs();
     }//GEN-LAST:event_configMenuItemActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
         showAbout();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void networkTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_networkTreeMouseClicked
         TreePath path = networkTree.getClosestPathForLocation(evt.getX(), evt.getY());
@@ -283,6 +303,10 @@ public class MainWindow extends javax.swing.JFrame {
     private void swapMessagesTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_swapMessagesTablePropertyChange
         // TODO add your handling code here:
     }//GEN-LAST:event_swapMessagesTablePropertyChange
+
+    private void addNetworkItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNetworkItemActionPerformed
+        
+    }//GEN-LAST:event_addNetworkItemActionPerformed
 
     private void quit() {
         System.exit(0);
@@ -297,14 +321,18 @@ public class MainWindow extends javax.swing.JFrame {
     private final DataModel model;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JMenuItem addNetworkItem;
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JMenuItem configMenuItem;
     private javax.swing.JScrollPane eventPanel;
     private javax.swing.JTable eventTable;
-    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel leftPanel;
     private javax.swing.JSplitPane leftRightSplitPane;
     private javax.swing.JMenuBar mainMenu;
+    private javax.swing.JMenu networkMenu;
     private javax.swing.JTree networkTree;
     private javax.swing.JMenu panStampMenu;
     private javax.swing.JMenuItem quitItem;

@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.swing.JFrame;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.gui.model.DataModel;
+import me.legrange.panstamp.gui.mvc.DataModel;
 
 /**
  * Create and lookup charts in frames for different data sources. 
