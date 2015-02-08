@@ -13,7 +13,6 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.gui.config.Config;
 import me.legrange.panstamp.gui.model.chart.EndpointCollector;
 import me.legrange.panstamp.gui.model.chart.EndpointDataSet;
 import me.legrange.panstamp.gui.model.chart.SignalCollector;
@@ -31,8 +30,7 @@ import me.legrange.panstamp.tools.store.Store;
  */
 public final class DataModel {
 
-    public DataModel(Config config) throws DataStoreException {
-        this.config = config;
+    public DataModel() throws DataStoreException {
         store = Store.openFile(dataFileName());
         updater = new DataUpdater(store);
     }
@@ -44,9 +42,6 @@ public final class DataModel {
         }
     }
 
-    public Config getConfig() {
-        return config;
-    }
 
     public synchronized void addGateway(Gateway gw) throws GatewayException {
         SignalCollector sc = new SignalCollector();
@@ -113,7 +108,6 @@ public final class DataModel {
     private final Map<PanStamp, Boolean> hasParams = new HashMap<>();
     private final Store store;
     private final DataUpdater updater;
-    private final Config config;
     private static final String DATA_PATH = "panstamp";
 
 }

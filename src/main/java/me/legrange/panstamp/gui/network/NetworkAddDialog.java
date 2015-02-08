@@ -1,6 +1,10 @@
 package me.legrange.panstamp.gui.network;
 
+import gnu.io.CommPortIdentifier;
 import java.awt.CardLayout;
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,8 +28,11 @@ import me.legrange.swap.SWAPException;
  * @author gideon
  */
 public class NetworkAddDialog extends javax.swing.JDialog {
-    
-    private enum State { SELECT_TYPE, SELECT_SERIAL, ENTER_TCP, ENTER_NETWORK, END; };
+
+    private enum State {
+
+        SELECT_TYPE, SELECT_SERIAL, ENTER_TCP, ENTER_NETWORK, END;
+    };
 
     /**
      * Creates new form PanStampSettingsDialog
@@ -319,7 +326,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
 
         channelTextField.setColumns(4);
         channelTextField.setDocument(new IntegerDocument(0,255));
-        channelTextField.setText(String.format("%d", model.getConfig().getChannel()));
+        channelTextField.setText("0");
         channelTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 channelTextFieldPropertyChange(evt);
@@ -329,7 +336,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         networkIDLabel.setText("Network ID:");
 
         networkTextField.setDocument(new HexDocument(0,65535));
-        networkTextField.setText(String.format("%4x",model.getConfig().getNetworkID()));
+        networkTextField.setText("0xb547");
         networkTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 networkTextFieldPropertyChange(evt);
@@ -339,7 +346,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         addressLabel.setText("Device address:");
 
         addressTextField.setDocument(new IntegerDocument(0, 255));
-        addressTextField.setText(String.format("%d", model.getConfig().getDeviceAddress()));
+        addressTextField.setText("1");
         addressTextField.setToolTipText("Local device address in decimal");
         addressTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
@@ -368,13 +375,13 @@ public class NetworkAddDialog extends javax.swing.JDialog {
                     .addComponent(networkIDLabel)
                     .addComponent(addressLabel)
                     .addComponent(securityLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
                 .addGroup(configNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(networkTextField)
                     .addComponent(securityTextField)
                     .addComponent(addressTextField)
                     .addComponent(channelTextField))
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addContainerGap(157, Short.MAX_VALUE))
         );
         configNetworkPanelLayout.setVerticalGroup(
             configNetworkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -466,8 +473,8 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-           backward();
-        
+        backward();
+
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -516,57 +523,56 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     private void channelTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_channelTextFieldPropertyChange
         String text = channelTextField.getText().trim();
         if ((text != null) && !text.equals("")) {
-       //     config.setChannel(Integer.parseInt(text));
+            //     config.setChannel(Integer.parseInt(text));
         }
     }//GEN-LAST:event_channelTextFieldPropertyChange
 
     private void networkTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_networkTextFieldPropertyChange
         String text = networkTextField.getText().trim();
         if ((text != null) && !text.equals("")) {
-       //     config.setNetworkID(Integer.parseInt(text, 16));
+            //     config.setNetworkID(Integer.parseInt(text, 16));
         }
     }//GEN-LAST:event_networkTextFieldPropertyChange
 
     private void addressTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_addressTextFieldPropertyChange
         String text = addressTextField.getText().trim();
         if ((text != null) && !text.equals("")) {
-      //      config.setDeviceAddress(Integer.parseInt(text));
+            //      config.setDeviceAddress(Integer.parseInt(text));
         }
     }//GEN-LAST:event_addressTextFieldPropertyChange
 
     private void securityTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_securityTextFieldPropertyChange
         String text = securityTextField.getText().trim();
         if ((text != null) && !text.equals("")) {
-      //      config.setSecurityOption(Integer.parseInt(text));
+            //      config.setSecurityOption(Integer.parseInt(text));
         }
     }//GEN-LAST:event_securityTextFieldPropertyChange
 
     private void forward() {
         switch (getState()) {
-            case ENTER_TCP :
-            case SELECT_SERIAL : 
+            case ENTER_TCP:
+            case SELECT_SERIAL:
                 state.push(State.ENTER_NETWORK);
                 break;
-            case SELECT_TYPE : 
+            case SELECT_TYPE:
                 if (typeIsSerial()) {
                     state.push(State.SELECT_SERIAL);
-                }
-                else {
+                } else {
                     state.push(State.ENTER_TCP);
                 }
                 break;
-            case ENTER_NETWORK : 
+            case ENTER_NETWORK:
                 state.push(State.END);
                 break;
         }
         applyState();
     }
-    
+
     private void backward() {
         state.pop();
         applyState();
     }
-    
+
     private void applyState() {
         backButton.setEnabled(getState() != State.SELECT_TYPE);
         nextButton.setEnabled(getState() != State.END);
@@ -574,38 +580,38 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         // select content for wizard based on state
         JPanel content = null;
         switch (getState()) {
-            case SELECT_TYPE :
+            case SELECT_TYPE:
                 content = selectTypePanel;
                 break;
-            case ENTER_TCP : 
+            case ENTER_TCP:
                 content = configTcpPanel;
                 break;
-            case SELECT_SERIAL : 
+            case SELECT_SERIAL:
                 content = configSerialPanel;
                 break;
-            case ENTER_NETWORK : 
+            case ENTER_NETWORK:
                 content = configNetworkPanel;
                 break;
-            case END : 
+            case END:
                 content = createNetworkPanel;
                 break;
-            default : return;
+            default:
+                return;
         }
         CardLayout clo = (CardLayout) contentPanel.getLayout();
         clo.show(contentPanel, content.getName());
     }
-    
+
     private State getState() {
         return state.peek();
     }
-    
-    private void createNetwork() throws ModemException, SWAPException, GatewayException  {
+
+    private void createNetwork() throws ModemException, SWAPException, GatewayException {
         Gateway gw;
         DeviceLibrary lib = new ClassLoaderLibrary();
         if (typeIsSerial()) {
             gw = Factory.createSerial(getSerialPort(), getSerialSpeed(), lib);
-        }
-        else {
+        } else {
             gw = Factory.createTcp(getTcpHost(), getTcpPort(), lib);
         }
         gw.open();
@@ -615,58 +621,69 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         setup.setNetworkID(getNetworkID());
         gw.getSWAPModem().setSetup(setup);
         model.addGateway(gw);
-    }  
-    
+    }
+
     private String getSerialPort() {
         return portComboBox.getSelectedItem().toString();
     }
-    
-    private int getSerialSpeed() { 
+
+    private int getSerialSpeed() {
         return Integer.parseInt(speedComboBox.getSelectedItem().toString());
     }
-    
+
     private String getTcpHost() {
         return hostTextField.getText();
     }
-    
+
     private int getTcpPort() {
         return Integer.parseInt(tcpPortTextField.getText());
     }
-    
+
     private boolean typeIsSerial() {
         return serialRadioButton.isSelected();
     }
-    
-    private int getChannel() { 
+
+    private int getChannel() {
         return Integer.parseInt(channelTextField.getText());
     }
 
-    private int getDeviceAddress() { 
+    private int getDeviceAddress() {
         return Integer.parseInt(addressTextField.getText());
     }
-    
-    private int getNetworkID() { 
-        return Integer.parseInt(networkTextField.getText(),16);
+
+    private int getNetworkID() {
+        return Integer.parseInt(networkTextField.getText(), 16);
     }
-    
+
+    private String[] getPorts() {
+        List<String> serials = new LinkedList<>();
+        Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
+        while (ports.hasMoreElements()) {
+            CommPortIdentifier cpi = ports.nextElement();
+            if (cpi.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+                serials.add(cpi.getName());
+            }
+        }
+        return serials.toArray(new String[]{});
+    }
+
     private ComboBoxModel<String> portListModel() {
         DefaultComboBoxModel<String> mod = new DefaultComboBoxModel<>();
-        for (String port : model.getConfig().getPorts()) {
+
+        for (String port : getPorts()) {
             mod.addElement(port);
-            if (port.equals(model.getConfig().getPortName())) {
-                mod.setSelectedItem(port);
-            }
         }
         return mod;
     }
 
+    private Integer[] getSpeeds() {
+        return new Integer[]{38400, 19200, 9600};
+    }
+
     private ComboBoxModel<Integer> speedListModel() {
         DefaultComboBoxModel<Integer> mod = new DefaultComboBoxModel<>();
-        for (Integer speed : model.getConfig().getSpeeds()) {
+        for (Integer speed : getSpeeds()) {
             mod.addElement(speed);
-            if (speed.equals(model.getConfig().getPortSpeed())) {
-                mod.setSelectedItem(speed);
-            }
         }
         return mod;
     }
@@ -714,5 +731,5 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
     private final DataModel model;
     private final Stack<State> state = new Stack<>();
-    
+
 }

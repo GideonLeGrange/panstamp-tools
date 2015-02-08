@@ -1,7 +1,5 @@
 package me.legrange.panstamp.gui;
 
-import me.legrange.panstamp.gui.config.Config;
-
 /**
  *
  * @author gideon
@@ -50,7 +48,7 @@ public class AboutDialog extends javax.swing.JDialog {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setText(Config.VERSION);
+        jLabel2.setText("1.0-SNAPSHOT");
 
         jLabel1.setText("Version");
 

@@ -1,8 +1,5 @@
 package me.legrange.panstamp.gui;
 
-import me.legrange.panstamp.gui.config.ConfigEvent;
-import me.legrange.panstamp.gui.config.Config;
-import me.legrange.panstamp.gui.config.ConfigListener;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
@@ -17,14 +14,12 @@ import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.model.DataModel;
 import me.legrange.panstamp.tools.store.DataStoreException;
-import me.legrange.swap.ModemSetup;
-import me.legrange.swap.SWAPException;
 
 /**
  *
  * @author gideon
  */
-public class MainWindow extends javax.swing.JFrame implements ConfigListener {
+public class MainWindow extends javax.swing.JFrame {
 
     /**
      * @param args the command line arguments
@@ -95,37 +90,18 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
 
     /**
      * Creates new form MainWindow
+     * @throws me.legrange.panstamp.tools.store.DataStoreException
      */
     public MainWindow() throws DataStoreException {
-        config = new Config();
-        model = new DataModel(config);
+        model = new DataModel();
         initComponents();
         setLocationRelativeTo(null);
-    }
-
-    @Override
-    public void configUpdated(ConfigEvent ev) {
-        switch (ev.getType()) {
-            case NETWORK: {
-                try {
-                    gw.getSWAPModem().setSetup(new ModemSetup(config.getChannel(), config.getNetworkID(), config.getDeviceAddress()));
-                } catch (SWAPException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            break;
-            case SERIAL:
-//                start();
-                break;
-        }
-
     }
 
     /**
      * start the application
      */
     private void start() throws GatewayException {
-        config.addListener(this);
         model.start();
     }
 
@@ -309,13 +285,7 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
     }//GEN-LAST:event_swapMessagesTablePropertyChange
 
     private void quit() {
-        try {
-            config.save();
-            System.exit(0);
-        } catch (BackingStoreException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        System.exit(0);
     }
 
     private void showAbout() {
@@ -323,7 +293,6 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
         ad.setVisible(true);
     }
 
-    private final Config config;
     private Gateway gw;
     private final DataModel model;
 
