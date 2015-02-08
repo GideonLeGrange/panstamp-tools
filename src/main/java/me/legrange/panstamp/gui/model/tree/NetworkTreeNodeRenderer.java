@@ -127,11 +127,13 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
                 public void actionPerformed(ActionEvent e) {
                     try {
                         gn.getGateway().open();
+                        activateItem.setEnabled(!gn.getGateway().isOpen());
                     } catch (GatewayException ex) {
                         Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });
+            activateItem.setEnabled(!gn.getGateway().isOpen());
             menu.add(activateItem);
             popupMenus.put(gn, menu);
         }
