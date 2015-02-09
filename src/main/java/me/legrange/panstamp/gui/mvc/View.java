@@ -19,11 +19,9 @@ import me.legrange.panstamp.gui.network.NetworkAddDialog;
 public class View {
 
     public void showNetworkAddDialog() {
-        if (networkAdd == null) {
-            if (!networkAdd.isVisible()) {
-                networkAdd = new NetworkAddDialog(null, model);
-                networkAdd.setVisible(true);
-            }
+        if ((networkAdd == null) ||  !networkAdd.isVisible()) {
+            networkAdd = new NetworkAddDialog(null, model);
+            networkAdd.setVisible(true);
         }
     }
 
