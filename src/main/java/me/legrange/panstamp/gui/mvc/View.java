@@ -45,6 +45,7 @@ public class View {
     public View(MainWindow window, DataModel model) {
         this.model = model;
         this.window = window;
+        this.treeRender = new NetworkTreeNodeRenderer(model, this);
         treeMenus = new TreeMenus(this);
     }
 
@@ -61,7 +62,7 @@ public class View {
         ChartFactory.getFactory(getModel()).getSignalChart(panStamp).setVisible(true);
     }
     private NetworkAddDialog networkAdd;
-    private TreeCellRenderer treeRender;
+    private final TreeCellRenderer treeRender;
     private final DataModel model;
     private final MainWindow window;
     private final TreeMenus treeMenus;

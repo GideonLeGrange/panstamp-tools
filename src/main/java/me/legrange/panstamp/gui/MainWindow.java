@@ -115,8 +115,6 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
         leftRightSplitPane = new javax.swing.JSplitPane();
         topBottomSplitPane = new javax.swing.JSplitPane();
         topPanel = new javax.swing.JPanel();
@@ -135,10 +133,6 @@ public class MainWindow extends javax.swing.JFrame {
         quitItem = new javax.swing.JMenuItem();
         networkMenu = new javax.swing.JMenu();
         addNetworkItem = new javax.swing.JMenuItem();
-
-        jMenuItem2.setText("jMenuItem2");
-
-        jMenuItem3.setText("jMenuItem3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("Courier", 0, 10)); // NOI18N
@@ -306,7 +300,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_swapMessagesTablePropertyChange
 
     private void addNetworkItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNetworkItemActionPerformed
-        
+        view.showNetworkAddDialog();
     }//GEN-LAST:event_addNetworkItemActionPerformed
 
     private void quit() {
@@ -328,8 +322,6 @@ private final View view;
     private javax.swing.JMenuItem configMenuItem;
     private javax.swing.JScrollPane eventPanel;
     private javax.swing.JTable eventTable;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel leftPanel;
     private javax.swing.JSplitPane leftRightSplitPane;
     private javax.swing.JMenuBar mainMenu;
