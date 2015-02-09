@@ -69,7 +69,7 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
 
    
 
-    public NetworkTreeNodeRenderer(DataModel model, View view) {
+    public NetworkTreeNodeRenderer(Model model, View view) {
         this.model = model;
         this.view =view;
     }
@@ -121,6 +121,6 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
     private static final String ICON_REGISTER = "register16x16.png";
     private static final String ICON_ENDPOINT = "endpoint16x16.png";
     private final Map<String, ImageIcon> icons = new HashMap<>();
-    private final DataModel model;
+    private final Model model;
     private final View view;
 }

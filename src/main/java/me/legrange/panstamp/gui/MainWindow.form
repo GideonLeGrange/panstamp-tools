@@ -53,6 +53,11 @@
             </MenuItem>
           </SubComponents>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="deviceMenu">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Device"/>
+          </Properties>
+        </Menu>
       </SubComponents>
     </Menu>
   </NonVisualComponents>

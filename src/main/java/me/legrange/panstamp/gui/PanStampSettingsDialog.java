@@ -7,7 +7,7 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.gui.mvc.HexDocument;
 import me.legrange.panstamp.gui.mvc.IntegerDocument;
-import me.legrange.panstamp.gui.mvc.DataModel;
+import me.legrange.panstamp.gui.mvc.Model;
 
 /**
  *
@@ -21,7 +21,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
      * @param model
      * @param ps
      */
-    public PanStampSettingsDialog(java.awt.Frame parent, DataModel model, PanStamp ps) {
+    public PanStampSettingsDialog(java.awt.Frame parent, Model model, PanStamp ps) {
         super(parent, true);
         this.ps = ps;
         this.model = model;
@@ -270,5 +270,5 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel securityLabel;
     // End of variables declaration//GEN-END:variables
     private final PanStamp ps;
-    private final DataModel model;
+    private final Model model;
 }

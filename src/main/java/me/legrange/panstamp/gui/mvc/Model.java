@@ -24,9 +24,9 @@ import me.legrange.panstamp.tools.store.Store;
  *
  * @author gideon
  */
-public final class DataModel {
+public final class Model {
 
-    public DataModel() throws DataStoreException {
+    public Model() throws DataStoreException {
         store = Store.openFile(dataFileName());
         updater = new DataUpdater(store);
     }

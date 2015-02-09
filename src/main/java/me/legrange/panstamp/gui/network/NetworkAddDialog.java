@@ -17,7 +17,7 @@ import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.mvc.HexDocument;
 import me.legrange.panstamp.gui.mvc.IntegerDocument;
-import me.legrange.panstamp.gui.mvc.DataModel;
+import me.legrange.panstamp.gui.mvc.Model;
 import me.legrange.panstamp.core.ModemException;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.swap.ModemSetup;
@@ -37,7 +37,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     /**
      * Creates new form PanStampSettingsDialog
      */
-    public NetworkAddDialog(java.awt.Frame parent, DataModel model) {
+    public NetworkAddDialog(java.awt.Frame parent, Model model) {
         super(parent, true);
         this.model = model;
         initComponents();
@@ -729,7 +729,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     private javax.swing.JRadioButton tcpRadioButton;
     private javax.swing.ButtonGroup typeButtonGroup;
     // End of variables declaration//GEN-END:variables
-    private final DataModel model;
+    private final Model model;
     private final Stack<State> state = new Stack<>();
 
 }

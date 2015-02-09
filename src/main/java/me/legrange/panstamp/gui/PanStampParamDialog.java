@@ -18,7 +18,7 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.gui.mvc.DataModel;
+import me.legrange.panstamp.gui.mvc.Model;
 
 /**
  *
@@ -29,7 +29,7 @@ public class PanStampParamDialog extends javax.swing.JDialog {
     /**
      * Creates new form PanStampParamDialog
      */
-    public PanStampParamDialog(java.awt.Frame parent, DataModel model, PanStamp ps) {
+    public PanStampParamDialog(java.awt.Frame parent, Model model, PanStamp ps) {
         super(parent, true);
         this.ps = ps;
         this.model = model;
@@ -244,6 +244,6 @@ public class PanStampParamDialog extends javax.swing.JDialog {
     private javax.swing.JTabbedPane paramTabbedPane;
     // End of variables declaration//GEN-END:variables
     private final PanStamp ps;
-    private final DataModel model;
+    private final Model model;
     private final Map<Component, Parameter> paramMap = new HashMap<>();
 }

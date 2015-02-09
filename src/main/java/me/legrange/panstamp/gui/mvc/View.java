@@ -42,14 +42,14 @@ public class View {
         return treeMenus.getPopupMenu(path);
     }
 
-    public View(MainWindow window, DataModel model) {
+    public View(MainWindow window, Model model) {
         this.model = model;
         this.window = window;
         this.treeRender = new NetworkTreeNodeRenderer(model, this);
         treeMenus = new TreeMenus(this);
     }
 
-    public DataModel getModel() {
+    public Model getModel() {
         return model;
     }
 
@@ -63,7 +63,7 @@ public class View {
     }
     private NetworkAddDialog networkAdd;
     private final TreeCellRenderer treeRender;
-    private final DataModel model;
+    private final Model model;
     private final MainWindow window;
     private final TreeMenus treeMenus;
 

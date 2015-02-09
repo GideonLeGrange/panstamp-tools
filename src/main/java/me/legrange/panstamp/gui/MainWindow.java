@@ -11,7 +11,7 @@ import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.gui.mvc.DataModel;
+import me.legrange.panstamp.gui.mvc.Model;
 import me.legrange.panstamp.gui.mvc.View;
 import me.legrange.panstamp.tools.store.DataStoreException;
 
@@ -93,7 +93,7 @@ public class MainWindow extends javax.swing.JFrame {
      * @throws me.legrange.panstamp.tools.store.DataStoreException
      */
     public MainWindow() throws DataStoreException {
-        model = new DataModel();
+        model = new Model();
         view = new View(this, model);
         initComponents();
         setLocationRelativeTo(null);
@@ -133,6 +133,7 @@ public class MainWindow extends javax.swing.JFrame {
         quitItem = new javax.swing.JMenuItem();
         networkMenu = new javax.swing.JMenu();
         addNetworkItem = new javax.swing.JMenuItem();
+        deviceMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("Courier", 0, 10)); // NOI18N
@@ -256,6 +257,9 @@ public class MainWindow extends javax.swing.JFrame {
 
         mainMenu.add(networkMenu);
 
+        deviceMenu.setText("Device");
+        mainMenu.add(deviceMenu);
+
         setJMenuBar(mainMenu);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -313,13 +317,14 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private Gateway gw;
-    private final DataModel model;
+    private final Model model;
 private final View view;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem addNetworkItem;
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JMenuItem configMenuItem;
+    private javax.swing.JMenu deviceMenu;
     private javax.swing.JScrollPane eventPanel;
     private javax.swing.JTable eventTable;
     private javax.swing.JPanel leftPanel;
