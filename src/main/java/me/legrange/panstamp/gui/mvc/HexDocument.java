@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.config;
+package me.legrange.panstamp.gui.mvc;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;

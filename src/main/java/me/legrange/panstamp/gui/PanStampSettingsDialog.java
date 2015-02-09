@@ -5,8 +5,8 @@ import java.util.logging.Logger;
 import javax.swing.JTextField;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.gui.config.HexDocument;
-import me.legrange.panstamp.gui.config.IntegerDocument;
+import me.legrange.panstamp.gui.mvc.HexDocument;
+import me.legrange.panstamp.gui.mvc.IntegerDocument;
 import me.legrange.panstamp.gui.mvc.DataModel;
 
 /**
@@ -17,6 +17,9 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form PanStampSettingsDialog
+     * @param parent
+     * @param model
+     * @param ps
      */
     public PanStampSettingsDialog(java.awt.Frame parent, DataModel model, PanStamp ps) {
         super(parent, true);

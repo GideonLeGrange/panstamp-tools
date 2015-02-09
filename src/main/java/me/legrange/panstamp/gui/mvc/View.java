@@ -3,10 +3,12 @@ package me.legrange.panstamp.gui.mvc;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
+import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.gui.MainWindow;
 import me.legrange.panstamp.gui.PanStampParamDialog;
 import me.legrange.panstamp.gui.PanStampSettingsDialog;
+import me.legrange.panstamp.gui.chart.ChartFactory;
 import me.legrange.panstamp.gui.network.NetworkAddDialog;
 
 /**
@@ -51,13 +53,19 @@ public class View {
     public DataModel getModel() {
         return model;
     }
-    
 
+    void showEndpointChart(Endpoint endpoint) {
+        ChartFactory.getFactory(getModel()).getEndpointChart(endpoint).setVisible(true);
 
+    }
+
+    void showSignalChart(PanStamp panStamp) {
+        ChartFactory.getFactory(getModel()).getSignalChart(panStamp).setVisible(true);
+    }
     private NetworkAddDialog networkAdd;
     private TreeCellRenderer treeRender;
     private final DataModel model;
     private final MainWindow window;
-    private TreeMenus treeMenus;
+    private final TreeMenus treeMenus;
 
 }
