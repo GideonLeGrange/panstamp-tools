@@ -164,7 +164,7 @@ public class PanStampNode extends NetworkTreeNode implements PanStampListener {
         }
     }
     
-    void setRegisterDisplay(RegisterDisplay rd) {
+    public void setRegisterDisplay(RegisterDisplay rd) {
         if (rd != registerDisplay) {
             registerDisplay = rd;
             reload();

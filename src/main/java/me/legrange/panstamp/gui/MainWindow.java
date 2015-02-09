@@ -206,7 +206,7 @@ public class MainWindow extends javax.swing.JFrame {
         leftPanel.setLayout(new java.awt.BorderLayout());
 
         networkTree.setModel(model.getTreeModel());
-        networkTree.setCellRenderer(model.getTreeCellRenderer());
+        networkTree.setCellRenderer(view.getTreeCellRenderer());
         networkTree.setSelectionModel(new DefaultTreeSelectionModel());
         networkTree.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {

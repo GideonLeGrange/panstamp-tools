@@ -303,7 +303,7 @@
                       <Connection code="model.getTreeModel()" type="code"/>
                     </Property>
                     <Property name="cellRenderer" type="javax.swing.tree.TreeCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="model.getTreeCellRenderer()" type="code"/>
+                      <Connection code="view.getTreeCellRenderer()" type="code"/>
                     </Property>
                     <Property name="selectionModel" type="javax.swing.tree.TreeSelectionModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="new DefaultTreeSelectionModel()" type="code"/>

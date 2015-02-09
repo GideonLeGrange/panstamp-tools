@@ -6,11 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSeparator;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.Register;
 import me.legrange.panstamp.gui.chart.ChartFactory;
 import me.legrange.panstamp.gui.model.tree.EndpointNode;
 import me.legrange.panstamp.gui.model.tree.GatewayNode;
@@ -128,7 +132,7 @@ public class TreeMenus {
                     }
                 }
             } catch (GatewayException ex) {
-                Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
             }
             paramItem.setEnabled(hasParams);
 
@@ -137,7 +141,7 @@ public class TreeMenus {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    ChartFactory.getFactory(model).getSignalChart(psn.getPanStamp()).setVisible(true);
+                    ChartFactory.getFactory(view.getModel()).getSignalChart(psn.getPanStamp()).setVisible(true);
                 }
             });
             menu.add(graphItem);
@@ -191,7 +195,7 @@ public class TreeMenus {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    ChartFactory.getFactory(model).getEndpointChart(epn.getEndpoint()).setVisible(true);
+                    ChartFactory.getFactory(view.getModel()).getEndpointChart(epn.getEndpoint()).setVisible(true);
                 }
             });
             menu.add(graphItem);

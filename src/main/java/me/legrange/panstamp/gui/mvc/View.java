@@ -48,6 +48,12 @@ public class View {
         treeMenus = new TreeMenus(this);
     }
 
+    public DataModel getModel() {
+        return model;
+    }
+    
+
+
     private NetworkAddDialog networkAdd;
     private TreeCellRenderer treeRender;
     private final DataModel model;
