@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model.chart;
+package me.legrange.panstamp.gui.model;
 
 import java.util.HashMap;
 import java.util.Map;

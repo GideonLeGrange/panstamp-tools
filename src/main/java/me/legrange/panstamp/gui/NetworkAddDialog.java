@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.network;
+package me.legrange.panstamp.gui;
 
 import gnu.io.CommPortIdentifier;
 import java.awt.CardLayout;
@@ -15,9 +15,9 @@ import me.legrange.panstamp.DeviceLibrary;
 import me.legrange.panstamp.Factory;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.gui.mvc.HexDocument;
-import me.legrange.panstamp.gui.mvc.IntegerDocument;
-import me.legrange.panstamp.gui.mvc.Model;
+import me.legrange.panstamp.gui.model.HexDocument;
+import me.legrange.panstamp.gui.model.IntegerDocument;
+import me.legrange.panstamp.gui.model.Model;
 import me.legrange.panstamp.core.ModemException;
 import me.legrange.panstamp.def.ClassLoaderLibrary;
 import me.legrange.swap.ModemSetup;

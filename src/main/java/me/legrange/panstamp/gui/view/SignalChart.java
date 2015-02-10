@@ -1,7 +1,7 @@
-package me.legrange.panstamp.gui.chart;
+package me.legrange.panstamp.gui.view;
 
 import java.text.DecimalFormat;
-import me.legrange.panstamp.gui.model.chart.SignalDataSet;
+import me.legrange.panstamp.gui.model.SignalDataSet;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 

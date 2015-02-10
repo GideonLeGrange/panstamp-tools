@@ -1,5 +1,5 @@
 
-package me.legrange.panstamp.gui.model.tree;
+package me.legrange.panstamp.gui.model;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -7,7 +7,7 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
-import static me.legrange.panstamp.gui.mvc.Format.formatValue;
+import static me.legrange.panstamp.gui.model.Format.formatValue;
 
 /**
  *

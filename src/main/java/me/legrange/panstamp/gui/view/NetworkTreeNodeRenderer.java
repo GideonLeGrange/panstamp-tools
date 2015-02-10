@@ -1,5 +1,7 @@
-package me.legrange.panstamp.gui.mvc;
+package me.legrange.panstamp.gui.view;
 
+import me.legrange.panstamp.gui.model.Model;
+import me.legrange.panstamp.gui.model.Format;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.io.IOException;
@@ -16,12 +18,12 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.gui.model.tree.EndpointNode;
-import me.legrange.panstamp.gui.model.tree.GatewayNode;
-import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
-import me.legrange.panstamp.gui.model.tree.PanStampNode;
-import me.legrange.panstamp.gui.model.tree.RegisterNode;
-import me.legrange.panstamp.gui.model.tree.WorldNode;
+import me.legrange.panstamp.gui.model.EndpointNode;
+import me.legrange.panstamp.gui.model.GatewayNode;
+import me.legrange.panstamp.gui.model.NetworkTreeNode;
+import me.legrange.panstamp.gui.model.PanStampNode;
+import me.legrange.panstamp.gui.model.RegisterNode;
+import me.legrange.panstamp.gui.model.WorldNode;
 
 /**
  *

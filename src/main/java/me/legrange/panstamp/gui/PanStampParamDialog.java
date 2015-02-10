@@ -18,7 +18,7 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.gui.mvc.Model;
+import me.legrange.panstamp.gui.model.Model;
 
 /**
  *

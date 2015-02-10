@@ -1,5 +1,6 @@
-package me.legrange.panstamp.gui.mvc;
+package me.legrange.panstamp.gui.view;
 
+import me.legrange.panstamp.gui.model.Model;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
@@ -8,8 +9,7 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.gui.MainWindow;
 import me.legrange.panstamp.gui.PanStampParamDialog;
 import me.legrange.panstamp.gui.PanStampSettingsDialog;
-import me.legrange.panstamp.gui.chart.ChartFactory;
-import me.legrange.panstamp.gui.network.NetworkAddDialog;
+import me.legrange.panstamp.gui.NetworkAddDialog;
 
 /**
  * Controlling the visual bits of the application

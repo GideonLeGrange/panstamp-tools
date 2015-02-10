@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.mvc;
+package me.legrange.panstamp.gui.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,11 +15,11 @@ import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.gui.model.tree.EndpointNode;
-import me.legrange.panstamp.gui.model.tree.GatewayNode;
-import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
-import me.legrange.panstamp.gui.model.tree.PanStampNode;
-import me.legrange.panstamp.gui.model.tree.WorldNode;
+import me.legrange.panstamp.gui.model.EndpointNode;
+import me.legrange.panstamp.gui.model.GatewayNode;
+import me.legrange.panstamp.gui.model.NetworkTreeNode;
+import me.legrange.panstamp.gui.model.PanStampNode;
+import me.legrange.panstamp.gui.model.WorldNode;
 
 /**
  *

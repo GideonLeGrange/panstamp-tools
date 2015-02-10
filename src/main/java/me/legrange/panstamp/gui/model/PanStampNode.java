@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model.tree;
+package me.legrange.panstamp.gui.model;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

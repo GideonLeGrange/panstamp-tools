@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.chart;
+package me.legrange.panstamp.gui.view;
 
 import java.awt.Dimension;
 import java.text.SimpleDateFormat;

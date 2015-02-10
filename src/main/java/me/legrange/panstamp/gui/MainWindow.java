@@ -11,8 +11,8 @@ import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.gui.mvc.Model;
-import me.legrange.panstamp.gui.mvc.View;
+import me.legrange.panstamp.gui.model.Model;
+import me.legrange.panstamp.gui.view.View;
 import me.legrange.panstamp.tools.store.DataStoreException;
 
 /**

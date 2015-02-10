@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.mvc;
+package me.legrange.panstamp.gui.model;
 
 import java.io.File;
 import java.util.HashMap;
@@ -10,11 +10,6 @@ import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.gui.model.chart.EndpointCollector;
-import me.legrange.panstamp.gui.model.chart.EndpointDataSet;
-import me.legrange.panstamp.gui.model.chart.SignalCollector;
-import me.legrange.panstamp.gui.model.chart.SignalDataSet;
-import me.legrange.panstamp.gui.model.tree.NetworkTreeModel;
 import me.legrange.panstamp.tools.store.DataStoreException;
 import me.legrange.panstamp.tools.store.DataUpdater;
 import me.legrange.panstamp.tools.store.Store;

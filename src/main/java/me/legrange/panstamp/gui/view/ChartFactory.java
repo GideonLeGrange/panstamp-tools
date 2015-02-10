@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.chart;
+package me.legrange.panstamp.gui.view;
 
 import java.awt.BorderLayout;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.swing.JFrame;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.gui.mvc.Model;
+import me.legrange.panstamp.gui.model.Model;
 
 /**
  * Create and lookup charts in frames for different data sources. 

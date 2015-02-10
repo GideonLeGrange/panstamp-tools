@@ -5,9 +5,9 @@ import java.util.logging.Logger;
 import javax.swing.JTextField;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.gui.mvc.HexDocument;
-import me.legrange.panstamp.gui.mvc.IntegerDocument;
-import me.legrange.panstamp.gui.mvc.Model;
+import me.legrange.panstamp.gui.model.HexDocument;
+import me.legrange.panstamp.gui.model.IntegerDocument;
+import me.legrange.panstamp.gui.model.Model;
 
 /**
  *
