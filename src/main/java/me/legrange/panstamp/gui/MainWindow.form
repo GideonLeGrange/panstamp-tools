@@ -21,9 +21,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Preferences"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="configMenuItemActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="quitItem">
               <Properties>
@@ -196,9 +193,6 @@
                           <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="swapMessagesTablePropertyChange"/>
-                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

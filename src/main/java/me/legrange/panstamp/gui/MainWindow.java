@@ -90,6 +90,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     /**
      * Creates new form MainWindow
+     *
      * @throws me.legrange.panstamp.tools.store.DataStoreException
      */
     public MainWindow() throws DataStoreException {
@@ -168,11 +169,6 @@ public class MainWindow extends javax.swing.JFrame {
         swapMessagesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         swapMessagesTable.setShowGrid(false);
         swapMessagesTable.getTableHeader().setReorderingAllowed(false);
-        swapMessagesTable.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                swapMessagesTablePropertyChange(evt);
-            }
-        });
         swapMessagesPane.setViewportView(swapMessagesTable);
 
         topPanel.add(swapMessagesPane, java.awt.BorderLayout.CENTER);
@@ -227,11 +223,6 @@ public class MainWindow extends javax.swing.JFrame {
         panStampMenu.add(aboutMenuItem);
 
         configMenuItem.setText("Preferences");
-        configMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                configMenuItemActionPerformed(evt);
-            }
-        });
         panStampMenu.add(configMenuItem);
 
         quitItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
@@ -286,10 +277,6 @@ public class MainWindow extends javax.swing.JFrame {
         quit();
     }//GEN-LAST:event_quitItemActionPerformed
 
-    private void configMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configMenuItemActionPerformed
-//        showPrefs();
-    }//GEN-LAST:event_configMenuItemActionPerformed
-
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
         showAbout();
     }//GEN-LAST:event_aboutMenuItemActionPerformed
@@ -298,10 +285,6 @@ public class MainWindow extends javax.swing.JFrame {
         TreePath path = networkTree.getClosestPathForLocation(evt.getX(), evt.getY());
         networkTree.setComponentPopupMenu(view.getTreePopupMenu(path));
     }//GEN-LAST:event_networkTreeMouseClicked
-
-    private void swapMessagesTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_swapMessagesTablePropertyChange
-        // TODO add your handling code here:
-    }//GEN-LAST:event_swapMessagesTablePropertyChange
 
     private void addNetworkItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNetworkItemActionPerformed
         view.showNetworkAddDialog();
@@ -318,7 +301,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private Gateway gw;
     private final Model model;
-private final View view;
+    private final View view;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem addNetworkItem;
