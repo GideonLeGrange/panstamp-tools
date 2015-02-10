@@ -413,14 +413,14 @@
                                   <Component id="addressLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="securityLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="120" max="32767" attributes="0"/>
+                              <EmptySpace pref="138" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="networkTextField" alignment="0" max="32767" attributes="0"/>
                                   <Component id="securityTextField" alignment="0" max="32767" attributes="0"/>
                                   <Component id="addressTextField" alignment="0" max="32767" attributes="0"/>
                                   <Component id="channelTextField" alignment="0" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="139" max="32767" attributes="0"/>
+                              <EmptySpace pref="157" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -465,9 +465,7 @@
                         <Property name="document" type="javax.swing.text.Document" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="new IntegerDocument(0,255)" type="code"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="String.format(&quot;%d&quot;, model.getConfig().getChannel())" type="code"/>
-                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
                       </Properties>
                       <Events>
                         <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="channelTextFieldPropertyChange"/>
@@ -483,9 +481,7 @@
                         <Property name="document" type="javax.swing.text.Document" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="new HexDocument(0,65535)" type="code"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="String.format(&quot;%4x&quot;,model.getConfig().getNetworkID())" type="code"/>
-                        </Property>
+                        <Property name="text" type="java.lang.String" value="0xb547"/>
                       </Properties>
                       <Events>
                         <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="networkTextFieldPropertyChange"/>
@@ -501,9 +497,7 @@
                         <Property name="document" type="javax.swing.text.Document" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="new IntegerDocument(0, 255)" type="code"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="String.format(&quot;%d&quot;, model.getConfig().getDeviceAddress())" type="code"/>
-                        </Property>
+                        <Property name="text" type="java.lang.String" value="1"/>
                         <Property name="toolTipText" type="java.lang.String" value="Local device address in decimal"/>
                       </Properties>
                       <Events>

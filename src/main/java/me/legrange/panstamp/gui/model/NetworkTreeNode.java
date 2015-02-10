@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model.tree;
+package me.legrange.panstamp.gui.model;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -8,7 +8,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public abstract class NetworkTreeNode extends DefaultMutableTreeNode {
 
-    enum Type {
+    public enum Type {
 
         WORLD, GATEWAY, PANSTAMP, REGISTER, ENDPOINT
     };
@@ -42,6 +42,6 @@ public abstract class NetworkTreeNode extends DefaultMutableTreeNode {
         reload(this);
     }
 
-    abstract Type getType();
+    public abstract Type getType();
 
 }

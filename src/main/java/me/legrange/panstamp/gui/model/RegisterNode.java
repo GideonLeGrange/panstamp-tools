@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model.tree;
+package me.legrange.panstamp.gui.model;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,7 +12,7 @@ import me.legrange.panstamp.RegisterListener;
  *
  * @author gideon
  */
-class RegisterNode extends NetworkTreeNode implements RegisterListener {
+public class RegisterNode extends NetworkTreeNode implements RegisterListener {
 
     public RegisterNode(Register reg) {
         super(reg);
@@ -65,7 +65,7 @@ class RegisterNode extends NetworkTreeNode implements RegisterListener {
     }
 
     @Override
-    Type getType() {
+    public Type getType() {
         return Type.REGISTER;
     }
 

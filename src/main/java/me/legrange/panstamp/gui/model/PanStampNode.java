@@ -1,6 +1,5 @@
-package me.legrange.panstamp.gui.model.tree;
+package me.legrange.panstamp.gui.model;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -16,7 +15,7 @@ import me.legrange.panstamp.Register;
  *
  * @author gideon
  */
-class PanStampNode extends NetworkTreeNode implements PanStampListener {
+public class PanStampNode extends NetworkTreeNode implements PanStampListener {
     
     public enum RegisterDisplay { ALL, NONE, INTERESTING; };
 
@@ -128,7 +127,7 @@ class PanStampNode extends NetworkTreeNode implements PanStampListener {
     }
 
     @Override
-    Type getType() {
+    public Type getType() {
         return Type.PANSTAMP;
     }
 
@@ -165,7 +164,7 @@ class PanStampNode extends NetworkTreeNode implements PanStampListener {
         }
     }
     
-    void setRegisterDisplay(RegisterDisplay rd) {
+    public void setRegisterDisplay(RegisterDisplay rd) {
         if (rd != registerDisplay) {
             registerDisplay = rd;
             reload();

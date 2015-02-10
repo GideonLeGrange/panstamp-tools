@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model.tree;
+package me.legrange.panstamp.gui.model;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +15,7 @@ import me.legrange.swap.serial.SerialModem;
  *
  * @author gideon
  */
-class GatewayNode extends NetworkTreeNode implements GatewayListener {
+public class GatewayNode extends NetworkTreeNode implements GatewayListener {
 
     public GatewayNode(Gateway gw) {
         super(gw);
@@ -72,7 +72,7 @@ class GatewayNode extends NetworkTreeNode implements GatewayListener {
     }
 
     @Override
-    Type getType() {
+    public Type getType() {
         return Type.GATEWAY;
     }
 

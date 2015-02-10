@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.chart;
+package me.legrange.panstamp.gui.view;
 
 import java.awt.BorderLayout;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.swing.JFrame;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.gui.model.DataModel;
+import me.legrange.panstamp.gui.model.Model;
 
 /**
  * Create and lookup charts in frames for different data sources. 
@@ -14,7 +14,7 @@ import me.legrange.panstamp.gui.model.DataModel;
  */
 public class ChartFactory {
 
-    public static ChartFactory getFactory(DataModel model) {
+    public static ChartFactory getFactory(Model model) {
         ChartFactory fact = facts.get(model);
         if (fact == null) {
             fact = new ChartFactory(model);
@@ -51,12 +51,12 @@ public class ChartFactory {
         return frame;
     }
 
-    private ChartFactory(DataModel model) {
+    private ChartFactory(Model model) {
         this.model = model;
     }
 
-    private final DataModel model;
+    private final Model model;
     private final Map<PanStamp, JFrame> signalCharts = new HashMap<>();
     private final Map<Endpoint, JFrame> endpointCharts = new HashMap<>();
-    private final static Map<DataModel, ChartFactory> facts = new HashMap<>();
+    private final static Map<Model, ChartFactory> facts = new HashMap<>();
 }

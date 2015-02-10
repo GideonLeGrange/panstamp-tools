@@ -1,30 +1,25 @@
 package me.legrange.panstamp.gui;
 
-import me.legrange.panstamp.gui.config.ConfigEvent;
-import me.legrange.panstamp.gui.config.Config;
-import me.legrange.panstamp.gui.config.ConfigListener;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.gui.model.DataModel;
+import me.legrange.panstamp.gui.model.Model;
+import me.legrange.panstamp.gui.view.View;
 import me.legrange.panstamp.tools.store.DataStoreException;
-import me.legrange.swap.ModemSetup;
-import me.legrange.swap.SWAPException;
 
 /**
  *
  * @author gideon
  */
-public class MainWindow extends javax.swing.JFrame implements ConfigListener {
+public class MainWindow extends javax.swing.JFrame {
 
     /**
      * @param args the command line arguments
@@ -95,37 +90,20 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
 
     /**
      * Creates new form MainWindow
+     *
+     * @throws me.legrange.panstamp.tools.store.DataStoreException
      */
     public MainWindow() throws DataStoreException {
-        config = new Config();
-        model = new DataModel(config);
+        model = new Model();
+        view = new View(this, model);
         initComponents();
         setLocationRelativeTo(null);
-    }
-
-    @Override
-    public void configUpdated(ConfigEvent ev) {
-        switch (ev.getType()) {
-            case NETWORK: {
-                try {
-                    gw.getSWAPModem().setSetup(new ModemSetup(config.getChannel(), config.getNetworkID(), config.getDeviceAddress()));
-                } catch (SWAPException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            break;
-            case SERIAL:
-//                start();
-                break;
-        }
-
     }
 
     /**
      * start the application
      */
     private void start() throws GatewayException {
-        config.addListener(this);
         model.start();
     }
 
@@ -151,9 +129,12 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
         networkTree = new javax.swing.JTree();
         mainMenu = new javax.swing.JMenuBar();
         panStampMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        aboutMenuItem = new javax.swing.JMenuItem();
         configMenuItem = new javax.swing.JMenuItem();
         quitItem = new javax.swing.JMenuItem();
+        networkMenu = new javax.swing.JMenu();
+        addNetworkItem = new javax.swing.JMenuItem();
+        deviceMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("Courier", 0, 10)); // NOI18N
@@ -188,11 +169,6 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
         swapMessagesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         swapMessagesTable.setShowGrid(false);
         swapMessagesTable.getTableHeader().setReorderingAllowed(false);
-        swapMessagesTable.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                swapMessagesTablePropertyChange(evt);
-            }
-        });
         swapMessagesPane.setViewportView(swapMessagesTable);
 
         topPanel.add(swapMessagesPane, java.awt.BorderLayout.CENTER);
@@ -220,7 +196,7 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
         leftPanel.setLayout(new java.awt.BorderLayout());
 
         networkTree.setModel(model.getTreeModel());
-        networkTree.setCellRenderer(model.getTreeCellRenderer());
+        networkTree.setCellRenderer(view.getTreeCellRenderer());
         networkTree.setSelectionModel(new DefaultTreeSelectionModel());
         networkTree.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -238,20 +214,15 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
 
         panStampMenu.setText("panStamp");
 
-        jMenuItem1.setText("About");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        aboutMenuItem.setText("About");
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                aboutMenuItemActionPerformed(evt);
             }
         });
-        panStampMenu.add(jMenuItem1);
+        panStampMenu.add(aboutMenuItem);
 
         configMenuItem.setText("Preferences");
-        configMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                configMenuItemActionPerformed(evt);
-            }
-        });
         panStampMenu.add(configMenuItem);
 
         quitItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
@@ -264,6 +235,21 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
         panStampMenu.add(quitItem);
 
         mainMenu.add(panStampMenu);
+
+        networkMenu.setText("Network");
+
+        addNetworkItem.setText("Add network");
+        addNetworkItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addNetworkItemActionPerformed(evt);
+            }
+        });
+        networkMenu.add(addNetworkItem);
+
+        mainMenu.add(networkMenu);
+
+        deviceMenu.setText("Device");
+        mainMenu.add(deviceMenu);
 
         setJMenuBar(mainMenu);
 
@@ -291,31 +277,21 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
         quit();
     }//GEN-LAST:event_quitItemActionPerformed
 
-    private void configMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configMenuItemActionPerformed
-//        showPrefs();
-    }//GEN-LAST:event_configMenuItemActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
         showAbout();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void networkTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_networkTreeMouseClicked
         TreePath path = networkTree.getClosestPathForLocation(evt.getX(), evt.getY());
-        networkTree.setComponentPopupMenu(model.getTreePopupMenu(path));
+        networkTree.setComponentPopupMenu(view.getTreePopupMenu(path));
     }//GEN-LAST:event_networkTreeMouseClicked
 
-    private void swapMessagesTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_swapMessagesTablePropertyChange
-        // TODO add your handling code here:
-    }//GEN-LAST:event_swapMessagesTablePropertyChange
+    private void addNetworkItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNetworkItemActionPerformed
+        view.showNetworkAddDialog();
+    }//GEN-LAST:event_addNetworkItemActionPerformed
 
     private void quit() {
-        try {
-            config.save();
-            System.exit(0);
-        } catch (BackingStoreException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        System.exit(0);
     }
 
     private void showAbout() {
@@ -323,19 +299,21 @@ public class MainWindow extends javax.swing.JFrame implements ConfigListener {
         ad.setVisible(true);
     }
 
-    private final Config config;
     private Gateway gw;
-    private final DataModel model;
-
+    private final Model model;
+    private final View view;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JMenuItem addNetworkItem;
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JMenuItem configMenuItem;
+    private javax.swing.JMenu deviceMenu;
     private javax.swing.JScrollPane eventPanel;
     private javax.swing.JTable eventTable;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel leftPanel;
     private javax.swing.JSplitPane leftRightSplitPane;
     private javax.swing.JMenuBar mainMenu;
+    private javax.swing.JMenu networkMenu;
     private javax.swing.JTree networkTree;
     private javax.swing.JMenu panStampMenu;
     private javax.swing.JMenuItem quitItem;

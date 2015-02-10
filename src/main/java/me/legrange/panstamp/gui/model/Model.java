@@ -4,22 +4,12 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JPopupMenu;
 import javax.swing.table.TableModel;
-import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.gui.config.Config;
-import me.legrange.panstamp.gui.model.chart.EndpointCollector;
-import me.legrange.panstamp.gui.model.chart.EndpointDataSet;
-import me.legrange.panstamp.gui.model.chart.SignalCollector;
-import me.legrange.panstamp.gui.model.chart.SignalDataSet;
-import me.legrange.panstamp.gui.model.tree.NetworkTreeModel;
-import me.legrange.panstamp.gui.model.tree.NetworkTreeNodeRenderer;
 import me.legrange.panstamp.tools.store.DataStoreException;
 import me.legrange.panstamp.tools.store.DataUpdater;
 import me.legrange.panstamp.tools.store.Store;
@@ -29,10 +19,9 @@ import me.legrange.panstamp.tools.store.Store;
  *
  * @author gideon
  */
-public final class DataModel {
+public final class Model {
 
-    public DataModel(Config config) throws DataStoreException {
-        this.config = config;
+    public Model() throws DataStoreException {
         store = Store.openFile(dataFileName());
         updater = new DataUpdater(store);
     }
@@ -44,9 +33,6 @@ public final class DataModel {
         }
     }
 
-    public Config getConfig() {
-        return config;
-    }
 
     public synchronized void addGateway(Gateway gw) throws GatewayException {
         SignalCollector sc = new SignalCollector();
@@ -69,14 +55,6 @@ public final class DataModel {
 
     public TableModel getSWAPTableModel() {
         return smm;
-    }
-
-    public TreeCellRenderer getTreeCellRenderer() {
-        return snr;
-    }
-
-    public JPopupMenu getTreePopupMenu(TreePath path) {
-        return snr.getPopupMenu(path);
     }
 
     public SignalDataSet getSignalDataSet(PanStamp ps) {
@@ -108,12 +86,10 @@ public final class DataModel {
     private final MessageTableModel smm = new MessageTableModel();
     private final NetworkTreeModel ntm = NetworkTreeModel.create();
     private final EndpointTableModel etm = EndpointTableModel.create();
-    private final NetworkTreeNodeRenderer snr = new NetworkTreeNodeRenderer(this);
     private final Map<Endpoint, EndpointDataSet> epds = new HashMap<>();
     private final Map<PanStamp, Boolean> hasParams = new HashMap<>();
     private final Store store;
     private final DataUpdater updater;
-    private final Config config;
     private static final String DATA_PATH = "panstamp";
 
 }

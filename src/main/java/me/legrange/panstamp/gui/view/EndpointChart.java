@@ -1,10 +1,10 @@
-package me.legrange.panstamp.gui.chart;
+package me.legrange.panstamp.gui.view;
 
 import java.text.DecimalFormat;
 import java.util.List;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.gui.model.chart.EndpointDataSet;
+import me.legrange.panstamp.gui.model.EndpointDataSet;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 
