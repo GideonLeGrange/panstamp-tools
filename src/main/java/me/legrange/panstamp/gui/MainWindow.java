@@ -5,6 +5,7 @@ import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -101,6 +102,7 @@ public class MainWindow extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         mainMenu.add(view.getWorldMenu());
         mainMenu.add(view.getGatewayMenu());
+        mainMenu.add(view.getDeviceMenu());
         mainMenu.add(view.getRegisterMenu());
         mainMenu.add(view.getEndpointMenu());
     }
@@ -274,7 +276,10 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void networkTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_networkTreeMouseClicked
         TreePath path = networkTree.getClosestPathForLocation(evt.getX(), evt.getY());
-        networkTree.setComponentPopupMenu(view.getTreePopupMenu(path));
+        if (!evt.isPopupTrigger()) {
+        JPopupMenu menu = view.getTreePopupMenu(path);
+        networkTree.setComponentPopupMenu(menu);
+        }
     }//GEN-LAST:event_networkTreeMouseClicked
 
     private void quit() {

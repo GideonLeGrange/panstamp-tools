@@ -30,51 +30,85 @@ import me.legrange.panstamp.gui.model.WorldNode;
  *
  * @author gideon
  */
-public class TreeMenus {
+public class MainMenus {
 
     public JPopupMenu getPopupMenu(TreePath path) {
         if (path != null) {
-            try {
-                NetworkTreeNode node = (NetworkTreeNode) path.getLastPathComponent();
-                selectedNode.set(node);
-                if (node != null) {
-                    switch (node.getType()) {
-                        case WORLD:
-                            return getWorldPopupMenu();
-                        case GATEWAY:
-                            return getGatewayPopupMenu();
-                        case PANSTAMP:
-                            return getPanStampPopupMenu();
-                        case ENDPOINT:
-                            return getEndpointPopupMenu();
-                    }
+            NetworkTreeNode node = (NetworkTreeNode) path.getLastPathComponent();
+            if (node != null) {
+                switch (node.getType()) {
+                    case WORLD:
+                        return getWorldPopupMenu();
+                    case GATEWAY:
+                        return getGatewayPopupMenu();
+                    case PANSTAMP:
+                        return getPanStampPopupMenu();
+                    case ENDPOINT:
+                        return getEndpointPopupMenu();
                 }
-            } finally {
-                selectedNode.remove();
             }
         }
         return null;
     }
 
-    TreeMenus(View view) {
+    JMenu getWorldMenu() {
+        JMenu menu = new JMenu("panStamp");
+        for (JMenuItem c : getWorldMenuItems()) {
+            menu.add(c);
+        }
+        return menu;
+    }
+
+    JMenu getGatewayMenu() {
+        JMenu menu = new JMenu("Gateway");
+        for (JMenuItem c : getGatewayMenuItems()) {
+            menu.add(c);
+        }
+        return menu;
+    }
+
+    JMenu getPanStampMenu() {
+        JMenu menu = new JMenu("Device");
+        for (JComponent c : getPanStampMenuItems()) {
+            menu.add(c);
+        }
+        return menu;
+    }
+
+    JMenu getRegisterMenu() {
+        JMenu menu = new JMenu("Register");
+        for (JComponent c : getRegisterMenuItems()) {
+            menu.add(c);
+        }
+        return menu;
+    }
+
+    JMenu getEndpointMenu() {
+        JMenu menu = new JMenu("Endpoint");
+        for (JComponent c : getEndpointMenuItems()) {
+            menu.add(c);
+        }
+        return menu;
+    }
+
+    MainMenus(View view) {
         this.view = view;
+
     }
 
     private JPopupMenu getWorldPopupMenu() {
         JPopupMenu worldPopupMenu = new JPopupMenu(((WorldNode) getSelectedNode()).toString());
         for (JMenuItem i : getWorldMenuItems()) {
             worldPopupMenu.add(i);
-            i.setEnabled(i.isEnabled());
         }
         return worldPopupMenu;
     }
 
     private JPopupMenu getGatewayPopupMenu() {
-        if (gatewayPopupMenu == null) {
-         gatewayPopupMenu = new JPopupMenu(((GatewayNode) getSelectedNode()).toString());
+
+        JPopupMenu gatewayPopupMenu = new JPopupMenu(((GatewayNode) getSelectedNode()).toString());
         for (JMenuItem c : getGatewayMenuItems()) {
             gatewayPopupMenu.add(c);
-        }
         }
         return gatewayPopupMenu;
     }
@@ -83,7 +117,6 @@ public class TreeMenus {
         JPopupMenu panstampPopupMenu = new JPopupMenu(((PanStampNode) getSelectedNode()).toString());
         for (JComponent item : getPanStampMenuItems()) {
             panstampPopupMenu.add(item);
-            item.setEnabled(item.isEnabled());
         }
         return panstampPopupMenu;
     }
@@ -94,7 +127,6 @@ public class TreeMenus {
 
         for (JComponent item : getEndpointMenuItems()) {
             endpointPopupMenu.add(item);
-            item.setEnabled(item.isEnabled());
         }
         return endpointPopupMenu;
     }
@@ -103,7 +135,7 @@ public class TreeMenus {
         List<JMenuItem> items = new LinkedList<>();
         final JMenuItem addSerialItem = new JMenuItem("Add network...");
         addSerialItem.addActionListener(new ActionListener() {
-            
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.showNetworkAddDialog();
@@ -128,7 +160,6 @@ public class TreeMenus {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    System.out.printf("Open.actionPerformed(): e = %s\n", e);
                     getSelectedGateway().open();
                 } catch (GatewayException ex) {
                     Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
@@ -304,12 +335,11 @@ public class TreeMenus {
 
                         }
                     } catch (GatewayException ex) {
-                        Logger.getLogger(TreeMenus.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(MainMenus.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 return false;
             }
-
         };
         return paramItem;
     }
@@ -438,10 +468,16 @@ public class TreeMenus {
     }
 
     private NetworkTreeNode getSelectedNode() {
-        return selectedNode.get();
+        TreePath path = view.getTree().getSelectionPath();
+        if (path != null) {
+            return (NetworkTreeNode) path.getLastPathComponent();
+        }
+        return null;
     }
 
     private final View view;
-    private JPopupMenu gatewayPopupMenu;
-    private static final ThreadLocal<NetworkTreeNode> selectedNode = new ThreadLocal<>();
+    /*    private JPopupMenu gatewayPopupMenu;
+     private JPopupMenu worldPopupMenu;
+     private JPopupMenu panstampPopupMenu;
+     private JPopupMenu endpointPopupMenu;  */
 }

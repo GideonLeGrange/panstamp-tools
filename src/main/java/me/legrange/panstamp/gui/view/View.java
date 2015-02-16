@@ -46,23 +46,23 @@ public class View {
     }
 
     public JMenu getGatewayMenu() {
-        return treeMenus.getGatewayMenu();
+        return mainMenus.getGatewayMenu();
     }
 
     public JMenu getWorldMenu() {
-        return treeMenus.getWorldMenu();
+        return mainMenus.getWorldMenu();
     }
 
     public JMenu getDeviceMenu() {
-        return treeMenus.getPanStampMenu();
+        return mainMenus.getPanStampMenu();
     }
 
     public JMenu getRegisterMenu() {
-        return treeMenus.getRegisterMenu();
+        return mainMenus.getRegisterMenu();
     }
 
     public JMenu getEndpointMenu() {
-        return treeMenus.getEndpointMenu();
+        return mainMenus.getEndpointMenu();
     }
 
     public View(MainWindow window, Model model) {
@@ -70,6 +70,7 @@ public class View {
         this.window = window;
         this.treeRender = new NetworkTreeNodeRenderer(model, this);
         treeMenus = new TreeMenus(this);
+        mainMenus = new MainMenus(this);
     }
 
     public Model getModel() {
@@ -94,5 +95,6 @@ public class View {
     private final Model model;
     private final MainWindow window;
     private final TreeMenus treeMenus;
+    private final MainMenus mainMenus;
 
 }
