@@ -5,6 +5,7 @@ import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.tree.DefaultTreeSelectionModel;
@@ -98,6 +99,10 @@ public class MainWindow extends javax.swing.JFrame {
         view = new View(this, model);
         initComponents();
         setLocationRelativeTo(null);
+    }
+    
+    public JTree getNetworkTree() {
+        return networkTree;
     }
 
     /**

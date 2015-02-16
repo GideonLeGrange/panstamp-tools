@@ -1,12 +1,14 @@
 package me.legrange.panstamp.gui.view;
 
-import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -20,6 +22,7 @@ import me.legrange.panstamp.gui.model.EndpointNode;
 import me.legrange.panstamp.gui.model.GatewayNode;
 import me.legrange.panstamp.gui.model.NetworkTreeNode;
 import me.legrange.panstamp.gui.model.PanStampNode;
+import me.legrange.panstamp.gui.model.RegisterNode;
 import me.legrange.panstamp.gui.model.WorldNode;
 
 /**
@@ -34,7 +37,7 @@ public class TreeMenus {
             case WORLD:
                 return getWorldPopupMenu((WorldNode) node);
             case GATEWAY:
-                return getGatewayPopupMenu((GatewayNode) node);
+                return getGatewayPopupMenu1((GatewayNode) node);
             case PANSTAMP:
                 return getPanStampPopupMenu((PanStampNode) node);
             case ENDPOINT:
@@ -48,6 +51,7 @@ public class TreeMenus {
         this.view = view;
 
     }
+
 
     private JPopupMenu getWorldPopupMenu(final WorldNode wn) {
         JPopupMenu menu = popupMenus.get(wn);
@@ -65,8 +69,72 @@ public class TreeMenus {
         }
         return menu;
     }
+    
+    private List<JComponent> getGatewayMenuItems() {
+        List<JComponent> list = new LinkedList<>();
+            final JMenuItem openItem = new JMenuItem() {
+                
+                @Override
+                public boolean isEnabled() {
+                    Gateway gw = getSelectedGateway();
+                    return (gw != null) && (!gw.isOpen());
+                }
+            };
+            openItem.addActionListener(new ActionListener() {
 
-    private JPopupMenu getGatewayPopupMenu(final GatewayNode gn) {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        getSelectedGateway().open();
+                    } catch (GatewayException ex) {
+                        Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            list.add(openItem);
+            final JMenuItem closeItem = new JMenuItem() {
+                
+                @Override
+                public boolean isEnabled() {
+                    Gateway gw = getSelectedGateway();
+                    return (gw != null) && (gw.isOpen());
+                }
+            };
+            closeItem.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        getSelectedGateway().close();
+                    } catch (GatewayException ex) {
+                        Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            list.add(openItem);
+            return list;
+        }
+
+    private Gateway getSelectedGateway() {
+        TreePath path = view.getTree().getSelectionPath();
+                NetworkTreeNode node = (NetworkTreeNode) path.getLastPathComponent();
+        switch (node.getType()) {
+            case WORLD:
+                return null;
+            case GATEWAY:
+                return ((GatewayNode)node).getGateway();
+            case PANSTAMP:
+                return ((PanStampNode)node).getPanStamp().getGateway();
+            case REGISTER : 
+                return ((RegisterNode)node).getRegister().getDevice().getGateway();
+            case ENDPOINT:
+                return ((EndpointNode)node).getEndpoint().getRegister().getDevice().getGateway();
+            default:
+                return null;
+        }
+    }
+
+    private JPopupMenu getGatewayPopupMenu1(final GatewayNode gn) {
         JPopupMenu menu = popupMenus.get(gn);
         if (menu == null) {
 
@@ -96,16 +164,85 @@ public class TreeMenus {
         }
         return menu;
     }
-
+    
     private JPopupMenu getPanStampPopupMenu(final PanStampNode psn) {
         JPopupMenu menu = popupMenus.get(psn);
         if (menu == null) {
-
             menu = new JPopupMenu(psn.toString());
-            menu.add(getPanstampSettingsItem(psn));
-            menu.add(getPanstampParametersItem(psn));
+            for (JComponent item : getPanStampMenuItems(psn)) {
+                menu.add(item);
+            }
+            popupMenus.put(psn, menu);
+        }
+                return menu;
 
-            final JMenuItem graphItem = new JMenuItem("RSSI/LQI Graph...");
+    }
+
+    private List<JComponent> getPanStampMenuItems(final PanStampNode psn) {
+        List<JComponent> list = new LinkedList<>();
+            list.add(getPanstampSettingsItem(psn));
+            list.add(getPanstampParametersItem(psn));
+            list.add(getPanstampLqiItem(psn));
+
+            list.add(new JSeparator());
+            // register selection
+            list.add(getPanStampRegisterMenu(psn));
+            return list;
+    }
+
+    /**
+     * build the settings item from the panStamp menu
+     */
+    private JMenuItem getPanstampSettingsItem(final PanStampNode psn) {
+        final JMenuItem settingsItem = new JMenuItem("Settings...");
+        if (psn != null) {
+            settingsItem.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    view.showPanStampSettingsDialog(psn.getPanStamp());
+                }
+            });
+        } else {
+            settingsItem.setEnabled(false);
+        }
+        return settingsItem;
+    }
+
+    /**
+     * build the parameters item from the panStamp menu
+     */
+    private JMenuItem getPanstampParametersItem(final PanStampNode psn) {
+        final JMenuItem paramItem = new JMenuItem("Parameters...");
+        if (psn != null) {
+            paramItem.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    view.showPanStampParamDialog(psn.getPanStamp());
+                }
+            });
+            boolean hasParams = false;
+            try {
+                for (Register reg : psn.getPanStamp().getRegisters()) {
+                    if (!reg.getParameters().isEmpty()) {
+                        hasParams = true;
+                        break;
+                    }
+                }
+            } catch (GatewayException ex) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+            }
+            paramItem.setEnabled(hasParams);
+        } else {
+            paramItem.setEnabled(false);
+        }
+        return paramItem;
+    }
+
+    private JMenuItem getPanstampLqiItem(final PanStampNode psn) {
+        final JMenuItem graphItem = new JMenuItem("RSSI/LQI Graph...");
+        if (psn != null) {
             graphItem.addActionListener(new ActionListener() {
 
                 @Override
@@ -113,10 +250,15 @@ public class TreeMenus {
                     view.showSignalChart(psn.getPanStamp());
                 }
             });
-            menu.add(graphItem);
-            // register selection
-            menu.add(new JSeparator());
-            final JMenu regsMenu = new JMenu("Show Standard Registers");
+        } else {
+            graphItem.setEnabled(false);
+        }
+        return graphItem;
+    }
+
+    private JMenu getPanStampRegisterMenu(final PanStampNode psn) {
+        final JMenu regsMenu = new JMenu("Show Standard Registers");
+        if (psn != null) {
             final JRadioButtonMenuItem allItem = new JRadioButtonMenuItem("All");
             final JRadioButtonMenuItem intItem = new JRadioButtonMenuItem("Interesting");
             final JRadioButtonMenuItem noneItem = new JRadioButtonMenuItem("None", true);
@@ -142,6 +284,7 @@ public class TreeMenus {
                 }
 
             };
+
             allItem.addActionListener(regL);
             noneItem.addActionListener(regL);
             intItem.addActionListener(regL);
@@ -149,50 +292,13 @@ public class TreeMenus {
             regsMenu.add(allItem);
             regsMenu.add(intItem);
             regsMenu.add(noneItem);
-            menu.add(regsMenu);
-            popupMenus.put(psn, menu);
         }
-        return menu;
+        else {
+            regsMenu.setEnabled(false);
+        }
+        return regsMenu;
     }
 
-    /** build the settings item from the panStamp menu */
-    private JMenuItem getPanstampSettingsItem(final PanStampNode psn) {
-        final JMenuItem settingsItem = new JMenuItem("Settings...");
-        settingsItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                view.showPanStampSettingsDialog(psn.getPanStamp());
-            }
-        });
-        return settingsItem;
-    }
-    
-    /** build the parameters item from the panStamp menu */
-    private JMenuItem getPanstampParametersItem(final PanStampNode psn) {
-            final JMenuItem paramItem = new JMenuItem("Parameters...");
-            paramItem.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    view.showPanStampParamDialog(psn.getPanStamp());
-                }
-            });
-            boolean hasParams = false;
-            try {
-                for (Register reg : psn.getPanStamp().getRegisters()) {
-                    if (!reg.getParameters().isEmpty()) {
-                        hasParams = true;
-                        break;
-                    }
-                }
-            } catch (GatewayException ex) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
-            }
-            paramItem.setEnabled(hasParams);
-            return paramItem;
-    }
-    
     private JPopupMenu getEndpointPopupMenu(final EndpointNode epn) {
         JPopupMenu menu = popupMenus.get(epn);
         if (menu == null) {
@@ -214,7 +320,5 @@ public class TreeMenus {
 
     private final View view;
     private final Map<NetworkTreeNode, JPopupMenu> popupMenus = new HashMap<>();
-
-
 
 }

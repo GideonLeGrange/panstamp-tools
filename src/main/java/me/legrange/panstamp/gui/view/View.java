@@ -2,6 +2,7 @@ package me.legrange.panstamp.gui.view;
 
 import me.legrange.panstamp.gui.model.Model;
 import javax.swing.JPopupMenu;
+import javax.swing.JTree;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
@@ -41,6 +42,7 @@ public class View {
     public JPopupMenu getTreePopupMenu(TreePath path) {
         return treeMenus.getPopupMenu(path);
     }
+    
 
     public View(MainWindow window, Model model) {
         this.model = model;
@@ -61,6 +63,11 @@ public class View {
     void showSignalChart(PanStamp panStamp) {
         ChartFactory.getFactory(getModel()).getSignalChart(panStamp).setVisible(true);
     }
+    
+    JTree getTree() { 
+        return window.getNetworkTree();
+    }
+    
     private NetworkAddDialog networkAdd;
     private final TreeCellRenderer treeRender;
     private final Model model;
