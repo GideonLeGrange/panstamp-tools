@@ -99,6 +99,10 @@ public class MainWindow extends javax.swing.JFrame {
         view = new View(this, model);
         initComponents();
         setLocationRelativeTo(null);
+        mainMenu.add(view.getWorldMenu());
+        mainMenu.add(view.getGatewayMenu());
+        mainMenu.add(view.getRegisterMenu());
+        mainMenu.add(view.getEndpointMenu());
     }
     
     public JTree getNetworkTree() {
@@ -137,8 +141,6 @@ public class MainWindow extends javax.swing.JFrame {
         aboutMenuItem = new javax.swing.JMenuItem();
         configMenuItem = new javax.swing.JMenuItem();
         quitItem = new javax.swing.JMenuItem();
-        networkMenu = new javax.swing.JMenu();
-        addNetworkItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFont(new java.awt.Font("Courier", 0, 10)); // NOI18N
@@ -240,18 +242,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         mainMenu.add(panStampMenu);
 
-        networkMenu.setText("Network");
-
-        addNetworkItem.setText("Add network");
-        addNetworkItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addNetworkItemActionPerformed(evt);
-            }
-        });
-        networkMenu.add(addNetworkItem);
-
-        mainMenu.add(networkMenu);
-
         setJMenuBar(mainMenu);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -287,10 +277,6 @@ public class MainWindow extends javax.swing.JFrame {
         networkTree.setComponentPopupMenu(view.getTreePopupMenu(path));
     }//GEN-LAST:event_networkTreeMouseClicked
 
-    private void addNetworkItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNetworkItemActionPerformed
-        view.showNetworkAddDialog();
-    }//GEN-LAST:event_addNetworkItemActionPerformed
-
     private void quit() {
         System.exit(0);
     }
@@ -305,7 +291,6 @@ public class MainWindow extends javax.swing.JFrame {
     private final View view;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem addNetworkItem;
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JMenuItem configMenuItem;
     private javax.swing.JScrollPane eventPanel;
@@ -313,7 +298,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel leftPanel;
     private javax.swing.JSplitPane leftRightSplitPane;
     private javax.swing.JMenuBar mainMenu;
-    private javax.swing.JMenu networkMenu;
     private javax.swing.JTree networkTree;
     private javax.swing.JMenu panStampMenu;
     private javax.swing.JMenuItem quitItem;

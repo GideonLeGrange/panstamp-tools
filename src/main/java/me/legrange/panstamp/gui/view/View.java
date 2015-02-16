@@ -1,5 +1,7 @@
 package me.legrange.panstamp.gui.view;
 
+import java.awt.PopupMenu;
+import javax.swing.JMenu;
 import me.legrange.panstamp.gui.model.Model;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
@@ -20,7 +22,7 @@ import me.legrange.panstamp.gui.NetworkAddDialog;
 public class View {
 
     public void showNetworkAddDialog() {
-        if ((networkAdd == null) ||  !networkAdd.isVisible()) {
+        if ((networkAdd == null) || !networkAdd.isVisible()) {
             networkAdd = new NetworkAddDialog(null, model);
             networkAdd.setVisible(true);
         }
@@ -42,7 +44,26 @@ public class View {
     public JPopupMenu getTreePopupMenu(TreePath path) {
         return treeMenus.getPopupMenu(path);
     }
-    
+
+    public JMenu getGatewayMenu() {
+        return treeMenus.getGatewayMenu();
+    }
+
+    public JMenu getWorldMenu() {
+        return treeMenus.getWorldMenu();
+    }
+
+    public JMenu getDeviceMenu() {
+        return treeMenus.getPanStampMenu();
+    }
+
+    public JMenu getRegisterMenu() {
+        return treeMenus.getRegisterMenu();
+    }
+
+    public JMenu getEndpointMenu() {
+        return treeMenus.getEndpointMenu();
+    }
 
     public View(MainWindow window, Model model) {
         this.model = model;
@@ -63,11 +84,11 @@ public class View {
     void showSignalChart(PanStamp panStamp) {
         ChartFactory.getFactory(getModel()).getSignalChart(panStamp).setVisible(true);
     }
-    
-    JTree getTree() { 
+
+    JTree getTree() {
         return window.getNetworkTree();
     }
-    
+
     private NetworkAddDialog networkAdd;
     private final TreeCellRenderer treeRender;
     private final Model model;

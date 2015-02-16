@@ -16,6 +16,7 @@ import me.legrange.panstamp.Register;
  * @author gideon
  */
 public class PanStampNode extends NetworkTreeNode implements PanStampListener {
+
     
     public enum RegisterDisplay { ALL, NONE, INTERESTING; };
 
@@ -162,6 +163,10 @@ public class PanStampNode extends NetworkTreeNode implements PanStampListener {
                     addNode(reg);
                 }
         }
+    }
+    
+    public RegisterDisplay getRegisterDisplay() {
+        return registerDisplay;
     }
     
     public void setRegisterDisplay(RegisterDisplay rd) {
