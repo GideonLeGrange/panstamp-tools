@@ -336,7 +336,13 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         networkIDLabel.setText("Network ID:");
 
         networkTextField.setDocument(new HexDocument(0,65535));
-        networkTextField.setText("0xb547");
+        networkTextField.setText("b547");
+        networkTextField.setToolTipText("Network ID in hexadecimal");
+        networkTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                networkTextFieldActionPerformed(evt);
+            }
+        });
         networkTextField.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 networkTextFieldPropertyChange(evt);
@@ -547,6 +553,10 @@ public class NetworkAddDialog extends javax.swing.JDialog {
             //      config.setSecurityOption(Integer.parseInt(text));
         }
     }//GEN-LAST:event_securityTextFieldPropertyChange
+
+    private void networkTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_networkTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_networkTextFieldActionPerformed
 
     private void forward() {
         switch (getState()) {
