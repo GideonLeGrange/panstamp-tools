@@ -152,6 +152,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
 
         tcpPortTextField.setColumns(4);
         tcpPortTextField.setDocument(new IntegerDocument(1,65535));
+        tcpPortTextField.setText("3333");
         tcpPortTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tcpPortTextFieldActionPerformed(evt);
