@@ -42,35 +42,35 @@ public class View {
     }
 
     public JPopupMenu getTreePopupMenu(TreePath path) {
-        return treeMenus.getPopupMenu(path);
+        return menus.getPopupMenu(path);
     }
 
     public JMenu getGatewayMenu() {
-        return mainMenus.getGatewayMenu();
+        return menus.getGatewayMenu();
     }
 
     public JMenu getWorldMenu() {
-        return mainMenus.getWorldMenu();
+        return menus.getWorldMenu();
     }
 
     public JMenu getDeviceMenu() {
-        return mainMenus.getPanStampMenu();
+        return menus.getPanStampMenu();
     }
 
     public JMenu getRegisterMenu() {
-        return mainMenus.getRegisterMenu();
+        return menus.getRegisterMenu();
     }
 
     public JMenu getEndpointMenu() {
-        return mainMenus.getEndpointMenu();
+        return menus.getEndpointMenu();
     }
 
     public View(MainWindow window, Model model) {
         this.model = model;
         this.window = window;
         this.treeRender = new NetworkTreeNodeRenderer(model, this);
-        treeMenus = new TreeMenus(this);
-        mainMenus = new MainMenus(this);
+
+        menus = new Menus(this);
     }
 
     public Model getModel() {
@@ -94,7 +94,6 @@ public class View {
     private final TreeCellRenderer treeRender;
     private final Model model;
     private final MainWindow window;
-    private final TreeMenus treeMenus;
-    private final MainMenus mainMenus;
+    private final Menus menus;
 
 }
