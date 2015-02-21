@@ -106,7 +106,7 @@ public class Menus {
         for (JMenuItem item : getWorldMenuItems()) {
             worldPopupMenu.add(item);
             item.setEnabled(item.isEnabled());
-            
+
         }
         return worldPopupMenu;
     }
@@ -421,12 +421,15 @@ public class Menus {
                 intItem.setSelected(false);
                 if (e.getSource().equals(noneItem)) {
                     setSelectedRegisterDisplay(PanStampNode.RegisterDisplay.NONE);
+                    noneItem.setSelected(true);
                 }
                 if (e.getSource().equals(allItem)) {
                     setSelectedRegisterDisplay(PanStampNode.RegisterDisplay.ALL);
+                    allItem.setSelected(true);
                 }
                 if (e.getSource().equals(intItem)) {
                     setSelectedRegisterDisplay(PanStampNode.RegisterDisplay.INTERESTING);
+                    intItem.setSelected(true);
                 }
             }
 
@@ -466,16 +469,22 @@ public class Menus {
     private void setSelectedRegisterDisplay(PanStampNode.RegisterDisplay rd) {
         NetworkTreeNode node = getSelectedNode();
         if (node != null) {
+            PanStampNode psn = null;
             switch (node.getType()) {
                 case PANSTAMP:
-                    ((PanStampNode) node).setRegisterDisplay(rd);
+                    psn = ((PanStampNode) node);
                     break;
                 case REGISTER:
-                    ((PanStampNode) ((RegisterNode) node).getParent()).setRegisterDisplay(rd);
+                    psn = ((PanStampNode) ((RegisterNode) node).getParent());
+                    psn.setRegisterDisplay(rd);
                     break;
                 case ENDPOINT:
-                    ((PanStampNode) ((EndpointNode) node).getEndpoint()).setRegisterDisplay(rd);
+                    psn = ((PanStampNode) ((RegisterNode) ((EndpointNode) node).getParent()).getParent());
+                    break;
+                default:
+                    return;
             }
+            psn.setRegisterDisplay(rd);
         }
     }
 
