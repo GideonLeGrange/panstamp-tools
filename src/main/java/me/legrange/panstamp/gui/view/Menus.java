@@ -196,6 +196,26 @@ public class Menus {
             }
         });
         list.add(closeItem);
+
+        final JMenuItem deleteItem = new JMenuItem("Delete") {
+            @Override
+            public boolean isEnabled() {
+                return (getSelectedGateway() != null);
+            }
+        };
+
+        deleteItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GatewayNode gn = getSelectedGatewayNode();
+                if (gn != null) {
+                    gn.removeFromParent();
+                }
+            }
+        }
+        );
+        list.add(deleteItem);
         return list;
     }
 
@@ -235,21 +255,9 @@ public class Menus {
      * @return The selected device, or null if none is selected.
      */
     private PanStamp getSelectedDevice() {
-        NetworkTreeNode node = getSelectedNode();
-        if (node != null) {
-            switch (node.getType()) {
-                case WORLD:
-                case GATEWAY:
-                    return null;
-                case PANSTAMP:
-                    return ((PanStampNode) node).getPanStamp();
-                case REGISTER:
-                    return ((RegisterNode) node).getRegister().getDevice();
-                case ENDPOINT:
-                    return ((EndpointNode) node).getEndpoint().getRegister().getDevice();
-                default:
-                    return null;
-            }
+        PanStampNode psn = getSelectedPanStampNode();
+        if (psn != null) {
+            return psn.getPanStamp();
         }
         return null;
     }
@@ -276,25 +284,21 @@ public class Menus {
         final JMenuItem deleteItem = new JMenuItem("Delete") {
             @Override
             public boolean isEnabled() {
-                PanStamp dev = getSelectedDevice();
-                return (dev != null);
+                return (getSelectedDevice() != null);
             }
         };
         deleteItem.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                NetworkTreeNode node = getSelectedNode();
                 PanStampNode psn = getSelectedPanStampNode();
-                
-                if (node != null) {
-                    switch (node.getType())
-                } 
-                PanStamp dev = getSelectedDevice();
-                dev.getGateway().removeDevice(dev);
-                getSelectedNode().getParent().deleteChild()
+                if (psn != null) {
+                    psn.removeFromParent();
+                }
             }
-        });
+        }
+        );
+        list.add(deleteItem);
         list.add(new JSeparator());
 
         final JMenuItem settingsItem = new JMenuItem("Settings...") {
@@ -304,13 +308,17 @@ public class Menus {
                 return (dev != null) && dev.getGateway().isOpen();
             }
         };
-        settingsItem.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                view.showPanStampSettingsDialog(getSelectedDevice());
-            }
-        });
+        settingsItem.addActionListener(
+                new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e
+                    ) {
+                        view.showPanStampSettingsDialog(getSelectedDevice());
+                    }
+                }
+        );
         final JMenuItem paramItem = new JMenuItem("Parameters...") {
             @Override
             public boolean isEnabled() {
@@ -337,18 +345,21 @@ public class Menus {
                 return (dev != null) && (dev.getGateway().isOpen());
             }
         };
-        graphItem.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                view.showSignalChart(getSelectedDevice());
-            }
-        });
+        graphItem.addActionListener(
+                new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e
+                    ) {
+                        view.showSignalChart(getSelectedDevice());
+                    }
+                }
+        );
 
         list.add(settingsItem);
         list.add(paramItem);
         list.add(graphItem);
-
         list.add(new JSeparator());
         // register selection
         list.add(getPanStampRegisterMenu());
@@ -494,6 +505,39 @@ public class Menus {
             }
             psn.setRegisterDisplay(rd);
         }
+    }
+
+    private PanStampNode getSelectedPanStampNode() {
+        NetworkTreeNode node = getSelectedNode();
+        if (node != null) {
+            switch (node.getType()) {
+                case PANSTAMP:
+                    return (PanStampNode) node;
+                case REGISTER:
+                    return (PanStampNode) node.getParent();
+                case ENDPOINT:
+                    return (PanStampNode) node.getParent().getParent();
+            }
+        }
+        return null;
+    }
+
+    private GatewayNode getSelectedGatewayNode() {
+        NetworkTreeNode node = getSelectedNode();
+        if (node != null) {
+            switch (node.getType()) {
+                case GATEWAY:
+                    return (GatewayNode) node;
+                case PANSTAMP:
+                    return (GatewayNode) node.getParent();
+                case REGISTER:
+                    return (GatewayNode) node.getParent().getParent();
+                case ENDPOINT:
+                    return (GatewayNode) node.getParent().getParent().getParent();
+            }
+        }
+        return null;
+
     }
 
     private NetworkTreeNode getSelectedNode() {

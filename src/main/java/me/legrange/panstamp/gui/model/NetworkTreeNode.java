@@ -1,6 +1,7 @@
 package me.legrange.panstamp.gui.model;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 
 /**
  *
@@ -12,6 +13,13 @@ public abstract class NetworkTreeNode extends DefaultMutableTreeNode {
 
         WORLD, GATEWAY, PANSTAMP, REGISTER, ENDPOINT
     };
+
+    @Override
+    public void remove(MutableTreeNode child) {
+        ((NetworkTreeNode) child).stop();
+        super.remove(child);
+        reload(this);
+    }
 
     @Override
     public abstract String toString();
@@ -26,7 +34,9 @@ public abstract class NetworkTreeNode extends DefaultMutableTreeNode {
         int c = getChildCount();
         for (int i = 0; i < c; ++i) {
             NetworkTreeNode sn = (NetworkTreeNode) getChildAt(c);
-            sn.stop();
+            if (sn != null  ) {
+                sn.stop();
+            }
         }
     }
 
