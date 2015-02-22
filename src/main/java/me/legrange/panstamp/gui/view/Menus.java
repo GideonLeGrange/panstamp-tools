@@ -272,9 +272,82 @@ public class Menus {
 
     private List<JComponent> getPanStampMenuItems() {
         List<JComponent> list = new LinkedList<>();
-        list.add(getPanstampSettingsItem());
-        list.add(getPanstampParametersItem());
-        list.add(getPanstampLqiItem());
+
+        final JMenuItem deleteItem = new JMenuItem("Delete") {
+            @Override
+            public boolean isEnabled() {
+                PanStamp dev = getSelectedDevice();
+                return (dev != null);
+            }
+        };
+        deleteItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NetworkTreeNode node = getSelectedNode();
+                PanStampNode psn = getSelectedPanStampNode();
+                
+                if (node != null) {
+                    switch (node.getType())
+                } 
+                PanStamp dev = getSelectedDevice();
+                dev.getGateway().removeDevice(dev);
+                getSelectedNode().getParent().deleteChild()
+            }
+        });
+        list.add(new JSeparator());
+
+        final JMenuItem settingsItem = new JMenuItem("Settings...") {
+            @Override
+            public boolean isEnabled() {
+                PanStamp dev = getSelectedDevice();
+                return (dev != null) && dev.getGateway().isOpen();
+            }
+        };
+        settingsItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.showPanStampSettingsDialog(getSelectedDevice());
+            }
+        });
+        final JMenuItem paramItem = new JMenuItem("Parameters...") {
+            @Override
+            public boolean isEnabled() {
+                PanStamp dev = getSelectedDevice();
+                if ((dev != null) && dev.getGateway().isOpen()) {
+                    try {
+                        for (Register reg : getSelectedDevice().getRegisters()) {
+                            if (!reg.getParameters().isEmpty()) {
+                                return true;
+                            }
+
+                        }
+                    } catch (GatewayException ex) {
+                        Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                return false;
+            }
+        };
+        final JMenuItem graphItem = new JMenuItem("RSSI/LQI Graph...") {
+            @Override
+            public boolean isEnabled() {
+                PanStamp dev = getSelectedDevice();
+                return (dev != null) && (dev.getGateway().isOpen());
+            }
+        };
+        graphItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.showSignalChart(getSelectedDevice());
+            }
+        });
+
+        list.add(settingsItem);
+        list.add(paramItem);
+        list.add(graphItem);
 
         list.add(new JSeparator());
         // register selection
@@ -304,71 +377,6 @@ public class Menus {
         });
         items.add(graphItem);
         return items;
-    }
-
-    /**
-     * build the settings item from the panStamp menu
-     */
-    private JMenuItem getPanstampSettingsItem() {
-        final JMenuItem settingsItem = new JMenuItem("Settings...") {
-            @Override
-            public boolean isEnabled() {
-                PanStamp dev = getSelectedDevice();
-                return (dev != null) && dev.getGateway().isOpen();
-            }
-        };
-        settingsItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                view.showPanStampSettingsDialog(getSelectedDevice());
-            }
-        });
-        return settingsItem;
-    }
-
-    /**
-     * build the parameters item from the panStamp menu
-     */
-    private JMenuItem getPanstampParametersItem() {
-        final JMenuItem paramItem = new JMenuItem("Parameters...") {
-            @Override
-            public boolean isEnabled() {
-                PanStamp dev = getSelectedDevice();
-                if ((dev != null) && dev.getGateway().isOpen()) {
-                    try {
-                        for (Register reg : getSelectedDevice().getRegisters()) {
-                            if (!reg.getParameters().isEmpty()) {
-                                return true;
-                            }
-
-                        }
-                    } catch (GatewayException ex) {
-                        Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                return false;
-            }
-        };
-        return paramItem;
-    }
-
-    private JMenuItem getPanstampLqiItem() {
-        final JMenuItem graphItem = new JMenuItem("RSSI/LQI Graph...") {
-            @Override
-            public boolean isEnabled() {
-                PanStamp dev = getSelectedDevice();
-                return (dev != null) && (dev.getGateway().isOpen());
-            }
-        };
-        graphItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                view.showSignalChart(getSelectedDevice());
-            }
-        });
-        return graphItem;
     }
 
     private JMenu getPanStampRegisterMenu() {
