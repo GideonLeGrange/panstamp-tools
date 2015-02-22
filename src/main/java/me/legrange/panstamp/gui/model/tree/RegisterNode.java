@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.tree;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,7 +12,7 @@ import me.legrange.panstamp.RegisterListener;
  *
  * @author gideon
  */
-public class RegisterNode extends NetworkTreeNode implements RegisterListener {
+public class RegisterNode extends NetworkTreeNode<Register, Endpoint> implements RegisterListener {
 
     public RegisterNode(Register reg) {
         super(reg);
@@ -46,12 +46,12 @@ public class RegisterNode extends NetworkTreeNode implements RegisterListener {
         getRegister().removeListener(this);
         super.stop();
     }
-    
-    
 
     void update(Register reg) {
         try {
-            if (reg.getEndpoints().size() < getRegister().getEndpoints().size()) {
+
+            if (reg.getEndpoints().size() != getRegister().getEndpoints().size()) {
+
                 for (Endpoint ep : getRegister().getEndpoints()) {
                     EndpointNode epn = new EndpointNode(ep);
                     addToTree(epn, this);
@@ -59,6 +59,7 @@ public class RegisterNode extends NetworkTreeNode implements RegisterListener {
                 }
                 reload();
             }
+            setUserObject(reg);
         } catch (GatewayException ex) {
             Logger.getLogger(RegisterNode.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -73,16 +74,16 @@ public class RegisterNode extends NetworkTreeNode implements RegisterListener {
     public void registerUpdated(RegisterEvent ev) {
         switch (ev.getType()) {
             case ENDPOINT_ADDED:
-                try {
-                    for (Endpoint ep : getRegister().getEndpoints()) {
-                        EndpointNode epn = new EndpointNode(ep);
-                        addToTree(epn, this);
-                        epn.start();
-                    }
-                    reload();
-                } catch (GatewayException ex) {
-                    Logger.getLogger(RegisterNode.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                addChild(ev.getEndpoint());
+                reload();
         }
+    }
+
+    @Override
+    void addChild(Endpoint ep) {
+        EndpointNode epn = new EndpointNode(ep);
+        addToTree(epn, this);
+        epn.start();
+
     }
 }

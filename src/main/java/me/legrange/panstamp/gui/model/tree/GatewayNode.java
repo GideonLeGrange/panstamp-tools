@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.tree;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,13 +9,12 @@ import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.core.ModemException;
 import me.legrange.swap.SWAPModem;
-import me.legrange.swap.serial.SerialModem;
 
 /**
- *
+ * A node representing a panStamp gateway to a network. 
  * @author gideon
  */
-public class GatewayNode extends NetworkTreeNode implements GatewayListener {
+public class GatewayNode extends NetworkTreeNode<Gateway, PanStamp> implements GatewayListener {
 
     public GatewayNode(Gateway gw) {
         super(gw);
@@ -31,11 +30,13 @@ public class GatewayNode extends NetworkTreeNode implements GatewayListener {
         try {
             Gateway gw = getGateway();
             SWAPModem sm = gw.getSWAPModem();
-            if (sm instanceof SerialModem) {
-              txt = String.format("Serial Network - %4x",  getGateway().getNetworkId());  
-            }
-            else {
-                txt = String.format("TCP/IP Network - %4x", getGateway().getNetworkId());
+            switch (sm.getType()) {
+                case SERIAL : txt = String.format("Serial Network - %4x",  gw.getNetworkId());  
+                    break;
+                case TCP_IP : txt = String.format("TCP/IP Network - %4x", gw.getNetworkId());
+                    break;
+                default : 
+                    txt = String.format("%4x", gw.getNetworkId());
             }
         } catch (ModemException ex) {
             Logger.getLogger(GatewayNode.class.getName()).log(Level.SEVERE, null, ex);
@@ -50,10 +51,12 @@ public class GatewayNode extends NetworkTreeNode implements GatewayListener {
     @Override
     public void gatewayUpdated(GatewayEvent ev) {
         switch (ev.getType()) {
-            case DEVICE_DETECTED: {
+            case DEVICE_DETECTED: 
                 addPanStamp(ev.getDevice());
-            }
-            break;
+                break;
+            case DEVICE_REMOVED :
+                removePanStamp(ev.getDevice());
+                break;
         }
     }
 
@@ -77,6 +80,22 @@ public class GatewayNode extends NetworkTreeNode implements GatewayListener {
     }
 
     private synchronized void addPanStamp(PanStamp ps) {
+        addChild(ps);
+    }
+    
+    private synchronized void removePanStamp(PanStamp ps) {
+        for (int i = 0; i < getChildCount(); ++i) {
+            PanStampNode psn = (PanStampNode) getChildAt(i);
+            if (psn.getPanStamp() == ps) {
+                psn.stop();
+                removeFromTree(psn, this);
+                return;
+            }
+        }
+    }
+
+    @Override
+    void addChild(PanStamp ps) {
         PanStampNode psn = new PanStampNode(ps);
         addToTree(psn, this);
         psn.start();

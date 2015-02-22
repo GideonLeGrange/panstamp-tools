@@ -1,5 +1,5 @@
 
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.tree;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,7 +13,7 @@ import static me.legrange.panstamp.gui.model.Format.formatValue;
  *
  * @author gideon
  */
-public class EndpointNode extends NetworkTreeNode implements EndpointListener {
+public class EndpointNode extends NetworkTreeNode<Endpoint, Object> implements EndpointListener {
 
     public EndpointNode(Endpoint ep) {
         super(ep);
@@ -58,6 +58,10 @@ public class EndpointNode extends NetworkTreeNode implements EndpointListener {
     @Override
     public Type getType() {
         return Type.ENDPOINT;
+    }
+
+    @Override
+    void addChild(Object child) {
     }
 
     

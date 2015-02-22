@@ -18,12 +18,12 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.gui.model.EndpointNode;
-import me.legrange.panstamp.gui.model.GatewayNode;
-import me.legrange.panstamp.gui.model.NetworkTreeNode;
-import me.legrange.panstamp.gui.model.PanStampNode;
-import me.legrange.panstamp.gui.model.RegisterNode;
-import me.legrange.panstamp.gui.model.WorldNode;
+import me.legrange.panstamp.gui.model.tree.EndpointNode;
+import me.legrange.panstamp.gui.model.tree.GatewayNode;
+import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
+import me.legrange.panstamp.gui.model.tree.PanStampNode;
+import me.legrange.panstamp.gui.model.tree.RegisterNode;
+import me.legrange.panstamp.gui.model.tree.WorldNode;
 
 /**
  *

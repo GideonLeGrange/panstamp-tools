@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui.model;
+package me.legrange.panstamp.gui.model.tree;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,15 +10,30 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampEvent;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.core.GatewayImpl;
 
 /**
- *
+ * A tree node representing a panStamp device in the network tree. 
  * @author gideon
  */
-public class PanStampNode extends NetworkTreeNode implements PanStampListener {
+public class PanStampNode extends NetworkTreeNode<PanStamp, Register> implements PanStampListener {
 
-    
-    public enum RegisterDisplay { ALL, NONE, INTERESTING; };
+    @Override
+    void addChild(Register reg) {
+     RegisterNode old = nodes.remove(reg.getId());
+        if (old != null) {
+            old.stop();
+        }
+        RegisterNode rn = new RegisterNode(reg);
+        addToTree(rn, this);
+        rn.start();
+        nodes.put(reg.getId(), rn);
+    }
+
+    public enum RegisterDisplay {
+
+        ALL, NONE, INTERESTING;
+    };
 
     public PanStampNode(PanStamp ps) {
         super(ps);
@@ -36,26 +51,25 @@ public class PanStampNode extends NetworkTreeNode implements PanStampListener {
     @Override
     public int getChildCount() {
         switch (registerDisplay) {
-            case ALL : 
-                return super.getChildCount(); 
-            case NONE : 
+            case ALL:
+                return super.getChildCount();
+            case NONE:
                 int count = 0;
                 for (RegisterNode rn : nodes.values()) {
                     if (rn.getRegister().getId() > 10) {
-                        count ++;
+                        count++;
                     }
                 }
                 return count;
-            case INTERESTING : 
+            case INTERESTING:
                 count = 0;
                 for (RegisterNode rn : nodes.values()) {
                     if ((rn.getRegister().getId() <= 10)) {
                         if (rn.getRegister().hasValue()) {
-                            count ++;
+                            count++;
                         }
-                    }
-                    else {
-                        count ++;
+                    } else {
+                        count++;
                     }
                 }
                 return count;
@@ -66,48 +80,42 @@ public class PanStampNode extends NetworkTreeNode implements PanStampListener {
     @Override
     public TreeNode getChildAt(int index) {
         switch (registerDisplay) {
-            case ALL : 
+            case ALL:
                 return super.getChildAt(index);
-            case NONE : 
+            case NONE:
                 int idx = 0;
                 for (RegisterNode rn : nodes.values()) {
                     if ((rn.getRegister().getId() > 10)) {
                         if (idx == index) {
                             return rn;
-                        }
-                        else {
-                            idx ++;
+                        } else {
+                            idx++;
                         }
                     }
                 }
                 return null;
-            case INTERESTING :
+            case INTERESTING:
                 idx = 0;
                 for (RegisterNode rn : nodes.values()) {
                     if (rn.getRegister().getId() <= 10) {
                         if (rn.getRegister().hasValue()) {
                             if (idx == index) {
                                 return rn;
-                            }
-                            else {
-                                idx ++;
+                            } else {
+                                idx++;
                             }
                         }
-                    }
-                    else {
-                            if (idx == index) {
-                                return rn;
-                            }
-                            else {
-                                idx ++;
-                            }
+                    } else {
+                        if (idx == index) {
+                            return rn;
+                        } else {
+                            idx++;
+                        }
                     }
                 }
         }
         return null;
     }
-    
-    
 
     @Override
     protected void start() {
@@ -123,8 +131,8 @@ public class PanStampNode extends NetworkTreeNode implements PanStampListener {
 
     @Override
     protected void stop() {
-        getPanStamp().removeListener(this);
-        super.stop(); 
+        ((GatewayImpl) getPanStamp().getGateway()).removeDevice(getPanStamp().getAddress());
+        super.stop();
     }
 
     @Override
@@ -138,9 +146,9 @@ public class PanStampNode extends NetworkTreeNode implements PanStampListener {
             case PRODUCT_CODE_UPDATE: {
                 try {
                     for (Register reg : ev.getDevice().getRegisters()) {
-                        RegisterNode rn = nodes.get(reg);
+                        RegisterNode rn = nodes.get(reg.getId());
                         if (rn == null) {
-                            addNode(reg);
+                            addChild(reg);
                             reload();
                         } else {
                             rn.update(reg);
@@ -150,49 +158,39 @@ public class PanStampNode extends NetworkTreeNode implements PanStampListener {
                 } catch (GatewayException ex) {
                     Logger.getLogger(PanStampNode.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                reload();
-            }
-            break;
-            case SYNC_STATE_CHANGE: {
-
+//                reload();
             }
             break;
             case REGISTER_DETECTED:
                 Register reg = ev.getRegister();
-                if (nodes.get(reg) == null) {
-                    addNode(reg);
+                if (nodes.get(reg.getId()) == null) {
+                    addChild(reg);
                 }
+                break;
+            case SYNC_REQUIRED:
+            case SYNC_STATE_CHANGE:
+                break;
+
         }
     }
-    
+
     public RegisterDisplay getRegisterDisplay() {
         return registerDisplay;
     }
-    
+
     public void setRegisterDisplay(RegisterDisplay rd) {
         if (rd != registerDisplay) {
             registerDisplay = rd;
             reload();
         }
     }
-
+    
     private synchronized void addRegister(Register reg) {
-        if (nodes.get(reg) == null) {
-            addNode(reg);
+        if (nodes.get(reg.getId()) == null) {
+            addChild(reg);
         }
     }
 
-    private void addNode(Register reg) {
-        RegisterNode old = nodes.remove(reg);
-        if (old != null) {
-            old.stop();
-        }
-        RegisterNode rn = new RegisterNode(reg);
-        addToTree(rn, this);
-        rn.start();
-        nodes.put(reg, rn);
-    }
-
-    private final Map<Register, RegisterNode> nodes = new ConcurrentHashMap<>();
-    private RegisterDisplay registerDisplay = RegisterDisplay.NONE; 
+    private final Map<Integer, RegisterNode> nodes = new ConcurrentHashMap<>();
+    private RegisterDisplay registerDisplay = RegisterDisplay.NONE;
 }

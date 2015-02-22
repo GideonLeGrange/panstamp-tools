@@ -28,6 +28,9 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
             case DEVICE_DETECTED:
                 add(ev.getDevice());
                 break;
+            case DEVICE_REMOVED :
+                remove(ev.getDevice());
+                break;
         }
     }
 
@@ -54,6 +57,7 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
     }
 
     public EndpointCollector(Gateway gw) throws GatewayException {
+        this.gw = gw;
         add(gw);
     }
 
@@ -63,6 +67,10 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
             ds = addDataSet(ep);
         }
         return ds;
+    }
+    
+    public void stop() {
+        remove(gw);
     }
 
     private void remove(PanStamp ps) {
@@ -85,6 +93,10 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
         } catch (GatewayException ex) {
             Logger.getLogger(EndpointCollector.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void remove(Gateway gw) {
+        gw.removeListener(this);
     }
 
     private void remove(Endpoint ep) {
@@ -135,6 +147,7 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
         sets.remove(ep);
     }
 
+    private final Gateway gw;
     private final Map<Endpoint, EndpointDataSet> sets = new HashMap<>();
 
 }

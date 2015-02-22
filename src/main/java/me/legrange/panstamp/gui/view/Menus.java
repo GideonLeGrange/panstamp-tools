@@ -19,12 +19,12 @@ import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.gui.model.EndpointNode;
-import me.legrange.panstamp.gui.model.GatewayNode;
-import me.legrange.panstamp.gui.model.NetworkTreeNode;
-import me.legrange.panstamp.gui.model.PanStampNode;
-import me.legrange.panstamp.gui.model.RegisterNode;
-import me.legrange.panstamp.gui.model.WorldNode;
+import me.legrange.panstamp.gui.model.tree.EndpointNode;
+import me.legrange.panstamp.gui.model.tree.GatewayNode;
+import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
+import me.legrange.panstamp.gui.model.tree.PanStampNode;
+import me.legrange.panstamp.gui.model.tree.RegisterNode;
+import me.legrange.panstamp.gui.model.tree.WorldNode;
 
 /**
  *
@@ -208,9 +208,10 @@ public class Menus {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                GatewayNode gn = getSelectedGatewayNode();
-                if (gn != null) {
-                    gn.removeFromParent();
+                try {
+                    view.getModel().deleteGateway(getSelectedGateway());
+                } catch (GatewayException ex) {
+                    Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -293,7 +294,7 @@ public class Menus {
             public void actionPerformed(ActionEvent e) {
                 PanStampNode psn = getSelectedPanStampNode();
                 if (psn != null) {
-                    psn.removeFromParent();
+                    psn.getPanStamp().getGateway().removeDevice(psn.getPanStamp().getAddress());
                 }
             }
         }

@@ -99,8 +99,11 @@ class EndpointTableModel implements TableModel, GatewayListener, PanStampListene
     }
 
     void addGateway(Gateway gw) {
-        this.gw = gw;
         gw.addListener(this);
+    }
+    
+    void removeGateway(Gateway gw) {
+        gw.removeListener(this);
     }
 
     void add(String msg) {
@@ -251,6 +254,7 @@ class EndpointTableModel implements TableModel, GatewayListener, PanStampListene
         ep.addListener(this);
 
     }
+
     
 
     private static class Entry {
@@ -271,6 +275,5 @@ class EndpointTableModel implements TableModel, GatewayListener, PanStampListene
     private final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.SSS");
     private static final String columnNames[] = {"Timestamp", "Event"};
     private static final Class columnClasses[] = {String.class, String.class};
-    private Gateway gw;
 
 }

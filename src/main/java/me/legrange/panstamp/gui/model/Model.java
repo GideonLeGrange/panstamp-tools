@@ -1,5 +1,6 @@
 package me.legrange.panstamp.gui.model;
 
+import me.legrange.panstamp.gui.model.tree.NetworkTreeModel;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,21 @@ public final class Model {
         etm.addGateway(gw);
         gw.getSWAPModem().addListener(smm);
         updater.addGateway(gw);
+    }
+    
+
+    public void deleteGateway(Gateway gw) throws GatewayException {
+        if (gw.isOpen()) {
+            gw.close();
+        }
+        updater.removeGateway(gw);
+        gw.getSWAPModem().removeListener(smm);
+        etm.removeGateway(gw);
+        ntm.removeGateway(gw);
+        EndpointCollector ec = endpointCollectors.remove(gw);
+        ec.stop();
+        SignalCollector sc = signalCollectors.get(gw);
+        gw.getSWAPModem().removeListener(sc);
     }
 
     public TreeModel getTreeModel() {
@@ -91,5 +107,6 @@ public final class Model {
     private final Store store;
     private final DataUpdater updater;
     private static final String DATA_PATH = "panstamp";
+
 
 }
