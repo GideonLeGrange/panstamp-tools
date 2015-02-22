@@ -100,10 +100,16 @@ class EndpointTableModel implements TableModel, GatewayListener, PanStampListene
 
     void addGateway(Gateway gw) {
         gw.addListener(this);
+        for (PanStamp ps : gw.getDevices()) {
+            add(ps);
+        }
     }
-    
-    void removeGateway(Gateway gw) {
+
+    void removeGateway(Gateway gw) throws GatewayException {
         gw.removeListener(this);
+        for (PanStamp ps : gw.getDevices()) {
+            remove(ps);
+        }
     }
 
     void add(String msg) {
@@ -235,6 +241,13 @@ class EndpointTableModel implements TableModel, GatewayListener, PanStampListene
             Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private void remove(PanStamp ps) throws GatewayException {
+        ps.removeListener(this);
+        for (Register reg : ps.getRegisters()) {
+            remove(reg);
+        }
+    }
 
     private void add(Register reg) {
         add(String.format("Learnt of register %d for device %d", reg.getId(), reg.getDevice().getAddress()));
@@ -247,15 +260,23 @@ class EndpointTableModel implements TableModel, GatewayListener, PanStampListene
             Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    private void remove(Register reg) throws GatewayException {
+        reg.removeListener(this);
+        for (Endpoint ep : reg.getEndpoints()) {
+            remove(ep);
+        }
+    }
+    
     private void add(Endpoint ep) {
         add(String.format("Learnt of endpoint '%s' for register %d on device %d",
                 ep.getName(), ep.getRegister().getId(), ep.getRegister().getDevice().getAddress()));
         ep.addListener(this);
-
     }
-
     
+    private void remove(Endpoint ep) {
+        ep.removeListener(this);
+    }
 
     private static class Entry {
 
