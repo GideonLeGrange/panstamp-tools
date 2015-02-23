@@ -1,5 +1,6 @@
 package me.legrange.panstamp.gui.view;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
@@ -57,7 +58,7 @@ public class Menus {
     }
 
     JMenu getWorldMenu() {
-        JMenu menu = new JMenu("panStamp");
+        JMenu menu = new JMenu("Networks");
         for (JMenuItem c : getWorldMenuItems()) {
             menu.add(c);
         }
@@ -387,38 +388,6 @@ public class Menus {
                 view.showEndpointChart(getSelectedEndpoint());
             }
         });
-        final JMenu unitMenu = new JMenu("Units...") {
-            @Override
-            public boolean isEnabled() { 
-                Endpoint ep = getSelectedEndpoint();
-                return (ep != null) && 
-                    !ep.getUnits().isEmpty();
-//                return (ep != null) && (ep.getRegister().getDevice().getGateway().isOpen());
-            }
-
-            @Override
-            public int getItemCount() {
-                return getSelectedEndpoint().getUnits().size();
-            }
-
-            @Override
-            public JMenuItem getItem(int pos) {
-                final Endpoint ep = getSelectedEndpoint();
-                final String unit = (String) ep.getUnits().get(pos);
-                JMenuItem item = new JMenuItem(unit) {
-                };
-                item.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("Code to update unit to '" + unit + "' goes here");
-                    }
-                });
-                return item;
-            }
-            
-            
-        };
         
         items.add(graphItem);
         return items;

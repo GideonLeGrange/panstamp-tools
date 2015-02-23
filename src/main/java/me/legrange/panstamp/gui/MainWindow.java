@@ -1,8 +1,10 @@
 package me.legrange.panstamp.gui;
 
+import com.apple.eawt.AboutHandler;
+import com.apple.eawt.AppEvent;
 import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationAdapter;
-import com.apple.eawt.ApplicationEvent;
+import com.apple.eawt.QuitHandler;
+import com.apple.eawt.QuitResponse;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPopupMenu;
@@ -31,7 +33,7 @@ public class MainWindow extends javax.swing.JFrame {
             if (isOSX) {
                 System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
                 System.setProperty("apple.laf.useScreenMenuBar", "true");
-                Application.getApplication().setEnabledPreferencesMenu(true);
+//                Application.getApplication().setEnabledPreferencesMenu(true);
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
@@ -56,27 +58,23 @@ public class MainWindow extends javax.swing.JFrame {
                 try {
                     final MainWindow mw = new MainWindow();
                     if (isOSX) {
-                        Application.getApplication().addApplicationListener(new ApplicationAdapter() {
+                        Application app = Application.getApplication();
+                        app.setAboutHandler(new AboutHandler() {
 
                             @Override
-                            public void handleQuit(ApplicationEvent ae) {
-                                ae.setHandled(true);
-                                mw.quit();
-                            }
-
-                            @Override
-                            public void handlePreferences(ApplicationEvent ae) {
-                                ae.setHandled(true);
-//                            mw.showPrefs();
-                            }
-
-                            @Override
-                            public void handleAbout(ApplicationEvent ae) {
-                                ae.setHandled(true);
+                            public void handleAbout(AppEvent.AboutEvent ae) {
                                 mw.showAbout();
                             }
-
                         });
+                        app.setQuitHandler(new QuitHandler() {
+
+                            @Override
+                            public void handleQuitRequestWith(AppEvent.QuitEvent qe, QuitResponse qr) {
+                                mw.quit();
+                            }
+                        });
+                        
+
                         mw.panStampMenu.setVisible(false);
                     }
                     mw.setVisible(true);
@@ -106,7 +104,7 @@ public class MainWindow extends javax.swing.JFrame {
         mainMenu.add(view.getRegisterMenu());
         mainMenu.add(view.getEndpointMenu());
     }
-    
+
     public JTree getNetworkTree() {
         return networkTree;
     }
@@ -277,8 +275,8 @@ public class MainWindow extends javax.swing.JFrame {
     private void networkTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_networkTreeMouseClicked
         TreePath path = networkTree.getClosestPathForLocation(evt.getX(), evt.getY());
         if (!evt.isPopupTrigger()) {
-        JPopupMenu menu = view.getTreePopupMenu(path);
-        networkTree.setComponentPopupMenu(menu);
+            JPopupMenu menu = view.getTreePopupMenu(path);
+            networkTree.setComponentPopupMenu(menu);
         }
     }//GEN-LAST:event_networkTreeMouseClicked
 
