@@ -619,11 +619,10 @@ public class NetworkAddDialog extends javax.swing.JDialog {
 
     private void createNetwork() throws ModemException, SWAPException, GatewayException {
         Gateway gw;
-        DeviceLibrary lib = new ClassLoaderLibrary();
         if (typeIsSerial()) {
-            gw = Factory.createSerial(getSerialPort(), getSerialSpeed(), lib);
+            gw = Factory.createSerial(getSerialPort(), getSerialSpeed());
         } else {
-            gw = Factory.createTcp(getTcpHost(), getTcpPort(), lib);
+            gw = Factory.createTcp(getTcpHost(), getTcpPort());
         }
         gw.open();
         ModemSetup setup = gw.getSWAPModem().getSetup();
