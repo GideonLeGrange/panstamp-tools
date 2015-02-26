@@ -33,6 +33,7 @@ public class MainWindow extends javax.swing.JFrame {
             if (isOSX) {
                 System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
                 System.setProperty("apple.laf.useScreenMenuBar", "true");
+//                System.setProperty("apple.awt.brushMetalLook", "true");
 //                Application.getApplication().setEnabledPreferencesMenu(true);
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -59,6 +60,7 @@ public class MainWindow extends javax.swing.JFrame {
                     final MainWindow mw = new MainWindow();
                     if (isOSX) {
                         Application app = Application.getApplication();
+
                         app.setAboutHandler(new AboutHandler() {
 
                             @Override
@@ -73,7 +75,6 @@ public class MainWindow extends javax.swing.JFrame {
                                 mw.quit();
                             }
                         });
-                        
 
                         mw.panStampMenu.setVisible(false);
                     }

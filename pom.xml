@@ -19,6 +19,7 @@
                     <source>1.7</source>
                     <target>1.7</target>
                     <showDeprecation>true</showDeprecation>
+                    <compilerArgument>-XDignore.symbol.file</compilerArgument>
                 </configuration>
             </plugin>
             <!-- package for OS X distribution -->
@@ -26,14 +27,15 @@
             mvn -X clean   package appbundle:bundle 
             -->
             <plugin>
-                <groupId>io.github.appbundler</groupId>
+                <groupId>sh.tak.appbundler</groupId>
                 <artifactId>appbundle-maven-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.2-SNAPSHOT</version>
                 <configuration>
                     <mainClass>me.legrange.panstamp.gui.MainWindow</mainClass>
                     <iconFile>src/main/resources/panstamp.icns</iconFile>
-                    <bundleName>PanStamp</bundleName>
                     <jvmVersion>1.7+</jvmVersion>
+                    <bundleName>PanStamp Tool</bundleName>
+                    <version>1.0-SNAPSHOT</version> 
                 </configuration>
                 <executions>
                     <execution>
