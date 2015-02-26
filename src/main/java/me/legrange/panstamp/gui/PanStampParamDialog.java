@@ -24,7 +24,7 @@ import me.legrange.panstamp.gui.model.Model;
  *
  * @author gideon
  */
-public class PanStampParamDialog extends javax.swing.JDialog {
+public final class PanStampParamDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form PanStampParamDialog
