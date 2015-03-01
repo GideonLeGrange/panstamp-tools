@@ -12,7 +12,6 @@ import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.tools.store.DataStoreException;
-import me.legrange.panstamp.tools.store.DataUpdater;
 import me.legrange.panstamp.tools.store.Store;
 
 /**
@@ -24,7 +23,6 @@ public final class Model {
 
     public Model() throws DataStoreException {
         store = Store.openFile(dataFileName());
-        updater = new DataUpdater(store);
     }
 
     public void start() throws DataStoreException, GatewayException {
@@ -34,8 +32,8 @@ public final class Model {
         }
     }
 
-
     public synchronized void addGateway(Gateway gw) throws GatewayException {
+        store.addGateway(gw);
         SignalCollector sc = new SignalCollector();
         gw.getSWAPModem().addListener(sc);
         signalCollectors.put(gw, sc);
@@ -43,7 +41,6 @@ public final class Model {
         ntm.addGateway(gw);
         etm.addGateway(gw);
         gw.getSWAPModem().addListener(smm);
-        updater.addGateway(gw);
     }
     
 
@@ -51,7 +48,6 @@ public final class Model {
         if (gw.isOpen()) {
             gw.close();
         }
-        updater.removeGateway(gw);
         gw.getSWAPModem().removeListener(smm);
         etm.removeGateway(gw);
         ntm.removeGateway(gw);
@@ -59,6 +55,7 @@ public final class Model {
         ec.stop();
         SignalCollector sc = signalCollectors.get(gw);
         gw.getSWAPModem().removeListener(sc);
+        store.removeGateway(gw);
     }
 
     public TreeModel getTreeModel() {
@@ -105,7 +102,6 @@ public final class Model {
     private final Map<Endpoint, EndpointDataSet> epds = new HashMap<>();
     private final Map<PanStamp, Boolean> hasParams = new HashMap<>();
     private final Store store;
-    private final DataUpdater updater;
     private static final String DATA_PATH = "panstamp";
 
 
