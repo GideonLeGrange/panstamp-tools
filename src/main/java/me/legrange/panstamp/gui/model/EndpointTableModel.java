@@ -25,7 +25,7 @@ import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.StandardEndpoint;
-import me.legrange.swap.Registers;
+import me.legrange.panstamp.StandardRegister;
 
 /**
  *
@@ -193,14 +193,14 @@ class EndpointTableModel implements TableModel, GatewayListener, PanStampListene
     }
 
     private String productCodeMessage(PanStamp ps) throws GatewayException {
-        Register reg = ps.getRegister(Registers.Register.PRODUCT_CODE.position());
+        Register reg = ps.getRegister(StandardRegister.PRODUCT_CODE.getId());
         return String.format("Device %d identified as %s/%s", ps.getAddress(),
                 reg.getEndpoint(StandardEndpoint.MANUFACTURER_ID.getName()).getValue(),
                 reg.getEndpoint(StandardEndpoint.PRODUCT_ID.getName()).getValue());
     }
 
     private String syncStateMessage(PanStamp ps) throws GatewayException {
-        Register reg = ps.getRegister(Registers.Register.SYSTEM_STATE.position());
+        Register reg = ps.getRegister(StandardRegister.SYSTEM_STATE.getId());
         Endpoint<Integer> ep = reg.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
         int state = ep.getValue();
         String mode;
