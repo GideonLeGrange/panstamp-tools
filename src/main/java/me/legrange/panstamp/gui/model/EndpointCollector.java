@@ -6,55 +6,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.PanStampEvent;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterListener;
+import me.legrange.panstamp.core.AbstractGatewayListener;
+import me.legrange.panstamp.core.AbstractPanStampListener;
+import me.legrange.panstamp.core.AbstractRegisterListener;
 
 /**
  *
  * @author gideon
  */
-public class EndpointCollector implements GatewayListener, PanStampListener, RegisterListener {
-
-    @Override
-    public void gatewayUpdated(GatewayEvent ev) {
-        switch (ev.getType()) {
-            case DEVICE_DETECTED:
-                add(ev.getDevice());
-                break;
-            case DEVICE_REMOVED :
-                remove(ev.getDevice());
-                break;
-        }
-    }
-
-    @Override
-    public void deviceUpdated(PanStampEvent ev) {
-        switch (ev.getType()) {
-            case REGISTER_DETECTED:
-                add(ev.getRegister());
-                break;
-            case PRODUCT_CODE_UPDATE:
-                remove(ev.getDevice());
-                add(ev.getDevice());
-                break;
-        }
-    }
-
-    @Override
-    public void registerUpdated(RegisterEvent ev) {
-        switch (ev.getType()) {
-            case ENDPOINT_ADDED:
-                add(ev.getEndpoint());
-                break;
-        }
-    }
+public class EndpointCollector {
 
     public EndpointCollector(Gateway gw) throws GatewayException {
         this.gw = gw;
@@ -68,13 +34,13 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
         }
         return ds;
     }
-    
+
     public void stop() {
         remove(gw);
     }
 
     private void remove(PanStamp ps) {
-        ps.removeListener(this);
+        ps.removeListener(panStampL);
         try {
             for (Register reg : ps.getRegisters()) {
                 remove(reg);
@@ -85,7 +51,7 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
     }
 
     private void remove(Register reg) {
-        reg.removeListener(this);
+        reg.removeListener(registerL);
         try {
             for (Endpoint ep : reg.getEndpoints()) {
                 remove(ep);
@@ -94,9 +60,9 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
             Logger.getLogger(EndpointCollector.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void remove(Gateway gw) {
-        gw.removeListener(this);
+        gw.removeListener(gatewayL);
     }
 
     private void remove(Endpoint ep) {
@@ -104,14 +70,14 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
     }
 
     private void add(Gateway gw) {
-        gw.addListener(this);
+        gw.addListener(gatewayL);
         for (PanStamp ps : gw.getDevices()) {
             add(ps);
         }
     }
 
     private void add(PanStamp ps) {
-        ps.addListener(this);
+        ps.addListener(panStampL);
         try {
             for (Register reg : ps.getRegisters()) {
                 add(reg);
@@ -122,7 +88,7 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
     }
 
     private void add(Register reg) {
-        reg.addListener(this);
+        reg.addListener(registerL);
         try {
             for (Endpoint ep : reg.getEndpoints()) {
                 add(ep);
@@ -139,6 +105,7 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
     private EndpointDataSet addDataSet(Endpoint ep) {
         EndpointDataSet ds = new EndpointDataSet(ep);
         sets.put(ep, ds);
+        
         ep.addListener(ds);
         return ds;
     }
@@ -149,5 +116,41 @@ public class EndpointCollector implements GatewayListener, PanStampListener, Reg
 
     private final Gateway gw;
     private final Map<Endpoint, EndpointDataSet> sets = new HashMap<>();
+
+    private final GatewayListener gatewayL = new AbstractGatewayListener() {
+
+        @Override
+        public void deviceRemoved(Gateway gw, PanStamp dev) {
+            add(dev);
+        }
+
+        @Override
+        public void deviceDetected(Gateway gw, PanStamp dev) {
+            remove(dev);
+        }
+    };
+
+    private final PanStampListener panStampL = new AbstractPanStampListener() {
+
+        @Override
+        public void registerDetected(PanStamp dev, Register reg) {
+            add(reg);
+        }
+
+        @Override
+        public void productCodeChange(PanStamp dev, int manufacturerId, int productId) {
+            remove(dev);
+            add(dev);
+        }
+
+    };
+    private final RegisterListener registerL = new AbstractRegisterListener() {
+
+        @Override
+        public void endpointAdded(Register reg, Endpoint ep) {
+            add(ep);
+        }
+
+    };
 
 }

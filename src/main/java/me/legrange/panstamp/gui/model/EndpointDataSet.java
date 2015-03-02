@@ -3,7 +3,6 @@ package me.legrange.panstamp.gui.model;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.EndpointEvent;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.GatewayException;
 import org.jfree.data.DomainOrder;
@@ -21,13 +20,10 @@ public class EndpointDataSet implements XYDataset, EndpointListener {
     public Endpoint getEndpoint() {
         return ep;
     }
-    
+
     @Override
-    public void endpointUpdated(EndpointEvent ev) {
-        switch (ev.getType()) {
-            case VALUE_RECEIVED:
-                addSample(asDouble(ev.getEndpoint()));
-        }
+    public void valueReceived(Endpoint ep, Object value) {
+                addSample(asDouble(ep));
     }
 
     @Override

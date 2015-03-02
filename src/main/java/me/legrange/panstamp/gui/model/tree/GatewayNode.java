@@ -3,7 +3,6 @@ package me.legrange.panstamp.gui.model.tree;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayEvent;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
@@ -49,16 +48,16 @@ public class GatewayNode extends NetworkTreeNode<Gateway, PanStamp> implements G
     }
 
     @Override
-    public void gatewayUpdated(GatewayEvent ev) {
-        switch (ev.getType()) {
-            case DEVICE_DETECTED: 
-                addPanStamp(ev.getDevice());
-                break;
-            case DEVICE_REMOVED :
-                removePanStamp(ev.getDevice());
-                break;
-        }
+    public void deviceDetected(Gateway gw, PanStamp dev) {
+        addPanStamp(dev);
     }
+
+    @Override
+    public void deviceRemoved(Gateway gw, PanStamp dev) {
+        removePanStamp(dev);
+    }
+    
+    
 
     @Override
     protected void start() {

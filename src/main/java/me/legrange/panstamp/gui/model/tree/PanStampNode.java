@@ -7,20 +7,20 @@ import java.util.logging.Logger;
 import javax.swing.tree.TreeNode;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.PanStampEvent;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.core.GatewayImpl;
 
 /**
- * A tree node representing a panStamp device in the network tree. 
+ * A tree node representing a panStamp device in the network tree.
+ *
  * @author gideon
  */
 public class PanStampNode extends NetworkTreeNode<PanStamp, Register> implements PanStampListener {
 
     @Override
     void addChild(Register reg) {
-     RegisterNode old = nodes.remove(reg.getId());
+        RegisterNode old = nodes.remove(reg.getId());
         if (old != null) {
             old.stop();
         }
@@ -140,38 +140,38 @@ public class PanStampNode extends NetworkTreeNode<PanStamp, Register> implements
         return Type.PANSTAMP;
     }
 
-    @Override
-    public void deviceUpdated(PanStampEvent ev) {
-        switch (ev.getType()) {
-            case PRODUCT_CODE_UPDATE: {
-                try {
-                    for (Register reg : ev.getDevice().getRegisters()) {
-                        RegisterNode rn = nodes.get(reg.getId());
-                        if (rn == null) {
-                            addChild(reg);
-                            reload();
-                        } else {
-                            rn.update(reg);
-                            rn.reload();
-                        }
-                    }
-                } catch (GatewayException ex) {
-                    Logger.getLogger(PanStampNode.class.getName()).log(Level.SEVERE, null, ex);
-                }
-//                reload();
-            }
-            break;
-            case REGISTER_DETECTED:
-                Register reg = ev.getRegister();
-                if (nodes.get(reg.getId()) == null) {
-                    addChild(reg);
-                }
-                break;
-            case SYNC_REQUIRED:
-            case SYNC_STATE_CHANGE:
-                break;
 
+    @Override
+    public void productCodeChange(PanStamp dev, int manufacturerId, int productId) {
+        try {
+            for (Register reg : dev.getRegisters()) {
+                RegisterNode rn = nodes.get(reg.getId());
+                if (rn == null) {
+                    addChild(reg);
+                    reload();
+                } else {
+                    rn.update(reg);
+                    rn.reload();
+                }
+            }
+        } catch (GatewayException ex) {
+            Logger.getLogger(PanStampNode.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public void syncStateChange(PanStamp dev, int syncState) {
+    }
+
+    @Override
+    public void registerDetected(PanStamp dev, Register reg) {
+        if (nodes.get(reg.getId()) == null) {
+            addChild(reg);
+        }
+    }
+
+    @Override
+    public void syncRequired(PanStamp dev) {
     }
 
     public RegisterDisplay getRegisterDisplay() {
@@ -184,7 +184,7 @@ public class PanStampNode extends NetworkTreeNode<PanStamp, Register> implements
             reload();
         }
     }
-    
+
     private synchronized void addRegister(Register reg) {
         if (nodes.get(reg.getId()) == null) {
             addChild(reg);

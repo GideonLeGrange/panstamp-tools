@@ -12,9 +12,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.DeviceStateStore;
@@ -360,6 +357,7 @@ public class Store {
         @Override
         public void setEndpointValue(int address, StandardEndpoint ep, int value) {
             System.out.printf("setEpVal(%d, %s) = %d\n", address, ep.getName(), value);
+//            if (ep.getName().equals("Manufacturer Id")) throw new RuntimeException("Stop! Hammer time!");
             JsonObject devO = getDevice(getGateway(gw), address);
             devO.put(ep.getName(), value);
             try {

@@ -4,8 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.RegisterEvent;
 import me.legrange.panstamp.RegisterListener;
 
 /**
@@ -71,12 +71,17 @@ public class RegisterNode extends NetworkTreeNode<Register, Endpoint> implements
     }
 
     @Override
-    public void registerUpdated(RegisterEvent ev) {
-        switch (ev.getType()) {
-            case ENDPOINT_ADDED:
-                addChild(ev.getEndpoint());
-                reload();
-        }
+    public void valueReceived(Register reg, byte[] value) {
+    }
+
+    @Override
+    public void endpointAdded(Register reg, Endpoint ep) {
+        addChild(ep);
+        reload();
+    }
+
+    @Override
+    public void parameteradded(Register reg, Parameter par) {
     }
 
     @Override
