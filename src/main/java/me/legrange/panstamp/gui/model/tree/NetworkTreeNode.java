@@ -14,8 +14,6 @@ public abstract class NetworkTreeNode<S,C> extends DefaultMutableTreeNode {
         WORLD, GATEWAY, PANSTAMP, REGISTER, ENDPOINT
     };
     
-    
-
     @Override
     public void remove(MutableTreeNode child) {
         ((NetworkTreeNode) child).stop();

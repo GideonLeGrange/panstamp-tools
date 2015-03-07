@@ -75,6 +75,12 @@ public class RegisterNode extends NetworkTreeNode<Register, Endpoint> implements
     }
 
     @Override
+    public void valueSet(Register reg, byte[] value) {
+        
+    }
+    
+ 
+    @Override
     public void endpointAdded(Register reg, Endpoint ep) {
         addChild(ep);
         reload();

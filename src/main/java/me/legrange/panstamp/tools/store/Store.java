@@ -349,18 +349,12 @@ public class Store {
 
         @Override
         public int getEndpointValue(int address, StandardEndpoint ep) {
-            System.out.printf("getEpVal(%d, %s)\n", address, ep.getName());
             JsonObject devO = getDevice(getGateway(gw), address);
             return devO.getInt(ep.getName());
         }
 
         @Override
         public void setEndpointValue(int address, StandardEndpoint ep, int value) {
-            System.out.printf("setEpVal(%d, %s) = %d\n", address, ep.getName(), value);
-            if (ep.getName().equals("Manufacturer Id") && (value == 4)) {
-                new RuntimeException().printStackTrace();
-            }
-//            if (ep.getName().equals("Manufacturer Id")) throw new RuntimeException("Stop! Hammer time!");
             JsonObject devO = getDevice(getGateway(gw), address);
             devO.put(ep.getName(), value);
             try {
