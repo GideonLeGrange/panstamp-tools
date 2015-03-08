@@ -87,7 +87,7 @@ public class RegisterNode extends NetworkTreeNode<Register, Endpoint> implements
     }
 
     @Override
-    public void parameteradded(Register reg, Parameter par) {
+    public void parameterAdded(Register reg, Parameter par) {
     }
 
     @Override

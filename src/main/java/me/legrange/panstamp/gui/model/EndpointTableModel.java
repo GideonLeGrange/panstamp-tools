@@ -22,10 +22,10 @@ import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.StandardEndpoint;
 import me.legrange.panstamp.StandardRegister;
-import me.legrange.panstamp.core.AbstractEndpointListener;
-import me.legrange.panstamp.core.AbstractGatewayListener;
-import me.legrange.panstamp.core.AbstractPanStampListener;
-import me.legrange.panstamp.core.AbstractRegisterListener;
+import me.legrange.panstamp.AbstractEndpointListener;
+import me.legrange.panstamp.AbstractGatewayListener;
+import me.legrange.panstamp.AbstractPanStampListener;
+import me.legrange.panstamp.AbstractRegisterListener;
 
 /**
  *
