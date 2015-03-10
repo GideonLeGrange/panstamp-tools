@@ -20,12 +20,10 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
-import me.legrange.panstamp.StandardEndpoint;
-import me.legrange.panstamp.StandardRegister;
-import me.legrange.panstamp.AbstractEndpointListener;
-import me.legrange.panstamp.AbstractGatewayListener;
-import me.legrange.panstamp.AbstractPanStampListener;
-import me.legrange.panstamp.AbstractRegisterListener;
+import me.legrange.panstamp.event.AbstractEndpointListener;
+import me.legrange.panstamp.event.AbstractGatewayListener;
+import me.legrange.panstamp.event.AbstractPanStampListener;
+import me.legrange.panstamp.event.AbstractRegisterListener;
 
 /**
  *
@@ -132,16 +130,11 @@ class EndpointTableModel implements TableModel {
     }
 
     private String productCodeMessage(PanStamp ps) throws GatewayException {
-        Register reg = ps.getRegister(StandardRegister.PRODUCT_CODE.getId());
         return String.format("Device %d identified as %s/%s", ps.getAddress(),
-                reg.getEndpoint(StandardEndpoint.MANUFACTURER_ID.getName()).getValue(),
-                reg.getEndpoint(StandardEndpoint.PRODUCT_ID.getName()).getValue());
+                ps.getManufacturerId(), ps.getProductId());
     }
 
-    private String syncStateMessage(PanStamp ps) throws GatewayException {
-        Register reg = ps.getRegister(StandardRegister.SYSTEM_STATE.getId());
-        Endpoint<Integer> ep = reg.getEndpoint(StandardEndpoint.SYSTEM_STATE.getName());
-        int state = ep.getValue();
+    private String syncStateMessage(PanStamp ps, int state) throws GatewayException {
         String mode;
         switch (state) {
             case 0:
@@ -255,7 +248,7 @@ class EndpointTableModel implements TableModel {
         @Override
         public void syncStateChange(PanStamp dev, int syncState) {
             try {
-                add(syncStateMessage(dev));
+                add(syncStateMessage(dev, syncState));
             } catch (GatewayException ex) {
                 Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
             }

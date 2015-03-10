@@ -6,7 +6,7 @@ import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.core.ModemException;
+import me.legrange.panstamp.impl.ModemException;
 import me.legrange.swap.SWAPModem;
 
 /**

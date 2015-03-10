@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,9 +22,8 @@ import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.StandardEndpoint;
-import me.legrange.panstamp.core.GatewayImpl;
-import me.legrange.panstamp.core.PanStampImpl;
+import me.legrange.panstamp.impl.GatewayImpl;
+import me.legrange.panstamp.impl.PanStampImpl;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
@@ -96,11 +96,10 @@ public class Store {
         for (String key : devicesO.keySet()) {
             JsonObject deviceO = devicesO.getObject(key);
             PanStampImpl ps = new PanStampImpl((GatewayImpl) gw, Integer.parseInt(key));
-            for (String epKey : deviceO.keySet()) {
-                StandardEndpoint sep = StandardEndpoint.forName(epKey);
-                Register reg = ps.getRegister(sep.getRegister().getId());
-                Endpoint ep = reg.getEndpoint(sep.getName());
-                ep.setValue(deviceO.getInt(epKey));
+            for (String regKey : deviceO.keySet()) {
+                int id = Integer.parseInt(regKey);
+                Register reg = ps.getRegister(id);
+                reg.setValue(new BigInteger(deviceO.getString(regKey), 16).toByteArray());
             }
             ((GatewayImpl) gw).addDevice(ps);
         }
@@ -341,22 +340,24 @@ public class Store {
         }
 
         @Override
-        public boolean hasEndpointValue(int address, StandardEndpoint ep) {
-            System.out.printf("hasEpVal(%d, %s)\n", address, ep.getName());
-            JsonObject devO = getDevice(getGateway(gw), address);
-            return devO.containsKey(ep.getName());
+        public boolean hasRegisterValue(Register reg) {
+            JsonObject devO = getDevice(getGateway(gw), reg.getDevice().getAddress());
+            return devO.containsKey("" + reg.getId());        }
+
+        @Override
+        public byte[] getRegisterValue(Register reg) {
+            JsonObject devO = getDevice(getGateway(gw), reg.getDevice().getAddress());
+             return new BigInteger(devO.getString("" + reg.getId()),16).toByteArray();
         }
 
         @Override
-        public int getEndpointValue(int address, StandardEndpoint ep) {
-            JsonObject devO = getDevice(getGateway(gw), address);
-            return devO.getInt(ep.getName());
-        }
-
-        @Override
-        public void setEndpointValue(int address, StandardEndpoint ep, int value) {
-            JsonObject devO = getDevice(getGateway(gw), address);
-            devO.put(ep.getName(), value);
+        public void setRegisterValue(Register reg, byte[] value) {
+            JsonObject devO = getDevice(getGateway(gw), reg.getDevice().getAddress());
+            StringBuilder val = new StringBuilder();
+            for (byte b : value) {
+                val.append(String.format("%02x", ((int)b)&0xFF));
+            }
+            devO.put("" + reg.getId(), val.toString());
             try {
                 flush();
             } catch (DataStoreException ex) {

@@ -12,9 +12,9 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
-import me.legrange.panstamp.AbstractGatewayListener;
-import me.legrange.panstamp.AbstractPanStampListener;
-import me.legrange.panstamp.AbstractRegisterListener;
+import me.legrange.panstamp.event.AbstractGatewayListener;
+import me.legrange.panstamp.event.AbstractPanStampListener;
+import me.legrange.panstamp.event.AbstractRegisterListener;
 
 /**
  *

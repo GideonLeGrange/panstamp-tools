@@ -18,8 +18,8 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.gui.model.HexDocument;
 import me.legrange.panstamp.gui.model.IntegerDocument;
 import me.legrange.panstamp.gui.model.Model;
-import me.legrange.panstamp.core.ModemException;
-import me.legrange.panstamp.core.ClassLoaderLibrary;
+import me.legrange.panstamp.impl.ModemException;
+import me.legrange.panstamp.impl.ClassLoaderLibrary;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 
