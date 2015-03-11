@@ -22,7 +22,7 @@ import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.impl.GatewayImpl;
+import me.legrange.panstamp.impl.Gateway;
 import me.legrange.panstamp.impl.PanStampImpl;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
@@ -95,13 +95,13 @@ public class Store {
     private void loadDevices(Gateway gw, JsonObject devicesO) throws GatewayException {
         for (String key : devicesO.keySet()) {
             JsonObject deviceO = devicesO.getObject(key);
-            PanStampImpl ps = new PanStampImpl((GatewayImpl) gw, Integer.parseInt(key));
+            PanStampImpl ps = new PanStampImpl((Gateway) gw, Integer.parseInt(key));
             for (String regKey : deviceO.keySet()) {
                 int id = Integer.parseInt(regKey);
                 Register reg = ps.getRegister(id);
                 reg.setValue(new BigInteger(deviceO.getString(regKey), 16).toByteArray());
             }
-            ((GatewayImpl) gw).addDevice(ps);
+            ((Gateway) gw).addDevice(ps);
         }
     }
 
