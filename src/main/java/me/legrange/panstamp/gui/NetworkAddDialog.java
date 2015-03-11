@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
-import me.legrange.panstamp.DeviceLibrary;
 import me.legrange.panstamp.Factory;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
@@ -19,7 +18,6 @@ import me.legrange.panstamp.gui.model.HexDocument;
 import me.legrange.panstamp.gui.model.IntegerDocument;
 import me.legrange.panstamp.gui.model.Model;
 import me.legrange.panstamp.impl.ModemException;
-import me.legrange.panstamp.impl.ClassLoaderLibrary;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 
