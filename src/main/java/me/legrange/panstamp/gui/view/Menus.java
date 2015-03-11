@@ -1,6 +1,5 @@
 package me.legrange.panstamp.gui.view;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
@@ -326,15 +325,11 @@ public class Menus {
             public boolean isEnabled() {
                 PanStamp dev = getSelectedDevice();
                 if ((dev != null) && dev.getGateway().isOpen()) {
-                    try {
-                        for (Register reg : getSelectedDevice().getRegisters()) {
-                            if (!reg.getParameters().isEmpty()) {
-                                return true;
-                            }
-
+                    for (Register reg : getSelectedDevice().getRegisters()) {
+                        if (!reg.getParameters().isEmpty()) {
+                            return true;
                         }
-                    } catch (GatewayException ex) {
-                        Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
+
                     }
                 }
                 return false;

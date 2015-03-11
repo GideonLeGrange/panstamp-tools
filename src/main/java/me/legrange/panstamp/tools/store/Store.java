@@ -17,13 +17,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.DeviceStateStore;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.Factory;
 import me.legrange.panstamp.Gateway;
 import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.impl.Gateway;
-import me.legrange.panstamp.impl.PanStampImpl;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SWAPException;
 import me.legrange.swap.SWAPModem;
@@ -77,7 +74,7 @@ public class Store {
     private Gateway loadGateway(JsonObject gatewayO) throws DataStoreException {
         try {
             SWAPModem modem = loadModem(gatewayO.getObject(SWAP_MODEM));
-            Gateway gw = Factory.createGateway(modem);
+            Gateway gw = Gateway.create(modem);
             gw.setNetworkId(gatewayO.getInt(NETWORK_ID));
             gw.setChannel(gatewayO.getInt(CHANNEL));
             gw.setDeviceAddress(gatewayO.getInt(DEVICE_ADDRESS));
@@ -95,7 +92,7 @@ public class Store {
     private void loadDevices(Gateway gw, JsonObject devicesO) throws GatewayException {
         for (String key : devicesO.keySet()) {
             JsonObject deviceO = devicesO.getObject(key);
-            PanStampImpl ps = new PanStampImpl((Gateway) gw, Integer.parseInt(key));
+            PanStamp ps = new PanStamp((Gateway) gw, Integer.parseInt(key));
             for (String regKey : deviceO.keySet()) {
                 int id = Integer.parseInt(regKey);
                 Register reg = ps.getRegister(id);

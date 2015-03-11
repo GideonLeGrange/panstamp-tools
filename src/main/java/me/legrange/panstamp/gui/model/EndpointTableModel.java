@@ -165,12 +165,8 @@ class EndpointTableModel implements TableModel {
     private void add(PanStamp ps) {
         add(String.format("Detected new device with address %d", ps.getAddress()));
         ps.addListener(panStampL);
-        try {
-            for (Register reg : ps.getRegisters()) {
-                add(reg);
-            }
-        } catch (GatewayException ex) {
-            Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        for (Register reg : ps.getRegisters()) {
+            add(reg);
         }
     }
 

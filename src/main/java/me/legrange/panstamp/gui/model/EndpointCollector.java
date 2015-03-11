@@ -41,12 +41,8 @@ public class EndpointCollector {
 
     private void remove(PanStamp ps) {
         ps.removeListener(panStampL);
-        try {
-            for (Register reg : ps.getRegisters()) {
-                remove(reg);
-            }
-        } catch (GatewayException ex) {
-            Logger.getLogger(EndpointCollector.class.getName()).log(Level.SEVERE, null, ex);
+        for (Register reg : ps.getRegisters()) {
+            remove(reg);
         }
     }
 
@@ -78,12 +74,8 @@ public class EndpointCollector {
 
     private void add(PanStamp ps) {
         ps.addListener(panStampL);
-        try {
-            for (Register reg : ps.getRegisters()) {
-                add(reg);
-            }
-        } catch (GatewayException ex) {
-            Logger.getLogger(EndpointCollector.class.getName()).log(Level.SEVERE, null, ex);
+        for (Register reg : ps.getRegisters()) {
+            add(reg);
         }
     }
 

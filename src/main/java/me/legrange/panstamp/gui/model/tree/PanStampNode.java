@@ -9,7 +9,7 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.impl.Gateway;
+import me.legrange.panstamp.Gateway;
 
 /**
  * A tree node representing a panStamp device in the network tree.
@@ -119,13 +119,9 @@ public class PanStampNode extends NetworkTreeNode<PanStamp, Register> implements
 
     @Override
     protected void start() {
-        try {
-            getPanStamp().addListener(this);
-            for (Register reg : getPanStamp().getRegisters()) {
-                addRegister(reg);
-            }
-        } catch (GatewayException ex) {
-            Logger.getLogger(PanStampNode.class.getName()).log(Level.SEVERE, null, ex);
+        getPanStamp().addListener(this);
+        for (Register reg : getPanStamp().getRegisters()) {
+            addRegister(reg);
         }
     }
 
@@ -143,19 +139,15 @@ public class PanStampNode extends NetworkTreeNode<PanStamp, Register> implements
 
     @Override
     public void productCodeChange(PanStamp dev, int manufacturerId, int productId) {
-        try {
-            for (Register reg : dev.getRegisters()) {
-                RegisterNode rn = nodes.get(reg.getId());
-                if (rn == null) {
-                    addChild(reg);
-                    reload();
-                } else {
-                    rn.update(reg);
-                    rn.reload();
-                }
+        for (Register reg : dev.getRegisters()) {
+            RegisterNode rn = nodes.get(reg.getId());
+            if (rn == null) {
+                addChild(reg);
+                reload();
+            } else {
+                rn.update(reg);
+                rn.reload();
             }
-        } catch (GatewayException ex) {
-            Logger.getLogger(PanStampNode.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
