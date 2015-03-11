@@ -18,7 +18,7 @@ import me.legrange.panstamp.gui.model.IntegerDocument;
 import me.legrange.panstamp.gui.model.Model;
 import me.legrange.panstamp.ModemException;
 import me.legrange.swap.ModemSetup;
-import me.legrange.swap.SWAPException;
+import me.legrange.swap.SwapException;
 
 /**
  *
@@ -492,7 +492,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
         try {
             createNetwork();
-        } catch (ModemException | SWAPException ex) {
+        } catch (ModemException | SwapExceptionex) {
             Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
         } catch (GatewayException ex) {
             Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -614,7 +614,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         return state.peek();
     }
 
-    private void createNetwork() throws ModemException, SWAPException, GatewayException {
+    private void createNetwork() throws ModemException, SwapException, GatewayException {
         Gateway gw;
         if (typeIsSerial()) {
             gw = Gateway.createSerial(getSerialPort(), getSerialSpeed());

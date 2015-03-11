@@ -22,9 +22,9 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.swap.ModemSetup;
-import me.legrange.swap.SWAPException;
-import me.legrange.swap.SWAPModem;
-import me.legrange.swap.serial.SerialModem;
+import me.legrange.swap.SwapException;
+import me.legrange.swap.SwapModem;
+import me.legrange.swap.SerialModem;
 import me.legrange.swap.tcp.TcpModem;
 
 /**
@@ -73,7 +73,7 @@ public class Store {
      */
     private Gateway loadGateway(JsonObject gatewayO) throws DataStoreException {
         try {
-            SWAPModem modem = loadModem(gatewayO.getObject(SWAP_MODEM));
+            SwapModem modem = loadModem(gatewayO.getObject(SWAP_MODEM));
             Gateway gw = Gateway.create(modem);
             gw.setNetworkId(gatewayO.getInt(NETWORK_ID));
             gw.setChannel(gatewayO.getInt(CHANNEL));
@@ -105,7 +105,7 @@ public class Store {
     /**
      * Load a SWAP modem
      */
-    private SWAPModem loadModem(JsonObject modemO) throws DataStoreException {
+    private SwapModem loadModem(JsonObject modemO) throws DataStoreException {
         String type = modemO.getString(TYPE);
         switch (type) {
             case SERIAL:
@@ -134,7 +134,7 @@ public class Store {
     /**
      * store a SWAP modem
      */
-    private JsonElement storeModem(SWAPModem modem) throws DataStoreException {
+    private JsonElement storeModem(SwapModem modem) throws DataStoreException {
         JsonObject modemO;
         switch (modem.getType()) {
             case SERIAL:
@@ -148,7 +148,7 @@ public class Store {
         }
         try {
             modemO.add(field(MODEM_SETUP, storeSetup(modem.getSetup())));
-        } catch (SWAPException ex) {
+        } catch (SwapException ex) {
             throw new DataStoreException(ex.getMessage(), ex);
         }
         return modemO;

@@ -7,7 +7,7 @@ import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.GatewayListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.ModemException;
-import me.legrange.swap.SWAPModem;
+import me.legrange.swap.SwapModem;
 
 /**
  * A node representing a panStamp gateway to a network. 
@@ -28,7 +28,7 @@ public class GatewayNode extends NetworkTreeNode<Gateway, PanStamp> implements G
         String txt;
         try {
             Gateway gw = getGateway();
-            SWAPModem sm = gw.getSWAPModem();
+            SwapModem sm = gw.getSWAPModem();
             switch (sm.getType()) {
                 case SERIAL : txt = String.format("Serial Network - %4x",  gw.getNetworkId());  
                     break;
