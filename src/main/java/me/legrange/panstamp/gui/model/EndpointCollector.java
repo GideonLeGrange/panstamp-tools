@@ -48,12 +48,8 @@ public class EndpointCollector {
 
     private void remove(Register reg) {
         reg.removeListener(registerL);
-        try {
-            for (Endpoint ep : reg.getEndpoints()) {
-                remove(ep);
-            }
-        } catch (GatewayException ex) {
-            Logger.getLogger(EndpointCollector.class.getName()).log(Level.SEVERE, null, ex);
+        for (Endpoint ep : reg.getEndpoints()) {
+            remove(ep);
         }
     }
 
@@ -81,12 +77,8 @@ public class EndpointCollector {
 
     private void add(Register reg) {
         reg.addListener(registerL);
-        try {
-            for (Endpoint ep : reg.getEndpoints()) {
-                add(ep);
-            }
-        } catch (GatewayException ex) {
-            Logger.getLogger(EndpointCollector.class.getName()).log(Level.SEVERE, null, ex);
+        for (Endpoint ep : reg.getEndpoints()) {
+            add(ep);
         }
     }
 

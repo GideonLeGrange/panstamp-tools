@@ -29,15 +29,11 @@ public class RegisterNode extends NetworkTreeNode<Register, Endpoint> implements
 
     @Override
     protected synchronized void start() {
-        try {
-            getRegister().addListener(this);
-            for (Endpoint ep : getRegister().getEndpoints()) {
-                EndpointNode epn = new EndpointNode(ep);
-                addToTree(epn, this);
-                epn.start();
-            }
-        } catch (GatewayException ex) {
-            Logger.getLogger(RegisterNode.class.getName()).log(Level.SEVERE, null, ex);
+        getRegister().addListener(this);
+        for (Endpoint ep : getRegister().getEndpoints()) {
+            EndpointNode epn = new EndpointNode(ep);
+            addToTree(epn, this);
+            epn.start();
         }
     }
 
@@ -48,21 +44,16 @@ public class RegisterNode extends NetworkTreeNode<Register, Endpoint> implements
     }
 
     void update(Register reg) {
-        try {
-
-            if (reg.getEndpoints().size() != getRegister().getEndpoints().size()) {
-
-                for (Endpoint ep : getRegister().getEndpoints()) {
-                    EndpointNode epn = new EndpointNode(ep);
-                    addToTree(epn, this);
-                    epn.start();
-                }
-                reload();
+        if (reg.getEndpoints().size() != getRegister().getEndpoints().size()) {
+            
+            for (Endpoint ep : getRegister().getEndpoints()) {
+                EndpointNode epn = new EndpointNode(ep);
+                addToTree(epn, this);
+                epn.start();
             }
-            setUserObject(reg);
-        } catch (GatewayException ex) {
-            Logger.getLogger(RegisterNode.class.getName()).log(Level.SEVERE, null, ex);
+            reload();
         }
+        setUserObject(reg);
     }
 
     @Override

@@ -163,7 +163,9 @@ class EndpointTableModel implements TableModel {
     }
 
     private void add(PanStamp ps) {
-        add(String.format("Detected new device with address %d", ps.getAddress()));
+        if (ps.getGateway().isOpen()) {
+            add(String.format("Detected new device with address %d", ps.getAddress()));
+        }
         ps.addListener(panStampL);
         for (Register reg : ps.getRegisters()) {
             add(reg);
@@ -178,14 +180,12 @@ class EndpointTableModel implements TableModel {
     }
 
     private void add(Register reg) {
-        add(String.format("Learnt of register %d for device %d", reg.getId(), reg.getDevice().getAddress()));
+        if (reg.getDevice().getGateway().isOpen()) {
+            add(String.format("Learnt of register %d for device %d", reg.getId(), reg.getDevice().getAddress()));
+        }
         reg.addListener(registerL);
-        try {
-            for (Endpoint ep : reg.getEndpoints()) {
-                add(ep);
-            }
-        } catch (GatewayException ex) {
-            Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
+        for (Endpoint ep : reg.getEndpoints()) {
+            add(ep);
         }
     }
 
@@ -197,8 +197,10 @@ class EndpointTableModel implements TableModel {
     }
 
     private void add(Endpoint ep) {
-        add(String.format("Learnt of endpoint '%s' for register %d on device %d",
-                ep.getName(), ep.getRegister().getId(), ep.getRegister().getDevice().getAddress()));
+        if (ep.getRegister().getDevice().getGateway().isOpen()) {
+            add(String.format("Learnt of endpoint '%s' for register %d on device %d",
+                    ep.getName(), ep.getRegister().getId(), ep.getRegister().getDevice().getAddress()));
+        }
         ep.addListener(endpointL);
     }
 
@@ -275,9 +277,11 @@ class EndpointTableModel implements TableModel {
         @Override
         public void valueReceived(Endpoint ep, Object value) {
             try {
-                add(String.format("%s in address %d on node %d changed to %s",
-                        ep.getName(), ep.getRegister().getId(),
-                        ep.getRegister().getDevice().getAddress(), formatValue(ep)));
+                if (ep.getRegister().getDevice().getGateway().isOpen()) {
+                    add(String.format("%s in address %d on node %d changed to %s",
+                            ep.getName(), ep.getRegister().getId(),
+                            ep.getRegister().getDevice().getAddress(), formatValue(ep)));
+                }
             } catch (GatewayException ex) {
                 Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
             }
