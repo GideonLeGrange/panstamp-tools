@@ -492,7 +492,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
         try {
             createNetwork();
-        } catch (ModemException | SwapExceptionex) {
+        } catch (ModemException | SwapException ex) {
             Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
         } catch (GatewayException ex) {
             Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -586,7 +586,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         nextButton.setEnabled(getState() != State.END);
         finishButton.setEnabled(getState() == State.END);
         // select content for wizard based on state
-        JPanel content = null;
+        JPanel content;
         switch (getState()) {
             case SELECT_TYPE:
                 content = selectTypePanel;
