@@ -40,10 +40,7 @@ public class GatewayNode extends NetworkTreeNode<Gateway, PanStamp> implements G
         } catch (ModemException ex) {
             Logger.getLogger(GatewayNode.class.getName()).log(Level.SEVERE, null, ex);
             txt = "Network";
-        } catch (GatewayException ex) {
-            Logger.getLogger(GatewayNode.class.getName()).log(Level.SEVERE, null, ex);
-            txt = "Network";
-        }
+        } 
         return txt;
     }
 
