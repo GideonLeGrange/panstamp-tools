@@ -1,14 +1,13 @@
 package me.legrange.panstamp.gui.model.tree;
 
 import java.util.Enumeration;
-import java.util.Iterator;
-import me.legrange.panstamp.Gateway;
+import me.legrange.panstamp.Network;
 
 /**
  * The top level node in the  networks tree. 
  * @author gideon
  */
-public class WorldNode extends NetworkTreeNode<String, Gateway> {
+public class WorldNode extends NetworkTreeNode<String, Network> {
 
     public WorldNode() {
         super("Networks");
@@ -34,13 +33,13 @@ public class WorldNode extends NetworkTreeNode<String, Gateway> {
     }
 
     @Override
-    void addChild(Gateway gw) {
+    void addChild(Network gw) {
         GatewayNode gn = new GatewayNode(gw);
         addToTree(gn, this);
         gn.start();
     }
  
-    void removeChild(Gateway gw) {
+    void removeChild(Network gw) {
         Enumeration<GatewayNode> it = children();
         while (it.hasMoreElements()) {
             GatewayNode gn = it.nextElement();

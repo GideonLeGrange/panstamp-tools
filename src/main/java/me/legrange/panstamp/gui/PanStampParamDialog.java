@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
@@ -36,12 +36,12 @@ public final class PanStampParamDialog extends javax.swing.JDialog {
         initComponents();
         try {
             addParamComponents();
-        } catch (GatewayException ex) {
+        } catch (NetworkException ex) {
             Logger.getLogger(PanStampParamDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void addParamComponents() throws GatewayException {
+    private void addParamComponents() throws NetworkException {
         for (Register reg : ps.getRegisters()) {
             List<Parameter> pars = reg.getParameters();
             if (!pars.isEmpty()) {
@@ -50,7 +50,7 @@ public final class PanStampParamDialog extends javax.swing.JDialog {
         }
     }
 
-    private JPanel registerPanel(Register reg) throws GatewayException {
+    private JPanel registerPanel(Register reg) throws NetworkException {
         JPanel panel = new JPanel();
         for (Parameter par : reg.getParameters()) {
             JLabel label = new JLabel(par.getName(), SwingConstants.LEFT);
@@ -78,7 +78,7 @@ public final class PanStampParamDialog extends javax.swing.JDialog {
         return panel;
     }
 
-    private Component makeTextField(final Parameter par) throws GatewayException {
+    private Component makeTextField(final Parameter par) throws NetworkException {
         final JTextField field = new JTextField();
         if (par.getRegister().hasValue()) {
             field.setText(par.getValue().toString());
@@ -96,11 +96,11 @@ public final class PanStampParamDialog extends javax.swing.JDialog {
         });
         return field;
     }
-    private Component makeStringField(Parameter<String> par) throws GatewayException {
+    private Component makeStringField(Parameter<String> par) throws NetworkException {
         return makeTextField(par);
     }
 
-    private Component makeBinaryField(Parameter<Boolean> par) throws GatewayException {
+    private Component makeBinaryField(Parameter<Boolean> par) throws NetworkException {
         JCheckBox field = new JCheckBox();
         if (par.getRegister().hasValue()) {
             field.setSelected(par.getValue());
@@ -110,11 +110,11 @@ public final class PanStampParamDialog extends javax.swing.JDialog {
         return field;
     }
 
-    private Component makeIntegerField(Parameter<Integer> par) throws GatewayException {
+    private Component makeIntegerField(Parameter<Integer> par) throws NetworkException {
         return makeTextField(par);
     }
 
-    private Component makeNumberField(Parameter<Double> par) throws GatewayException {
+    private Component makeNumberField(Parameter<Double> par) throws NetworkException {
         return makeTextField(par);
     }
 
@@ -232,7 +232,7 @@ public final class PanStampParamDialog extends javax.swing.JDialog {
             }
             
             // Variables declaration - do not modify
-        } catch (GatewayException ex) {
+        } catch (NetworkException ex) {
             Logger.getLogger(PanStampParamDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         dispose();

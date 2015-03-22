@@ -2,17 +2,15 @@ package me.legrange.panstamp.gui.model;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.GatewayListener;
+import me.legrange.panstamp.Network;
+import me.legrange.panstamp.NetworkException;
+import me.legrange.panstamp.NetworkListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
-import me.legrange.panstamp.event.AbstractGatewayListener;
+import me.legrange.panstamp.event.AbstractNetworkListener;
 import me.legrange.panstamp.event.AbstractPanStampListener;
 import me.legrange.panstamp.event.AbstractRegisterListener;
 
@@ -22,7 +20,7 @@ import me.legrange.panstamp.event.AbstractRegisterListener;
  */
 public class EndpointCollector {
 
-    public EndpointCollector(Gateway gw) throws GatewayException {
+    public EndpointCollector(Network gw) throws NetworkException {
         this.gw = gw;
         add(gw);
     }
@@ -53,7 +51,7 @@ public class EndpointCollector {
         }
     }
 
-    private void remove(Gateway gw) {
+    private void remove(Network gw) {
         gw.removeListener(gatewayL);
     }
 
@@ -61,7 +59,7 @@ public class EndpointCollector {
         removeDataSet(ep);
     }
 
-    private void add(Gateway gw) {
+    private void add(Network gw) {
         gw.addListener(gatewayL);
         for (PanStamp ps : gw.getDevices()) {
             add(ps);
@@ -98,18 +96,18 @@ public class EndpointCollector {
         sets.remove(ep);
     }
 
-    private final Gateway gw;
+    private final Network gw;
     private final Map<Endpoint, EndpointDataSet> sets = new HashMap<>();
 
-    private final GatewayListener gatewayL = new AbstractGatewayListener() {
+    private final NetworkListener gatewayL = new AbstractNetworkListener() {
 
         @Override
-        public void deviceRemoved(Gateway gw, PanStamp dev) {
+        public void deviceRemoved(Network gw, PanStamp dev) {
             add(dev);
         }
 
         @Override
-        public void deviceDetected(Gateway gw, PanStamp dev) {
+        public void deviceDetected(Network gw, PanStamp dev) {
             remove(dev);
         }
     };

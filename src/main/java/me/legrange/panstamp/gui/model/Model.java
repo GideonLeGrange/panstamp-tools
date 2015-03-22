@@ -8,8 +8,8 @@ import java.util.Map;
 import javax.swing.table.TableModel;
 import javax.swing.tree.TreeModel;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.Network;
+import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.tools.store.DataStoreException;
 import me.legrange.panstamp.tools.store.Store;
@@ -25,14 +25,14 @@ public final class Model {
         store = Store.openFile(dataFileName());
     }
 
-    public void start() throws DataStoreException, GatewayException {
-        List<Gateway> stored = store.load();
-        for (Gateway gw : stored) {
+    public void start() throws DataStoreException, NetworkException {
+        List<Network> stored = store.load();
+        for (Network gw : stored) {
             addGateway(gw);
         }
     }
 
-    public synchronized void addGateway(Gateway gw) throws GatewayException {
+    public synchronized void addGateway(Network gw) throws NetworkException {
         store.addGateway(gw);
         SignalCollector sc = new SignalCollector();
         gw.getSWAPModem().addListener(sc);
@@ -44,7 +44,7 @@ public final class Model {
     }
     
 
-    public void deleteGateway(Gateway gw) throws GatewayException {
+    public void deleteGateway(Network gw) throws NetworkException {
         if (gw.isOpen()) {
             gw.close();
         }
@@ -94,8 +94,8 @@ public final class Model {
         return name + File.separator + "panstamp.json";
     }
 
-    private final Map<Gateway, SignalCollector> signalCollectors = new HashMap<>();
-    private final Map<Gateway, EndpointCollector> endpointCollectors = new HashMap<>();
+    private final Map<Network, SignalCollector> signalCollectors = new HashMap<>();
+    private final Map<Network, EndpointCollector> endpointCollectors = new HashMap<>();
     private final MessageTableModel smm = new MessageTableModel();
     private final NetworkTreeModel ntm = NetworkTreeModel.create();
     private final EndpointTableModel etm = EndpointTableModel.create();

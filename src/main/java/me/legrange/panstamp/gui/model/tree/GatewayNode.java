@@ -2,9 +2,9 @@ package me.legrange.panstamp.gui.model.tree;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.GatewayListener;
+import me.legrange.panstamp.Network;
+import me.legrange.panstamp.NetworkException;
+import me.legrange.panstamp.NetworkListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.ModemException;
 import me.legrange.swap.SwapModem;
@@ -13,21 +13,21 @@ import me.legrange.swap.SwapModem;
  * A node representing a panStamp gateway to a network. 
  * @author gideon
  */
-public class GatewayNode extends NetworkTreeNode<Gateway, PanStamp> implements GatewayListener {
+public class GatewayNode extends NetworkTreeNode<Network, PanStamp> implements NetworkListener {
 
-    public GatewayNode(Gateway gw) {
+    public GatewayNode(Network gw) {
         super(gw);
     }
 
-    public Gateway getGateway() {
-        return (Gateway) getUserObject();
+    public Network getGateway() {
+        return (Network) getUserObject();
     }
 
     @Override
     public String toString() {
         String txt;
         try {
-            Gateway gw = getGateway();
+            Network gw = getGateway();
             SwapModem sm = gw.getSWAPModem();
             switch (sm.getType()) {
                 case SERIAL : txt = String.format("Serial Network - %4x",  gw.getNetworkId());  
@@ -45,12 +45,12 @@ public class GatewayNode extends NetworkTreeNode<Gateway, PanStamp> implements G
     }
 
     @Override
-    public void deviceDetected(Gateway gw, PanStamp dev) {
+    public void deviceDetected(Network gw, PanStamp dev) {
         addPanStamp(dev);
     }
 
     @Override
-    public void deviceRemoved(Gateway gw, PanStamp dev) {
+    public void deviceRemoved(Network gw, PanStamp dev) {
         removePanStamp(dev);
     }
     

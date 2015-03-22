@@ -1,9 +1,6 @@
 package me.legrange.panstamp.gui.model.tree;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.GatewayException;
 import me.legrange.panstamp.Parameter;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;

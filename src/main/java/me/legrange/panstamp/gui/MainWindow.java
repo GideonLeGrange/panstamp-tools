@@ -13,8 +13,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
-import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.Network;
+import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.gui.model.Model;
 import me.legrange.panstamp.gui.view.View;
 import me.legrange.panstamp.tools.store.DataStoreException;
@@ -82,7 +82,7 @@ public class MainWindow extends javax.swing.JFrame {
                     mw.start();
                 } catch (DataStoreException ex) {
                     Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (GatewayException ex) {
+                } catch (NetworkException ex) {
                     Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -113,7 +113,7 @@ public class MainWindow extends javax.swing.JFrame {
     /**
      * start the application
      */
-    private void start() throws GatewayException {
+    private void start() throws NetworkException {
         model.start();
     }
 
@@ -290,7 +290,7 @@ public class MainWindow extends javax.swing.JFrame {
         ad.setVisible(true);
     }
 
-    private Gateway gw;
+    private Network gw;
     private final Model model;
     private final View view;
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.gui.model.tree.EndpointNode;
 import me.legrange.panstamp.gui.model.tree.GatewayNode;
 import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
@@ -62,7 +62,7 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
                 panel.setBackground(sel ? backgroundSelectionColor : tree.getBackground());
                 com.setForeground(sel ? textSelectionColor : textNonSelectionColor);
                 return panel;
-            } catch (GatewayException ex) {
+            } catch (NetworkException ex) {
                 Logger.getLogger(NetworkTreeNodeRenderer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -76,7 +76,7 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
         this.view =view;
     }
 
-    private Component renderEndpoint(EndpointNode epn) throws GatewayException {
+    private Component renderEndpoint(EndpointNode epn) throws NetworkException {
         JLabel label = new JLabel(epn.toString(), getIcon(ICON_ENDPOINT), JLabel.LEADING);
         return label;
     }
@@ -98,7 +98,7 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
         return new JLabel(wn.toString(), getIcon(ICON_WORLD), JLabel.LEADING);
     }
 
-    private String formatValue(Endpoint ep) throws GatewayException {
+    private String formatValue(Endpoint ep) throws NetworkException {
         return Format.formatValue(ep);
     }
 

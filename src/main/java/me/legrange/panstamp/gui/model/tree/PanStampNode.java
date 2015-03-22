@@ -6,7 +6,7 @@ import javax.swing.tree.TreeNode;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.Gateway;
+import me.legrange.panstamp.Network;
 
 /**
  * A tree node representing a panStamp device in the network tree.
@@ -124,7 +124,7 @@ public class PanStampNode extends NetworkTreeNode<PanStamp, Register> implements
 
     @Override
     protected void stop() {
-        ((Gateway) getPanStamp().getGateway()).removeDevice(getPanStamp().getAddress());
+        ((Network) getPanStamp().getGateway()).removeDevice(getPanStamp().getAddress());
         super.stop();
     }
 

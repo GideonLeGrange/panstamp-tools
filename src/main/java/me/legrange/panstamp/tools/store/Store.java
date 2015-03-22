@@ -17,8 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.DeviceStateStore;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.Network;
+import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.swap.ModemSetup;
@@ -42,12 +42,12 @@ public class Store {
         return new Store(fileName);
     }
 
-    public void addGateway(Gateway gw) {
+    public void addGateway(Network gw) {
         JsonObject gwO = getGateway(gw);
         gw.setDeviceStore(new JsonStateStore(gw));
     }
 
-    public void removeGateway(Gateway gw) throws GatewayException {
+    public void removeGateway(Network gw) throws NetworkException {
         root.getObject(GATEWAYS).remove(makeKey(gw));
     }
 
@@ -58,8 +58,8 @@ public class Store {
      * @throws me.legrange.panstamp.tools.store.DataStoreException If there is
      * an error loading the definitions.
      */
-    public List<Gateway> load() throws DataStoreException {
-        List<Gateway> gateways = new LinkedList<>();
+    public List<Network> load() throws DataStoreException {
+        List<Network> gateways = new LinkedList<>();
         JsonObject networksO = root.getObject(GATEWAYS);
         for (String key : networksO.keySet()) {
             JsonObject networkO = networksO.getObject(key);
@@ -71,17 +71,17 @@ public class Store {
     /**
      * Load a gatway from JSON
      */
-    private Gateway loadGateway(JsonObject gatewayO) throws DataStoreException {
+    private Network loadGateway(JsonObject gatewayO) throws DataStoreException {
         try {
             SwapModem modem = loadModem(gatewayO.getObject(SWAP_MODEM));
-            Gateway gw = Gateway.create(modem);
+            Network gw = Network.create(modem);
             gw.setNetworkId(gatewayO.getInt(NETWORK_ID));
             gw.setChannel(gatewayO.getInt(CHANNEL));
             gw.setDeviceAddress(gatewayO.getInt(DEVICE_ADDRESS));
             gw.setSecurityOption(gatewayO.getInt(SECURITY_OPTION));
             loadDevices(gw, gatewayO.getObject(DEVICES));
             return gw;
-        } catch (GatewayException ex) {
+        } catch (NetworkException ex) {
             throw new DataStoreException(ex.getMessage(), ex);
         }
     }
@@ -89,16 +89,16 @@ public class Store {
     /**
      * Load the devices from JSOM
      */
-    private void loadDevices(Gateway gw, JsonObject devicesO) throws GatewayException {
+    private void loadDevices(Network gw, JsonObject devicesO) throws NetworkException {
         for (String key : devicesO.keySet()) {
             JsonObject deviceO = devicesO.getObject(key);
-            PanStamp ps = new PanStamp((Gateway) gw, Integer.parseInt(key));
+            PanStamp ps = new PanStamp((Network) gw, Integer.parseInt(key));
             for (String regKey : deviceO.keySet()) {
                 int id = Integer.parseInt(regKey);
                 Register reg = ps.getRegister(id);
                 reg.setValue(new BigInteger(deviceO.getString(regKey), 16).toByteArray());
             }
-            ((Gateway) gw).addDevice(ps);
+            ((Network) gw).addDevice(ps);
         }
     }
 
@@ -190,7 +190,7 @@ public class Store {
     /**
      * convert list of panStamp nodes to JSON
      */
-    private JsonElement storeDevices(List<PanStamp> devices) throws GatewayException {
+    private JsonElement storeDevices(List<PanStamp> devices) throws NetworkException {
         JsonObject devicesO = new JsonObject();
         for (PanStamp dev : devices) {
             devicesO.put("" + dev.getAddress(), storeDevice(dev));
@@ -201,7 +201,7 @@ public class Store {
     /**
      * convert a panStamp to JSON
      */
-    private JsonObject storeDevice(PanStamp ps) throws GatewayException {
+    private JsonObject storeDevice(PanStamp ps) throws NetworkException {
         JsonObject stateO = new JsonObject();
         for (Register reg : ps.getRegisters()) {
             if (reg.isStandard()) {
@@ -215,7 +215,7 @@ public class Store {
         return stateO;
     }
 
-    private JsonObject getGateway(Gateway gw) {
+    private JsonObject getGateway(Network gw) {
         try {
             String key = makeKey(gw);
             JsonObject networksO = root.getObject(GATEWAYS);
@@ -230,7 +230,7 @@ public class Store {
                 networksO.put(key, gwO);
             }
             return networksO.getObject(key);
-        } catch (GatewayException ex) {
+        } catch (NetworkException ex) {
             return new JsonObject();
         }
     }
@@ -270,7 +270,7 @@ public class Store {
     /**
      * make a key for the given gateway
      */
-    private String makeKey(Gateway gw) throws GatewayException {
+    private String makeKey(Network gw) throws NetworkException {
         String path = "";
         switch (gw.getSWAPModem().getType()) {
             case SERIAL:
@@ -332,7 +332,7 @@ public class Store {
 
     private class JsonStateStore implements DeviceStateStore {
 
-        public JsonStateStore(Gateway gw) {
+        public JsonStateStore(Network gw) {
             this.gw = gw;
         }
 
@@ -362,7 +362,7 @@ public class Store {
             }
 
         }
-        private final Gateway gw;
+        private final Network gw;
 
     }
 

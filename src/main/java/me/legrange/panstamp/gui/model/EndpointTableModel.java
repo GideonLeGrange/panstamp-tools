@@ -13,15 +13,15 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointListener;
-import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayException;
-import me.legrange.panstamp.GatewayListener;
+import me.legrange.panstamp.Network;
+import me.legrange.panstamp.NetworkException;
+import me.legrange.panstamp.NetworkListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.PanStampListener;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.RegisterListener;
 import me.legrange.panstamp.event.AbstractEndpointListener;
-import me.legrange.panstamp.event.AbstractGatewayListener;
+import me.legrange.panstamp.event.AbstractNetworkListener;
 import me.legrange.panstamp.event.AbstractPanStampListener;
 import me.legrange.panstamp.event.AbstractRegisterListener;
 
@@ -96,14 +96,14 @@ class EndpointTableModel implements TableModel {
         return new EndpointTableModel();
     }
 
-    void addGateway(Gateway gw) {
+    void addGateway(Network gw) {
         gw.addListener(gatewayL);
         for (PanStamp ps : gw.getDevices()) {
             add(ps);
         }
     }
 
-    void removeGateway(Gateway gw) throws GatewayException {
+    void removeGateway(Network gw) throws NetworkException {
         gw.removeListener(gatewayL);
         for (PanStamp ps : gw.getDevices()) {
             remove(ps);
@@ -129,12 +129,12 @@ class EndpointTableModel implements TableModel {
         this.listeners = new LinkedList<>();
     }
 
-    private String productCodeMessage(PanStamp ps) throws GatewayException {
+    private String productCodeMessage(PanStamp ps) throws NetworkException {
         return String.format("Device %d identified as %s/%s", ps.getAddress(),
                 ps.getManufacturerId(), ps.getProductId());
     }
 
-    private String syncStateMessage(PanStamp ps, int state) throws GatewayException {
+    private String syncStateMessage(PanStamp ps, int state) throws NetworkException {
         String mode;
         switch (state) {
             case 0:
@@ -158,7 +158,7 @@ class EndpointTableModel implements TableModel {
         return String.format("Device %d reported state: %s", ps.getAddress(), mode);
     }
 
-    private String formatValue(Endpoint ep) throws GatewayException {
+    private String formatValue(Endpoint ep) throws NetworkException {
         return Format.formatValue(ep);
     }
 
@@ -172,7 +172,7 @@ class EndpointTableModel implements TableModel {
         }
     }
 
-    private void remove(PanStamp ps) throws GatewayException {
+    private void remove(PanStamp ps) throws NetworkException {
         ps.removeListener(panStampL);
         for (Register reg : ps.getRegisters()) {
             remove(reg);
@@ -189,7 +189,7 @@ class EndpointTableModel implements TableModel {
         }
     }
 
-    private void remove(Register reg) throws GatewayException {
+    private void remove(Register reg) throws NetworkException {
         reg.removeListener(registerL);
         for (Endpoint ep : reg.getEndpoints()) {
             remove(ep);
@@ -228,10 +228,10 @@ class EndpointTableModel implements TableModel {
     private static final Class columnClasses[] = {String.class, String.class};
 
     // GatewayListener, PanStampListener, RegisterListener, EndpointListener
-    private final GatewayListener gatewayL = new AbstractGatewayListener() {
+    private final NetworkListener gatewayL = new AbstractNetworkListener() {
 
         @Override
-        public void deviceDetected(Gateway gw, PanStamp dev) {
+        public void deviceDetected(Network gw, PanStamp dev) {
             add(dev);
         }
     };
@@ -247,7 +247,7 @@ class EndpointTableModel implements TableModel {
         public void syncStateChange(PanStamp dev, int syncState) {
             try {
                 add(syncStateMessage(dev, syncState));
-            } catch (GatewayException ex) {
+            } catch (NetworkException ex) {
                 Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -256,7 +256,7 @@ class EndpointTableModel implements TableModel {
         public void productCodeChange(PanStamp dev, int manufacturerId, int productId) {
             try {
                 add(productCodeMessage(dev));
-            } catch (GatewayException ex) {
+            } catch (NetworkException ex) {
                 Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -282,7 +282,7 @@ class EndpointTableModel implements TableModel {
                             ep.getName(), ep.getRegister().getId(),
                             ep.getRegister().getDevice().getAddress(), formatValue(ep)));
                 }
-            } catch (GatewayException ex) {
+            } catch (NetworkException ex) {
                 Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

@@ -2,7 +2,7 @@ package me.legrange.panstamp.gui.model;
 
 import java.util.List;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.NetworkException;
 
 /**
  *
@@ -10,7 +10,7 @@ import me.legrange.panstamp.GatewayException;
  */
 public final class Format {
     
-    public static  String formatValue(Endpoint ep) throws GatewayException {
+    public static  String formatValue(Endpoint ep) throws NetworkException {
         List<String> units = ep.getUnits();
         String unit = "";
         Object val;

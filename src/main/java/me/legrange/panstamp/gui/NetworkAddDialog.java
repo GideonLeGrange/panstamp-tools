@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
-import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.Network;
+import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.gui.model.HexDocument;
 import me.legrange.panstamp.gui.model.IntegerDocument;
 import me.legrange.panstamp.gui.model.Model;
@@ -494,7 +494,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
             createNetwork();
         } catch (ModemException | SwapException ex) {
             Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (GatewayException ex) {
+        } catch (NetworkException ex) {
             Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         dispose();
@@ -614,12 +614,12 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         return state.peek();
     }
 
-    private void createNetwork() throws ModemException, SwapException, GatewayException {
-        Gateway gw;
+    private void createNetwork() throws ModemException, SwapException, NetworkException {
+        Network gw;
         if (typeIsSerial()) {
-            gw = Gateway.createSerial(getSerialPort(), getSerialSpeed());
+            gw = Network.createSerial(getSerialPort(), getSerialSpeed());
         } else {
-            gw = Gateway.createTcp(getTcpHost(), getTcpPort());
+            gw = Network.createTcp(getTcpHost(), getTcpPort());
         }
         gw.open();
         ModemSetup setup = gw.getSWAPModem().getSetup();

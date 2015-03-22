@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointListener;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.NetworkException;
 import org.jfree.data.DomainOrder;
 import org.jfree.data.general.DatasetChangeEvent;
 import org.jfree.data.general.DatasetChangeListener;
@@ -145,7 +145,7 @@ public class EndpointDataSet implements XYDataset, EndpointListener {
                 case STRING:
                     return 0.0;
             }
-        } catch (GatewayException e) {
+        } catch (NetworkException e) {
             
         }
         return 0.0;

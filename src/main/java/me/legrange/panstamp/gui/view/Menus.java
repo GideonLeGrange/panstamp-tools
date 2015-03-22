@@ -15,8 +15,8 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
-import me.legrange.panstamp.Gateway;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.Network;
+import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.gui.model.tree.EndpointNode;
@@ -65,7 +65,7 @@ public class Menus {
     }
 
     JMenu getGatewayMenu() {
-        JMenu menu = new JMenu("Gateway");
+        JMenu menu = new JMenu("Network");
         for (JMenuItem c : getGatewayMenuItems()) {
             menu.add(c);
         }
@@ -160,7 +160,7 @@ public class Menus {
 
             @Override
             public boolean isEnabled() {
-                Gateway gw = getSelectedGateway();
+                Network gw = getSelectedGateway();
                 return (gw != null) && (!gw.isOpen());
             }
         };
@@ -170,7 +170,7 @@ public class Menus {
             public void actionPerformed(ActionEvent e) {
                 try {
                     getSelectedGateway().open();
-                } catch (GatewayException ex) {
+                } catch (NetworkException ex) {
                     Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -180,7 +180,7 @@ public class Menus {
 
             @Override
             public boolean isEnabled() {
-                Gateway gw = getSelectedGateway();
+                Network gw = getSelectedGateway();
                 return (gw != null) && (gw.isOpen());
             }
         };
@@ -190,7 +190,7 @@ public class Menus {
             public void actionPerformed(ActionEvent e) {
                 try {
                     getSelectedGateway().close();
-                } catch (GatewayException ex) {
+                } catch (NetworkException ex) {
                     Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -210,7 +210,7 @@ public class Menus {
             public void actionPerformed(ActionEvent e) {
                 try {
                     view.getModel().deleteGateway(getSelectedGateway());
-                } catch (GatewayException ex) {
+                } catch (NetworkException ex) {
                     Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -227,7 +227,7 @@ public class Menus {
      *
      * @return The selected gateway, or null if none is selected.
      */
-    private Gateway getSelectedGateway() {
+    private Network getSelectedGateway() {
         NetworkTreeNode node = getSelectedNode();
         if (node != null) {
             switch (node.getType()) {

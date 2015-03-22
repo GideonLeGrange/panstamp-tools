@@ -3,7 +3,7 @@ package me.legrange.panstamp.gui;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
-import me.legrange.panstamp.GatewayException;
+import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.gui.model.HexDocument;
 import me.legrange.panstamp.gui.model.IntegerDocument;
@@ -31,7 +31,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
     private String getChannel() {
         try {
             return "" + ps.getChannel();
-        } catch (GatewayException ex) {
+        } catch (NetworkException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "<unknown>";
@@ -40,7 +40,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
     private String getSecurityOption() {
         try {
             return "" + ps.getSecurityOption();
-        } catch (GatewayException ex) {
+        } catch (NetworkException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "<unknown>";
@@ -50,7 +50,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
     private String getTxInterval() {
         try {
             return "" + ps.getTxInterval();
-        } catch (GatewayException ex) {
+        } catch (NetworkException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "<unknown>";
@@ -59,7 +59,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
     private String getNetwork() {
         try {
             return String.format("%4x", ps.getNetwork());
-        } catch (GatewayException ex) {
+        } catch (NetworkException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "<unknown>";
@@ -239,7 +239,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
             ps.setSecurityOption(getIntValue(securityField));
             ps.setTxInterval(getIntValue(intervalField));
             dispose();
-        } catch (GatewayException ex) {
+        } catch (NetworkException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         

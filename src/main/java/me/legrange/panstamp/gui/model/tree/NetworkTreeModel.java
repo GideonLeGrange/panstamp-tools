@@ -3,7 +3,7 @@ package me.legrange.panstamp.gui.model.tree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
-import me.legrange.panstamp.Gateway;
+import me.legrange.panstamp.Network;
 
 /**
  *
@@ -11,11 +11,11 @@ import me.legrange.panstamp.Gateway;
  */
 public class NetworkTreeModel extends DefaultTreeModel {
 
-    public void addGateway(Gateway gw) {
+    public void addGateway(Network gw) {
         ((WorldNode) getRoot()).addChild(gw);
     }
     
-    public void removeGateway(Gateway gw) {
+    public void removeGateway(Network gw) {
         ((WorldNode) getRoot()).removeChild(gw);
     }
 
