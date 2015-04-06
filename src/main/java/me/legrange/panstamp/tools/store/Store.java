@@ -96,9 +96,9 @@ public class Store {
             for (String regKey : deviceO.keySet()) {
                 int id = Integer.parseInt(regKey);
                 Register reg = ps.getRegister(id);
-                reg.setValue(new BigInteger(deviceO.getString(regKey), 16).toByteArray());
+                reg.setValue(hexToBytes(deviceO.getString(regKey)));
             }
-            ((Network) gw).addDevice(ps);
+            gw.addDevice(ps);
         }
     }
 
@@ -309,6 +309,22 @@ public class Store {
         }
     }
 
+    private byte[] hexToBytes(String text) {
+        text = text.trim();
+        if ((text.length() % 2) == 1) {
+            text = "0" + text;
+        }
+        byte data[] = new byte[text.length() / 2];
+        for (int i = 0; i < text.length(); i = i + 2) {
+            int val = Integer.parseInt("" + text.charAt(i) + text.charAt(i + 1), 16);
+            if (val > 127) {
+                val = 256 - val;
+            }
+            data[i / 2] = (byte) val;
+        }
+        return data;
+    }
+
     private final String fileName;
     private JsonObject root;
 
@@ -329,7 +345,6 @@ public class Store {
     private static final String VERSION = "storeVersion";
     private static final String GATEWAYS = "gateways";
 
-
     private class JsonStateStore implements DeviceStateStore {
 
         public JsonStateStore(Network gw) {
@@ -339,12 +354,13 @@ public class Store {
         @Override
         public boolean hasRegisterValue(Register reg) {
             JsonObject devO = getDevice(getGateway(gw), reg.getDevice().getAddress());
-            return devO.containsKey("" + reg.getId());        }
+            return devO.containsKey("" + reg.getId());
+        }
 
         @Override
         public byte[] getRegisterValue(Register reg) {
             JsonObject devO = getDevice(getGateway(gw), reg.getDevice().getAddress());
-             return new BigInteger(devO.getString("" + reg.getId()),16).toByteArray();
+            return new BigInteger(devO.getString("" + reg.getId()), 16).toByteArray();
         }
 
         @Override
@@ -352,7 +368,7 @@ public class Store {
             JsonObject devO = getDevice(getGateway(gw), reg.getDevice().getAddress());
             StringBuilder val = new StringBuilder();
             for (byte b : value) {
-                val.append(String.format("%02x", ((int)b)&0xFF));
+                val.append(String.format("%02x", ((int) b) & 0xFF));
             }
             devO.put("" + reg.getId(), val.toString());
             try {
