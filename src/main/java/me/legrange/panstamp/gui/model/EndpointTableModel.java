@@ -256,6 +256,7 @@ class EndpointTableModel implements TableModel {
         public void productCodeChange(PanStamp dev, int manufacturerId, int productId) {
             try {
                 add(productCodeMessage(dev));
+                
             } catch (NetworkException ex) {
                 Logger.getLogger(EndpointTableModel.class.getName()).log(Level.SEVERE, null, ex);
             }
