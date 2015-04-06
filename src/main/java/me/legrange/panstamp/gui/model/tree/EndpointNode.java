@@ -1,7 +1,10 @@
 package me.legrange.panstamp.gui.model.tree;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointListener;
+import me.legrange.panstamp.NetworkException;
 import static me.legrange.panstamp.gui.model.Format.formatValue;
 
 /**
@@ -20,7 +23,11 @@ public class EndpointNode extends NetworkTreeNode<Endpoint, Object> implements E
 
     @Override
     public String toString() {
-        return String.format("%s = %s", getEndpoint().getName(), formatValue(getEndpoint()));
+        try {
+            return String.format("%s = %s", getEndpoint().getName(), formatValue(getEndpoint()));
+        } catch (NetworkException ex) {
+            return "";
+        }
     }
 
     @Override
