@@ -7,6 +7,7 @@ import com.apple.eawt.QuitHandler;
 import com.apple.eawt.QuitResponse;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.UIManager;
@@ -33,8 +34,6 @@ public class MainWindow extends javax.swing.JFrame {
             if (isOSX) {
                 System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
                 System.setProperty("apple.laf.useScreenMenuBar", "true");
-//                System.setProperty("apple.awt.brushMetalLook", "true");
-//                Application.getApplication().setEnabledPreferencesMenu(true);
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
@@ -115,6 +114,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     private void start() throws NetworkException {
         model.start();
+         // Application.getApplication().setDefaultMenuBar(mainMenu);
     }
 
     /**
@@ -279,6 +279,7 @@ public class MainWindow extends javax.swing.JFrame {
             JPopupMenu menu = view.getTreePopupMenu(path);
             networkTree.setComponentPopupMenu(menu);
         }
+       
     }//GEN-LAST:event_networkTreeMouseClicked
 
     private void quit() {

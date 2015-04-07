@@ -1,5 +1,6 @@
 package me.legrange.panstamp.gui.view;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
@@ -13,12 +14,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.gui.MainWindow;
 import me.legrange.panstamp.gui.model.tree.EndpointNode;
 import me.legrange.panstamp.gui.model.tree.GatewayNode;
 import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
@@ -44,7 +47,7 @@ public class Menus {
                         case GATEWAY:
                             return getGatewayPopupMenu();
                         case PANSTAMP:
-                            return getPanStampPopupMenu();
+                            return getPanStampPopupMenu(false);
                         case ENDPOINT:
                             return getEndpointPopupMenu();
                     }
@@ -77,6 +80,7 @@ public class Menus {
         for (JComponent c : getPanStampMenuItems()) {
             menu.add(c);
         }
+        mainMenu = menu;
         return menu;
     }
 
@@ -120,7 +124,7 @@ public class Menus {
         return gatewayPopupMenu;
     }
 
-    private JPopupMenu getPanStampPopupMenu() {
+    private JPopupMenu getPanStampPopupMenu(boolean isMain) {
         JPopupMenu panstampPopupMenu = new JPopupMenu(((PanStampNode) getSelectedNode()).toString());
         for (JComponent item : getPanStampMenuItems()) {
             panstampPopupMenu.add(item);
@@ -383,18 +387,29 @@ public class Menus {
                 view.showEndpointChart(getSelectedEndpoint());
             }
         });
-        
+
         items.add(graphItem);
         return items;
     }
 
     private JMenu getPanStampRegisterMenu() {
         final JMenu regsMenu = new JMenu("Show Standard Registers");
-        final JRadioButtonMenuItem allItem = new JRadioButtonMenuItem("All") {
+        final JRadioButtonMenuItem allItem = getPanStampRegisterMenuItem("All", PanStampNode.RegisterDisplay.ALL);
+        final JRadioButtonMenuItem intItem = getPanStampRegisterMenuItem("Interesting", PanStampNode.RegisterDisplay.INTERESTING);
+        final JRadioButtonMenuItem noneItem = getPanStampRegisterMenuItem("None", PanStampNode.RegisterDisplay.NONE);
+        regsMenu.add(allItem);
+        regsMenu.add(intItem);
+        noneItem.setSelected(true);
+        regsMenu.add(noneItem);
+        return regsMenu;
+    }
+
+    private JRadioButtonMenuItem getPanStampRegisterMenuItem(String label, final PanStampNode.RegisterDisplay regD) {
+        JRadioButtonMenuItem item = new JRadioButtonMenuItem(label) {
             @Override
             public boolean isSelected() {
                 PanStampNode.RegisterDisplay rd = getSelectedRegisterDisplay();
-                return (rd != null) && (rd == PanStampNode.RegisterDisplay.ALL);
+                return (rd != null) && (rd == regD);
             }
 
             @Override
@@ -403,64 +418,19 @@ public class Menus {
                 return (dev != null) && (dev.getGateway().isOpen());
             }
         };
-        final JRadioButtonMenuItem intItem = new JRadioButtonMenuItem("Interesting") {
-            @Override
-            public boolean isSelected() {
-                PanStampNode.RegisterDisplay rd = getSelectedRegisterDisplay();
-                return (rd != null) && (rd == PanStampNode.RegisterDisplay.INTERESTING);
-            }
-
-            @Override
-            public boolean isEnabled() {
-                PanStamp dev = getSelectedDevice();
-                return (dev != null) && (dev.getGateway().isOpen());
-            }
-        };
-        final JRadioButtonMenuItem noneItem = new JRadioButtonMenuItem("None", true) {
-            @Override
-            public boolean isSelected() {
-                PanStampNode.RegisterDisplay rd = getSelectedRegisterDisplay();
-                return (rd != null) && (rd == PanStampNode.RegisterDisplay.NONE);
-            }
-
-            @Override
-            public boolean isEnabled() {
-                PanStamp dev = getSelectedDevice();
-                return (dev != null) && (dev.getGateway().isOpen());
-            }
-        };
-        ActionListener regL = new ActionListener() {
+        item.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                noneItem.setSelected(false);
-                allItem.setSelected(false);
-                intItem.setSelected(false);
-                if (e.getSource().equals(noneItem)) {
-                    setSelectedRegisterDisplay(PanStampNode.RegisterDisplay.NONE);
-                    noneItem.setSelected(true);
+                for (Component com : ((JMenuItem) e.getSource()).getParent().getComponents()) {
+                    JMenuItem item = (JMenuItem) com;
+                    item.setSelected(item == e.getSource());
                 }
-                if (e.getSource().equals(allItem)) {
-                    setSelectedRegisterDisplay(PanStampNode.RegisterDisplay.ALL);
-                    allItem.setSelected(true);
-                }
-                if (e.getSource().equals(intItem)) {
-                    setSelectedRegisterDisplay(PanStampNode.RegisterDisplay.INTERESTING);
-                    intItem.setSelected(true);
-                }
+                setSelectedRegisterDisplay(PanStampNode.RegisterDisplay.valueOf(e.getActionCommand()));
             }
-
-        };
-
-        allItem.addActionListener(regL);
-        noneItem.addActionListener(regL);
-        intItem.addActionListener(regL);
-
-        regsMenu.add(allItem);
-        regsMenu.add(intItem);
-        regsMenu.add(noneItem);
-
-        return regsMenu;
+        });
+        item.setActionCommand(regD.name());
+        return item;
     }
 
     private PanStampNode.RegisterDisplay getSelectedRegisterDisplay() {
@@ -552,5 +522,6 @@ public class Menus {
 
     private final View view;
     private static final ThreadLocal<NetworkTreeNode> selectedNode = new ThreadLocal<>();
+    private JMenu mainMenu;
 
 }
