@@ -181,5 +181,5 @@ public class PanStampNode extends NetworkTreeNode<PanStamp, Register> implements
     }
 
     private final Map<Integer, RegisterNode> nodes = new ConcurrentHashMap<>();
-    private RegisterDisplay registerDisplay = RegisterDisplay.NONE;
+    private RegisterDisplay registerDisplay = RegisterDisplay.INTERESTING;
 }

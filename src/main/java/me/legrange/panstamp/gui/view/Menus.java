@@ -10,18 +10,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
-import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
-import me.legrange.panstamp.gui.MainWindow;
 import me.legrange.panstamp.gui.model.tree.EndpointNode;
 import me.legrange.panstamp.gui.model.tree.GatewayNode;
 import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
@@ -80,7 +79,6 @@ public class Menus {
         for (JComponent c : getPanStampMenuItems()) {
             menu.add(c);
         }
-        mainMenu = menu;
         return menu;
     }
 
@@ -89,6 +87,7 @@ public class Menus {
         for (JComponent c : getRegisterMenuItems()) {
             menu.add(c);
         }
+        menu.setEnabled(menu.getItemCount() > 0);
         return menu;
     }
 
@@ -361,9 +360,10 @@ public class Menus {
         list.add(settingsItem);
         list.add(paramItem);
         list.add(graphItem);
-        list.add(new JSeparator());
+/*        list.add(new JSeparator());
         // register selection
-        list.add(getPanStampRegisterMenu());
+        list.add(getPanStampRegisterMenu()); 
+        // Disabled for now, have issue with OSX menu. */
         return list;
     }
 
@@ -522,6 +522,5 @@ public class Menus {
 
     private final View view;
     private static final ThreadLocal<NetworkTreeNode> selectedNode = new ThreadLocal<>();
-    private JMenu mainMenu;
 
 }
