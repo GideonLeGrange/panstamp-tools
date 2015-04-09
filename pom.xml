@@ -29,7 +29,7 @@
             <plugin>
                 <groupId>sh.tak.appbundler</groupId>
                 <artifactId>appbundle-maven-plugin</artifactId>
-                <version>1.0.2-SNAPSHOT</version>
+                <version>1.0.3-SNAPSHOT</version>
                 <configuration>
                     <mainClass>me.legrange.panstamp.gui.MainWindow</mainClass>
                     <iconFile>src/main/resources/panstamp.icns</iconFile>
