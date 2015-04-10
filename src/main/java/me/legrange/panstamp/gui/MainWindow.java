@@ -1,13 +1,7 @@
 package me.legrange.panstamp.gui;
 
-import com.apple.eawt.AboutHandler;
-import com.apple.eawt.AppEvent;
-import com.apple.eawt.Application;
-import com.apple.eawt.QuitHandler;
-import com.apple.eawt.QuitResponse;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.UIManager;
@@ -58,23 +52,7 @@ public class MainWindow extends javax.swing.JFrame {
                 try {
                     final MainWindow mw = new MainWindow();
                     if (isOSX) {
-                        Application app = Application.getApplication();
-
-                        app.setAboutHandler(new AboutHandler() {
-
-                            @Override
-                            public void handleAbout(AppEvent.AboutEvent ae) {
-                                mw.showAbout();
-                            }
-                        });
-                        app.setQuitHandler(new QuitHandler() {
-
-                            @Override
-                            public void handleQuitRequestWith(AppEvent.QuitEvent qe, QuitResponse qr) {
-                                mw.quit();
-                            }
-                        });
-
+                        AppleExtension.apply(mw);
                         mw.panStampMenu.setVisible(false);
                     }
                     mw.setVisible(true);
@@ -219,7 +197,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         leftRightSplitPane.setLeftComponent(leftPanel);
 
-        panStampMenu.setText("panStamp");
+        panStampMenu.setText("PanStamp Tool");
+        panStampMenu.setAutoscrolls(true);
 
         aboutMenuItem.setText("About");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -282,11 +261,11 @@ public class MainWindow extends javax.swing.JFrame {
        
     }//GEN-LAST:event_networkTreeMouseClicked
 
-    private void quit() {
+    void quit() {
         System.exit(0);
     }
 
-    private void showAbout() {
+     void showAbout() {
         AboutDialog ad = new AboutDialog(this, true);
         ad.setVisible(true);
     }

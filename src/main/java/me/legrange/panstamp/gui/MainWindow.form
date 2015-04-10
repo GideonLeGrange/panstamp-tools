@@ -6,7 +6,8 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="panStampMenu">
           <Properties>
-            <Property name="text" type="java.lang.String" value="panStamp"/>
+            <Property name="text" type="java.lang.String" value="PanStamp Tool"/>
+            <Property name="autoscrolls" type="boolean" value="true"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="aboutMenuItem">
