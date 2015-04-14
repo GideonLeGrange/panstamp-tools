@@ -134,8 +134,6 @@ public class Menus {
 
     private JPopupMenu getEndpointPopupMenu() {
         JPopupMenu endpointPopupMenu = new JPopupMenu(((EndpointNode) getSelectedNode()).toString());
-        final JMenuItem graphItem = new JMenuItem("Data graph...");
-
         for (JComponent item : getEndpointMenuItems()) {
             endpointPopupMenu.add(item);
             item.setEnabled(item.isEnabled());
