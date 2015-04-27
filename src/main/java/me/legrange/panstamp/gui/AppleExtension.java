@@ -1,11 +1,5 @@
 package me.legrange.panstamp.gui;
 
-import com.apple.eawt.AboutHandler;
-import com.apple.eawt.AppEvent;
-import com.apple.eawt.Application;
-import com.apple.eawt.QuitHandler;
-import com.apple.eawt.QuitResponse;
-
 /**
  * Handle the Apple extentions to isolate the imports from com.apple.eawt
  *
@@ -14,24 +8,9 @@ import com.apple.eawt.QuitResponse;
  */
 class AppleExtension {
 
-    static void apply(final MainWindow mw) {
-        Application app = Application.getApplication();
-
-        app.setAboutHandler(new AboutHandler() {
-
-            @Override
-            public void handleAbout(AppEvent.AboutEvent ae) {
-                mw.showAbout();
-            }
-        });
-        app.setQuitHandler(new QuitHandler() {
-
-            @Override
-            public void handleQuitRequestWith(AppEvent.QuitEvent qe, QuitResponse qr) {
-                mw.quit();
-            }
-        });
-
-        //           mw.panStampMenu.setVisible(false);
+    static void apply(final MainWindow mw) throws NoSuchMethodException {    
+        OSXAdapter.setAboutHandler(mw, mw.getClass().getMethod("showAbout", new Class[]{}));
+        OSXAdapter.setQuitHandler(mw, mw.getClass().getMethod("quit", new Class[]{}));
     }
+    
 }

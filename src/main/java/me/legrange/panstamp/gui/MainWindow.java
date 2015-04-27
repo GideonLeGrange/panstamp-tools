@@ -61,6 +61,8 @@ public class MainWindow extends javax.swing.JFrame {
                     Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NetworkException ex) {
                     Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NoSuchMethodException ex) {
+                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -261,11 +263,11 @@ public class MainWindow extends javax.swing.JFrame {
        
     }//GEN-LAST:event_networkTreeMouseClicked
 
-    void quit() {
+    public void quit() {
         System.exit(0);
     }
 
-     void showAbout() {
+     public void showAbout() {
         AboutDialog ad = new AboutDialog(this, true);
         ad.setVisible(true);
     }

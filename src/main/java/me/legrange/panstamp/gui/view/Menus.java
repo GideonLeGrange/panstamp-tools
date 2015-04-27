@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
@@ -357,11 +357,10 @@ public class Menus {
 
         list.add(settingsItem);
         list.add(paramItem);
-        list.add(graphItem);
-/*        list.add(new JSeparator());
+        list.add(graphItem);        list.add(new JSeparator());
         // register selection
         list.add(getPanStampRegisterMenu()); 
-        // Disabled for now, have issue with OSX menu. */
+        // Disabled for now, have issue with OSX menu. 
         return list;
     }
 
@@ -395,6 +394,10 @@ public class Menus {
         final JRadioButtonMenuItem allItem = getPanStampRegisterMenuItem("All", PanStampNode.RegisterDisplay.ALL);
         final JRadioButtonMenuItem intItem = getPanStampRegisterMenuItem("Interesting", PanStampNode.RegisterDisplay.INTERESTING);
         final JRadioButtonMenuItem noneItem = getPanStampRegisterMenuItem("None", PanStampNode.RegisterDisplay.NONE);
+        ButtonGroup group = new ButtonGroup();
+        group.add(allItem);
+        group.add(intItem);
+        group.add(noneItem);
         regsMenu.add(allItem);
         regsMenu.add(intItem);
         noneItem.setSelected(true);
