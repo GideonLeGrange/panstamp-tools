@@ -1,5 +1,6 @@
 package me.legrange.panstamp.gui;
 
+import me.legrange.panstamp.gui.osx.AppleExtension;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPopupMenu;
@@ -25,7 +26,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         try {
-            if (isOSX) {
+            if (AppleExtension.isOSX()) {
                 System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
                 System.setProperty("apple.laf.useScreenMenuBar", "true");
                 try {
@@ -51,7 +52,7 @@ public class MainWindow extends javax.swing.JFrame {
 
                 try {
                     final MainWindow mw = new MainWindow();
-                    if (isOSX) {
+                    if (AppleExtension.isOSX()) {
                         AppleExtension.apply(mw);
                         mw.panStampMenu.setVisible(false);
                     }
@@ -293,9 +294,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JSplitPane topBottomSplitPane;
     private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
-    static {
-        isOSX = System.getProperty("os.name", "").trim().equals("Mac OS X");
-    }
-    private static final boolean isOSX;
+  
 
 }

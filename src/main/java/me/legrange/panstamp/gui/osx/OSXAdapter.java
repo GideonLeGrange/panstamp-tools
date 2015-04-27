@@ -1,4 +1,4 @@
-package me.legrange.panstamp.gui;
+package me.legrange.panstamp.gui.osx;
 
 /*
  
