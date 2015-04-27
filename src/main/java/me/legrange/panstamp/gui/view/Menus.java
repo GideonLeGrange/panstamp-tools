@@ -22,7 +22,7 @@ import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.gui.model.tree.EndpointNode;
-import me.legrange.panstamp.gui.model.tree.GatewayNode;
+import me.legrange.panstamp.gui.model.tree.NetworkNode;
 import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
 import me.legrange.panstamp.gui.model.tree.PanStampNode;
 import me.legrange.panstamp.gui.model.tree.RegisterNode;
@@ -43,7 +43,7 @@ public class Menus {
                     switch (node.getType()) {
                         case WORLD:
                             return getWorldPopupMenu();
-                        case GATEWAY:
+                        case NETWORK:
                             return getGatewayPopupMenu();
                         case PANSTAMP:
                             return getPanStampPopupMenu(false);
@@ -115,7 +115,7 @@ public class Menus {
     }
 
     private JPopupMenu getGatewayPopupMenu() {
-        JPopupMenu gatewayPopupMenu = new JPopupMenu(((GatewayNode) getSelectedNode()).toString());
+        JPopupMenu gatewayPopupMenu = new JPopupMenu(((NetworkNode) getSelectedNode()).toString());
         for (JMenuItem item : getGatewayMenuItems()) {
             gatewayPopupMenu.add(item);
             item.setEnabled(item.isEnabled());
@@ -234,8 +234,8 @@ public class Menus {
             switch (node.getType()) {
                 case WORLD:
                     return null;
-                case GATEWAY:
-                    return ((GatewayNode) node).getGateway();
+                case NETWORK:
+                    return ((NetworkNode) node).getGateway();
                 case PANSTAMP:
                     return ((PanStampNode) node).getPanStamp().getGateway();
                 case REGISTER:
@@ -439,7 +439,7 @@ public class Menus {
         if (node != null) {
             switch (node.getType()) {
                 case WORLD:
-                case GATEWAY:
+                case NETWORK:
                     return null;
                 case PANSTAMP:
                     return ((PanStampNode) node).getRegisterDisplay();
@@ -491,18 +491,18 @@ public class Menus {
         return null;
     }
 
-    private GatewayNode getSelectedGatewayNode() {
+    private NetworkNode getSelectedGatewayNode() {
         NetworkTreeNode node = getSelectedNode();
         if (node != null) {
             switch (node.getType()) {
-                case GATEWAY:
-                    return (GatewayNode) node;
+                case NETWORK:
+                    return (NetworkNode) node;
                 case PANSTAMP:
-                    return (GatewayNode) node.getParent();
+                    return (NetworkNode) node.getParent();
                 case REGISTER:
-                    return (GatewayNode) node.getParent().getParent();
+                    return (NetworkNode) node.getParent().getParent();
                 case ENDPOINT:
-                    return (GatewayNode) node.getParent().getParent().getParent();
+                    return (NetworkNode) node.getParent().getParent().getParent();
             }
         }
         return null;

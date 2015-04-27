@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTree;
@@ -19,7 +20,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.gui.model.tree.EndpointNode;
-import me.legrange.panstamp.gui.model.tree.GatewayNode;
+import me.legrange.panstamp.gui.model.tree.NetworkNode;
 import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
 import me.legrange.panstamp.gui.model.tree.PanStampNode;
 import me.legrange.panstamp.gui.model.tree.RegisterNode;
@@ -47,8 +48,8 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
                     case PANSTAMP:
                         com = renderPanStamp((PanStampNode) node);
                         break;
-                    case GATEWAY:
-                        com = renderGateway((GatewayNode) node);
+                    case NETWORK:
+                        com = renderNetwork((NetworkNode) node);
                         break;
                     case WORLD:
                         com = renderWorld((WorldNode) node);
@@ -90,7 +91,7 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
         return new JLabel(psn.toString(), getIcon(ICON_DEVICE), JLabel.LEADING);
     }
 
-    private Component renderGateway(GatewayNode gn) {
+    private Component renderNetwork(NetworkNode gn) {
         return new JLabel(gn.toString(), getIcon(ICON_NETWORK), JLabel.LEADING);
     }
 
@@ -122,6 +123,8 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
     private static final String ICON_DEVICE = "device16x16.png";
     private static final String ICON_REGISTER = "register16x16.png";
     private static final String ICON_ENDPOINT = "endpoint16x16.png";
+    private static final String ICON_STOP_NETWORK = "stop16x16.png";
+    private static final String ICON_START_NETWORK = "play16x16.png";
     private final Map<String, ImageIcon> icons = new HashMap<>();
     private final Model model;
     private final View view;

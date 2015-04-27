@@ -11,7 +11,7 @@ public abstract class NetworkTreeNode<S,C> extends DefaultMutableTreeNode {
 
     public enum Type {
 
-        WORLD, GATEWAY, PANSTAMP, REGISTER, ENDPOINT
+        WORLD, NETWORK, PANSTAMP, REGISTER, ENDPOINT
     };
     
     @Override

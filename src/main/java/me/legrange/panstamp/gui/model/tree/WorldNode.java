@@ -34,15 +34,15 @@ public class WorldNode extends NetworkTreeNode<String, Network> {
 
     @Override
     void addChild(Network gw) {
-        GatewayNode gn = new GatewayNode(gw);
+        NetworkNode gn = new NetworkNode(gw);
         addToTree(gn, this);
         gn.start();
     }
  
     void removeChild(Network gw) {
-        Enumeration<GatewayNode> it = children();
+        Enumeration<NetworkNode> it = children();
         while (it.hasMoreElements()) {
-            GatewayNode gn = it.nextElement();
+            NetworkNode gn = it.nextElement();
             if (gn.getGateway() == gw) {
                 remove(gn);
             }

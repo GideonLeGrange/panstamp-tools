@@ -3,7 +3,6 @@ package me.legrange.panstamp.gui.model.tree;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.Network;
-import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.NetworkListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.ModemException;
@@ -13,9 +12,9 @@ import me.legrange.swap.SwapModem;
  * A node representing a panStamp gateway to a network. 
  * @author gideon
  */
-public class GatewayNode extends NetworkTreeNode<Network, PanStamp> implements NetworkListener {
+public class NetworkNode extends NetworkTreeNode<Network, PanStamp> implements NetworkListener {
 
-    public GatewayNode(Network gw) {
+    public NetworkNode(Network gw) {
         super(gw);
     }
 
@@ -38,7 +37,7 @@ public class GatewayNode extends NetworkTreeNode<Network, PanStamp> implements N
                     txt = String.format("%4x", gw.getNetworkId());
             }
         } catch (ModemException ex) {
-            Logger.getLogger(GatewayNode.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NetworkNode.class.getName()).log(Level.SEVERE, null, ex);
             txt = "Network";
         } 
         return txt;
@@ -72,7 +71,7 @@ public class GatewayNode extends NetworkTreeNode<Network, PanStamp> implements N
 
     @Override
     public Type getType() {
-        return Type.GATEWAY;
+        return Type.NETWORK;
     }
 
     private synchronized void addPanStamp(PanStamp ps) {
