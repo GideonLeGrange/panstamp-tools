@@ -6,19 +6,21 @@ import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.ModemException;
+import me.legrange.panstamp.event.AbstractNetworkListener;
 import me.legrange.swap.SwapModem;
 
 /**
- * A node representing a panStamp gateway to a network. 
+ * A node representing a panStamp gateway to a network.
+ *
  * @author gideon
  */
-public class NetworkNode extends NetworkTreeNode<Network, PanStamp> implements NetworkListener {
+public class NetworkNode extends NetworkTreeNode<Network, PanStamp> {
 
     public NetworkNode(Network gw) {
         super(gw);
     }
 
-    public Network getGateway() {
+    public Network getNetwork() {
         return (Network) getUserObject();
     }
 
@@ -26,46 +28,37 @@ public class NetworkNode extends NetworkTreeNode<Network, PanStamp> implements N
     public String toString() {
         String txt;
         try {
-            Network gw = getGateway();
+            Network gw = getNetwork();
             SwapModem sm = gw.getSWAPModem();
             switch (sm.getType()) {
-                case SERIAL : txt = String.format("Serial Network - %4x",  gw.getNetworkId());  
+                case SERIAL:
+                    txt = String.format("Serial Network - %4x", gw.getNetworkId());
                     break;
-                case TCP_IP : txt = String.format("TCP/IP Network - %4x", gw.getNetworkId());
+                case TCP_IP:
+                    txt = String.format("TCP/IP Network - %4x", gw.getNetworkId());
                     break;
-                default : 
+                default:
                     txt = String.format("%4x", gw.getNetworkId());
             }
         } catch (ModemException ex) {
             Logger.getLogger(NetworkNode.class.getName()).log(Level.SEVERE, null, ex);
             txt = "Network";
-        } 
+        }
         return txt;
     }
 
-    @Override
-    public void deviceDetected(Network gw, PanStamp dev) {
-        addPanStamp(dev);
-    }
-
-    @Override
-    public void deviceRemoved(Network gw, PanStamp dev) {
-        removePanStamp(dev);
-    }
-    
-    
 
     @Override
     protected void start() {
-        getGateway().addListener(this);
-        for (PanStamp ps : getGateway().getDevices()) {
+        getNetwork().addListener(listener);
+        for (PanStamp ps : getNetwork().getDevices()) {
             addPanStamp(ps);
         }
     }
-    
+
     @Override
     protected void stop() {
-        getGateway().removeListener(this);
+        getNetwork().removeListener(listener);
         super.stop();
     }
 
@@ -77,7 +70,7 @@ public class NetworkNode extends NetworkTreeNode<Network, PanStamp> implements N
     private synchronized void addPanStamp(PanStamp ps) {
         addChild(ps);
     }
-    
+
     private synchronized void removePanStamp(PanStamp ps) {
         for (int i = 0; i < getChildCount(); ++i) {
             PanStampNode psn = (PanStampNode) getChildAt(i);
@@ -96,4 +89,29 @@ public class NetworkNode extends NetworkTreeNode<Network, PanStamp> implements N
         psn.start();
     }
 
+    private final NetworkListener listener = new AbstractNetworkListener() {
+            
+        @Override
+        public void deviceDetected(Network gw, PanStamp dev) {
+            addPanStamp(dev);
+        }
+
+        @Override
+        public void deviceRemoved(Network gw, PanStamp dev) {
+            removePanStamp(dev);
+        }
+
+        @Override
+        public void networkClosed(Network nw) {
+            reload();
+        }
+
+        @Override
+        public void networkOpened(Network nw) {
+            reload();
+        }
+        
+        
+
+    };
 }

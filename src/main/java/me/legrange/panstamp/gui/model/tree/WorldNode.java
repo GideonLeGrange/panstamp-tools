@@ -43,7 +43,7 @@ public class WorldNode extends NetworkTreeNode<String, Network> {
         Enumeration<NetworkNode> it = children();
         while (it.hasMoreElements()) {
             NetworkNode gn = it.nextElement();
-            if (gn.getGateway() == gw) {
+            if (gn.getNetwork() == gw) {
                 remove(gn);
             }
         }

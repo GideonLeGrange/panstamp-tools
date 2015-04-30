@@ -235,7 +235,7 @@ public class Menus {
                 case WORLD:
                     return null;
                 case NETWORK:
-                    return ((NetworkNode) node).getGateway();
+                    return ((NetworkNode) node).getNetwork();
                 case PANSTAMP:
                     return ((PanStampNode) node).getPanStamp().getGateway();
                 case REGISTER:
