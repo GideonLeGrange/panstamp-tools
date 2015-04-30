@@ -1,9 +1,12 @@
 package me.legrange.panstamp.gui.view;
 
+import java.awt.Color;
 import me.legrange.panstamp.gui.model.Model;
 import me.legrange.panstamp.gui.model.Format;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.geom.AffineTransform;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -22,7 +25,6 @@ import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
 import me.legrange.panstamp.gui.model.tree.PanStampNode;
 import me.legrange.panstamp.gui.model.tree.RegisterNode;
 import me.legrange.panstamp.gui.model.tree.WorldNode;
-
 
 /**
  *
@@ -68,20 +70,23 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
         return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
     }
 
-   
-
     public NetworkTreeNodeRenderer(Model model, View view) {
         this.model = model;
-        this.view =view;
+        this.view = view;
     }
 
     private Component renderEndpoint(EndpointNode epn) throws NetworkException {
-        return  new JLabel(epn.toString(), IconMap.getEndpointIcon(epn.getEndpoint()), JLabel.LEADING);
+        return new JLabel(epn.toString(), IconMap.getEndpointIcon(epn.getEndpoint()), JLabel.LEADING);
     }
 
     private Component renderRegister(RegisterNode rn) {
-        return new JLabel(rn.toString(), IconMap.getRegisterIcon(rn.getRegister()), JLabel.LEADING);
-
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panel.setOpaque(false);
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(new EmptyBorder(0, 0, 0, 0));
+        panel.add(new JLabel(IconMap.getRegisterIcon(rn.getRegister())));
+        panel.add(new JLabel(rn.toString()));
+        return panel;
     }
 
     private Component renderPanStamp(PanStampNode psn) {
@@ -89,14 +94,15 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
     }
 
     private Component renderNetwork(NetworkNode gn) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT,0, 0));
-        panel.add(new JLabel(IconMap.getNetworkIcon(gn.getNetwork()),JLabel.LEADING));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panel.setBackground(Color.WHITE);
+        panel.add(new JLabel(IconMap.getNetworkIcon(gn.getNetwork()), JLabel.LEADING));
         panel.add(new JLabel(gn.toString()));
- //       panel.add(new JLabel(getIcon(gn.getNetwork().isOpen() ? ICON_OPEN : ICON_CLOSED)));
-        panel.setBorder(new EmptyBorder(0,0,0,0));
+        //       panel.add(new JLabel(getIcon(gn.getNetwork().isOpen() ? ICON_OPEN : ICON_CLOSED)));
+        panel.setBorder(new EmptyBorder(0, 0, 0, 0));
         panel.setOpaque(false);
         return panel;
- //       return new JLabel(gn.toString(), getIcon(ICON_NETWORK), JLabel.LEADING);
+        //       return new JLabel(gn.toString(), getIcon(ICON_NETWORK), JLabel.LEADING);
     }
 
     private Component renderWorld(WorldNode wn) {
@@ -106,7 +112,7 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
     private String formatValue(Endpoint ep) throws NetworkException {
         return Format.formatValue(ep);
     }
- 
+
     private final Model model;
     private final View view;
 }

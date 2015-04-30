@@ -21,6 +21,7 @@ import me.legrange.panstamp.Register;
  */
 class IconMap {
     
+    static final String STANDARD_REGISTER = "weight.png";
     
     static Icon getWorldIcon() {
         return getIcon(WORLD);
@@ -41,7 +42,7 @@ class IconMap {
     
 
     static Icon getRegisterIcon(Register register) {
-        return register.isStandard() ? getIcon(STANDARD_REGISTER) : getIcon(REGISTER);
+        return getIcon(REGISTER);
     }
 
 
@@ -59,18 +60,7 @@ class IconMap {
         }
         return getIcon(val);
     }
-
-    private static String findForName(String name) {
-        String val = map.get(name);
-        if (val == null) {
-            int idx = name.lastIndexOf(' ');
-            if (idx > 0) {
-                return findForName(name.substring(0, idx).trim());
-            }
-        }
-        return val;
-    }
-
+    
     private static Icon getIcon(String name) {
         ImageIcon ico = icons.get(name);
         if (ico == null) {
@@ -84,6 +74,18 @@ class IconMap {
         }
 
         return ico;
+    }
+
+
+    private static String findForName(String name) {
+        String val = map.get(name);
+        if (val == null) {
+            int idx = name.lastIndexOf(' ');
+            if (idx > 0) {
+                return findForName(name.substring(0, idx).trim());
+            }
+        }
+        return val;
     }
 
     private static final Map<String, String> map = new HashMap<>();
@@ -108,7 +110,7 @@ class IconMap {
     private static final String PANSTAMP_KNOWN = "radio.png";
     private static final String PANSTAMP_UNKNOWN = "radio--exclamation.png";
     private static final String REGISTER = "processor.png";
-    private static final String STANDARD_REGISTER = "processor.png";
+//    private static final String STANDARD_REGISTER = "processor.png";
     private static final String NETWORK = "network-wireless.png";
     private static final String WORLD = "globe.png";
     
