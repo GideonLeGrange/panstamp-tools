@@ -357,9 +357,10 @@ public class Menus {
 
         list.add(settingsItem);
         list.add(paramItem);
-        list.add(graphItem);        list.add(new JSeparator());
+        list.add(graphItem);
+        list.add(new JSeparator());
         // register selection
-        list.add(getPanStampRegisterMenu()); 
+        list.add(getPanStampRegisterMenu());
         // Disabled for now, have issue with OSX menu. 
         return list;
     }
@@ -370,6 +371,21 @@ public class Menus {
 
     private List<JComponent> getEndpointMenuItems() {
         List<JComponent> items = new LinkedList<>();
+        final JMenuItem setItem = new JMenuItem("Set value...") {
+            @Override
+            public boolean isEnabled() {
+                Endpoint ep = getSelectedEndpoint();
+                return (ep != null) && ep.getRegister().getDevice().getGateway().isOpen() && ep.isOutput();
+            }
+        };
+        setItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.showSetValueDialog(getSelectedEndpoint());
+            }
+        });
+        items.add(setItem);
         final JMenuItem graphItem = new JMenuItem("Data graph...") {
             @Override
             public boolean isEnabled() {

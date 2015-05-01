@@ -98,11 +98,9 @@ public class NetworkTreeNodeRenderer extends DefaultTreeCellRenderer {
         panel.setBackground(Color.WHITE);
         panel.add(new JLabel(IconMap.getNetworkIcon(gn.getNetwork()), JLabel.LEADING));
         panel.add(new JLabel(gn.toString()));
-        //       panel.add(new JLabel(getIcon(gn.getNetwork().isOpen() ? ICON_OPEN : ICON_CLOSED)));
         panel.setBorder(new EmptyBorder(0, 0, 0, 0));
         panel.setOpaque(false);
         return panel;
-        //       return new JLabel(gn.toString(), getIcon(ICON_NETWORK), JLabel.LEADING);
     }
 
     private Component renderWorld(WorldNode wn) {

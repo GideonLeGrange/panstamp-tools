@@ -1,6 +1,5 @@
 package me.legrange.panstamp.gui.view;
 
-import java.awt.PopupMenu;
 import javax.swing.JMenu;
 import me.legrange.panstamp.gui.model.Model;
 import javax.swing.JPopupMenu;
@@ -13,6 +12,7 @@ import me.legrange.panstamp.gui.MainWindow;
 import me.legrange.panstamp.gui.PanStampParamDialog;
 import me.legrange.panstamp.gui.PanStampSettingsDialog;
 import me.legrange.panstamp.gui.NetworkAddDialog;
+import me.legrange.panstamp.gui.SetValueDialog;
 
 /**
  * Controlling the visual bits of the application
@@ -76,6 +76,11 @@ public class View {
     public Model getModel() {
         return model;
     }
+    
+    void showSetValueDialog(Endpoint ep) {
+        SetValueDialog d = new SetValueDialog(window, ep);
+        d.setVisible(true);
+    }
 
     void showEndpointChart(Endpoint endpoint) {
         ChartFactory.getFactory(getModel()).getEndpointChart(endpoint).setVisible(true);
@@ -95,5 +100,6 @@ public class View {
     private final Model model;
     private final MainWindow window;
     private final Menus menus;
+
 
 }
