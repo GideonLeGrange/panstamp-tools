@@ -83,6 +83,8 @@
                               <Component id="valueLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="valueTextField" min="-2" pref="179" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="valueCheckBox" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
@@ -101,6 +103,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="valueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="valueTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="valueCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -126,11 +129,8 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="unitComboBox">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="getUnits()" type="code"/>
-                </Property>
-              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="valueCheckBox">
             </Component>
           </SubComponents>
         </Container>
@@ -139,7 +139,6 @@
     <Component class="javax.swing.JButton" name="okButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="OK"/>
-        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okButtonActionPerformed"/>

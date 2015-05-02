@@ -1,10 +1,14 @@
 package me.legrange.panstamp.gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 import me.legrange.panstamp.Endpoint;
+import me.legrange.panstamp.NetworkException;
+import me.legrange.panstamp.gui.model.DoubleDocument;
 import me.legrange.panstamp.gui.model.IntegerDocument;
 
 /**
@@ -20,30 +24,45 @@ public class SetValueDialog extends javax.swing.JDialog {
         super(parent, true);
         this.ep = ep;
         initComponents();
-    }
-    
-    /** return the units available for this endpoint */
-    private ComboBoxModel getUnits() {
-        ComboBoxModel cbm = new DefaultComboBoxModel(ep.getUnits().toArray(new String[]{}));
-        switch (cbm.getSize()) {
-            case 0 : 
-                unitComboBox.setEnabled(false);
-                break;
-            case 1: 
-                cbm.setSelectedItem(ep.getUnit());
-                unitComboBox.setEnabled(false);
-                break;
-            default : 
-                cbm.setSelectedItem(ep.getUnit());
-        }
-        return cbm;
-    }
-    
-    /** return the document for editing this endpoint */
-    private Document getDocument() {
-        return new PlainDocument(); // TODO implement based on endpoint data
+        initUnitsCombo();
+        valueTextField.setVisible(ep.getType() != Endpoint.Type.BINARY);
+        valueCheckBox.setVisible(ep.getType() == Endpoint.Type.BINARY);
     }
 
+    /**
+     * return the units available for this endpoint
+     */
+    private void initUnitsCombo() {
+        ComboBoxModel cbm = new DefaultComboBoxModel(ep.getUnits().toArray(new String[]{}));
+        switch (cbm.getSize()) {
+            case 0:
+                unitComboBox.setEnabled(false);
+                break;
+            case 1:
+                cbm.setSelectedItem(ep.getUnit());
+                unitComboBox.setEnabled(false);
+                break;
+            default:
+                cbm.setSelectedItem(ep.getUnit());
+        }
+        unitComboBox.setModel(cbm);
+    }
+
+    /**
+     * return the document for editing this endpoint
+     */
+    private Document getDocument() {
+        switch (ep.getType()) {
+            case BINARY:
+            case STRING:
+                return new PlainDocument();
+            case INTEGER:
+                return new IntegerDocument(Integer.MIN_VALUE, Integer.MAX_VALUE);
+            case NUMBER:
+                return new DoubleDocument(Double.MIN_VALUE, Double.MIN_VALUE);
+        }
+        return new PlainDocument();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -60,6 +79,7 @@ public class SetValueDialog extends javax.swing.JDialog {
         valueTextField = new javax.swing.JTextField();
         unitsLabel = new javax.swing.JLabel();
         unitComboBox = new javax.swing.JComboBox();
+        valueCheckBox = new javax.swing.JCheckBox();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
@@ -70,8 +90,6 @@ public class SetValueDialog extends javax.swing.JDialog {
         valueTextField.setDocument(getDocument());
 
         unitsLabel.setText("Unit:");
-
-        unitComboBox.setModel(getUnits());
 
         javax.swing.GroupLayout networkPanelLayout = new javax.swing.GroupLayout(networkPanel);
         networkPanel.setLayout(networkPanelLayout);
@@ -87,7 +105,9 @@ public class SetValueDialog extends javax.swing.JDialog {
                     .addGroup(networkPanelLayout.createSequentialGroup()
                         .addComponent(valueLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(valueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(valueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(valueCheckBox)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         networkPanelLayout.setVerticalGroup(
@@ -100,14 +120,14 @@ public class SetValueDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(networkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(valueLabel)
-                    .addComponent(valueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(valueTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(valueCheckBox))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         configTabs.addTab("Set Value", networkPanel);
 
         okButton.setText("OK");
-        okButton.setEnabled(false);
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -152,7 +172,39 @@ public class SetValueDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        try {
+            if ((ep.getType() != Endpoint.Type.BINARY) && valueTextField.getText().isEmpty()) {
+                return;
+            }
+            Object unit = unitComboBox.getSelectedItem();
+            switch (ep.getType()) {
+                case NUMBER:
+                    if (unit != null) {
+                        ep.setValue(unitComboBox.getSelectedItem().toString(), Double.valueOf(valueTextField.getText()));
+                    } else {
+                        ep.setValue(Double.valueOf(valueTextField.getText()));
+
+                    }
+                    break;
+                case INTEGER:
+                    if (unit != null) {
+                        ep.setValue(unitComboBox.getSelectedItem().toString(), Integer.parseInt(valueTextField.getText()));
+                    }
+                    else {
+                         ep.setValue(Integer.parseInt(valueTextField.getText()));
+                    }
+                    break;
+                case STRING:
+                    ep.setValue(valueTextField.getText());
+                    break;
+                case BINARY:
+                    ep.setValue(valueCheckBox.isSelected());
+                    break;
+            }
             dispose();
+        } catch (NetworkException ex) {
+            Logger.getLogger(SetValueDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -166,6 +218,7 @@ public class SetValueDialog extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JComboBox unitComboBox;
     private javax.swing.JLabel unitsLabel;
+    private javax.swing.JCheckBox valueCheckBox;
     private javax.swing.JLabel valueLabel;
     private javax.swing.JTextField valueTextField;
     // End of variables declaration//GEN-END:variables
