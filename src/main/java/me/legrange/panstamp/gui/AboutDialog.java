@@ -42,6 +42,7 @@ public class AboutDialog extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         bannerLabel.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         bannerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

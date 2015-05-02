@@ -26,6 +26,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
         this.ps = ps;
         this.model = model;
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     private String getChannel() {

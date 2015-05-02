@@ -42,6 +42,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         this.parent = parent;
         this.model = model;
         initComponents();
+        setLocationRelativeTo(null);
         state.push(State.SELECT_TYPE);
         applyState();
     }

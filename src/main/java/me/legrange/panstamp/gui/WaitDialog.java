@@ -14,6 +14,7 @@ class WaitDialog extends javax.swing.JDialog {
      WaitDialog(java.awt.Frame parent, Task task) {
         super(parent, true);
         initComponents();
+        setLocationRelativeTo(null);
         this.task = task;
         taskThread = new Thread(task, "Task thread");
         taskThread.setDaemon(true);

@@ -24,6 +24,7 @@ public class SetValueDialog extends javax.swing.JDialog {
         super(parent, true);
         this.ep = ep;
         initComponents();
+        setLocationRelativeTo(null);
         initUnitsCombo();
         valueTextField.setVisible(ep.getType() != Endpoint.Type.BINARY);
         valueCheckBox.setVisible(ep.getType() == Endpoint.Type.BINARY);
@@ -84,6 +85,8 @@ public class SetValueDialog extends javax.swing.JDialog {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Set Value");
+        setResizable(false);
 
         valueLabel.setText("Value:");
 
@@ -126,7 +129,7 @@ public class SetValueDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        configTabs.addTab("Set Value", networkPanel);
+        configTabs.addTab(String.format("Set value for %s", ep.getName()), networkPanel);
 
         okButton.setText("OK");
         okButton.addActionListener(new java.awt.event.ActionListener() {

@@ -18,6 +18,7 @@ public class PreferencesDialog extends javax.swing.JDialog {
         super(parent, true);
         this.model = model;
         initComponents();
+        setLocationRelativeTo(null);
         directoryTextField.setText(model.getFileLibary());
     }
 
@@ -39,6 +40,7 @@ public class PreferencesDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Preferences");
+        setResizable(false);
 
         directoryLabel.setText("XML Definition Directory:");
 

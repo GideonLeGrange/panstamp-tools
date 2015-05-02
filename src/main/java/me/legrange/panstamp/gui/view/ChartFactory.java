@@ -9,7 +9,8 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.gui.model.Model;
 
 /**
- * Create and lookup charts in frames for different data sources. 
+ * Create and lookup charts in frames for different data sources.
+ *
  * @author gideon
  */
 public class ChartFactory {
@@ -43,6 +44,7 @@ public class ChartFactory {
 
     private JFrame frameChart(Chart chart) {
         JFrame frame = new JFrame();
+        frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout());
         frame.setTitle(chart.getTitle());
         frame.setContentPane(chart);

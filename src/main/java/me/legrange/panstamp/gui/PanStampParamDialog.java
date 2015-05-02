@@ -34,6 +34,7 @@ public final class PanStampParamDialog extends javax.swing.JDialog {
         this.ps = ps;
         this.model = model;
         initComponents();
+        setLocationRelativeTo(null);
         try {
             addParamComponents();
         } catch (NetworkException ex) {
