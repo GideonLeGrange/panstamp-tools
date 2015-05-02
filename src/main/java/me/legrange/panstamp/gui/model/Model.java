@@ -3,16 +3,21 @@ package me.legrange.panstamp.gui.model;
 import me.legrange.panstamp.gui.model.tree.NetworkTreeModel;
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.swing.table.TableModel;
 import javax.swing.tree.TreeModel;
+import me.legrange.panstamp.DeviceLibrary;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.definition.CompoundDeviceLibrary;
 import me.legrange.panstamp.tools.store.DataStoreException;
 import me.legrange.panstamp.tools.store.Store;
+import me.legrange.panstamp.xml.ClassLoaderLibrary;
+import me.legrange.panstamp.xml.FileLibrary;
 
 /**
  * A data model that provides the different view models required.
@@ -23,17 +28,20 @@ public final class Model {
 
     public Model() throws DataStoreException {
         store = Store.openFile(dataFileName());
+        setDeviceLibary(store.getLibary());
     }
 
     public void start() throws DataStoreException, NetworkException {
-        List<Network> stored = store.load();
+        List<Network> stored = store.loadNetworks();
         for (Network gw : stored) {
             addGateway(gw);
         }
     }
 
     public synchronized void addGateway(Network gw) throws NetworkException {
+        networks.add(gw);
         store.addGateway(gw);
+        gw.setDeviceLibrary(devLib);
         SignalCollector sc = new SignalCollector();
         gw.getSWAPModem().addListener(sc);
         signalCollectors.put(gw, sc);
@@ -42,7 +50,6 @@ public final class Model {
         etm.addGateway(gw);
         gw.getSWAPModem().addListener(smm);
     }
-    
 
     public void deleteGateway(Network gw) throws NetworkException {
         if (gw.isOpen()) {
@@ -80,6 +87,39 @@ public final class Model {
         return ec.getDataSet(ep);
     }
 
+    public void setFileLibrary(String dir) throws DataStoreException {
+        FileLibrary lib = new FileLibrary(new File(dir));
+        store.setLibrary(lib);
+        setDeviceLibary(lib);
+    }
+
+    public void clearFileLibry() throws DataStoreException {
+        setDeviceLibary(null);
+        store.setLibrary(null);
+    }
+    
+    public String getFileLibary() throws DataStoreException {
+        FileLibrary lib = store.getLibary();
+        if (lib != null) {
+            return lib.getDirectory();
+        }
+        else {
+            return "";
+        }
+     }
+
+    private void setDeviceLibary(DeviceLibrary lib) {
+        if (lib != null) {
+            devLib = new CompoundDeviceLibrary(lib, new ClassLoaderLibrary());
+        } else {
+            devLib = new ClassLoaderLibrary();
+
+        }
+        for (Network nw : networks) {
+            nw.setDeviceLibrary(devLib);
+        }
+    }
+
     private static String dataFileName() {
         String name = System.getProperty("user.home") + File.separator;
         if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
@@ -101,8 +141,9 @@ public final class Model {
     private final EndpointTableModel etm = EndpointTableModel.create();
     private final Map<Endpoint, EndpointDataSet> epds = new HashMap<>();
     private final Map<PanStamp, Boolean> hasParams = new HashMap<>();
+    private final List<Network> networks = new LinkedList<>();
     private final Store store;
+    private DeviceLibrary devLib;
     private static final String DATA_PATH = "panstamp";
-
 
 }

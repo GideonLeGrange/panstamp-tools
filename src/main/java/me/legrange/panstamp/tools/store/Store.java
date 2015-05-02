@@ -21,6 +21,9 @@ import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.definition.CompoundDeviceLibrary;
+import me.legrange.panstamp.xml.ClassLoaderLibrary;
+import me.legrange.panstamp.xml.FileLibrary;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SwapException;
 import me.legrange.swap.SwapModem;
@@ -48,7 +51,7 @@ public class Store {
     }
 
     public void removeGateway(Network gw) throws NetworkException {
-        root.getObject(GATEWAYS).remove(makeKey(gw));
+        root.getObject(NETWORKS).remove(makeKey(gw));
     }
 
     /**
@@ -58,14 +61,43 @@ public class Store {
      * @throws me.legrange.panstamp.tools.store.DataStoreException If there is
      * an error loading the definitions.
      */
-    public List<Network> load() throws DataStoreException {
+    public List<Network> loadNetworks() throws DataStoreException {
         List<Network> gateways = new LinkedList<>();
-        JsonObject networksO = root.getObject(GATEWAYS);
+        JsonObject networksO = root.getObject(NETWORKS);
         for (String key : networksO.keySet()) {
             JsonObject networkO = networksO.getObject(key);
             gateways.add(loadGateway(networkO));
         }
         return gateways;
+    }
+
+    /**
+     * Load all device libraries configured from storage.
+     *
+     * @return The device library implementation, or null if it isn't defined. .
+     * @throws DataStoreException If there is an error loading the library.
+     */
+    public FileLibrary getLibary() throws DataStoreException {
+        String libraryO = root.getString(XML_LIBRARY);
+        if (libraryO != null) {
+            return new FileLibrary(new File(libraryO));
+        }
+        return null;
+    }
+
+    /**
+     * Set the file library used by the application, if configured.
+     *
+     * @param lib The library
+     */
+    public void setLibrary(FileLibrary lib) throws DataStoreException {
+        if (lib != null) {
+            root.put(XML_LIBRARY, lib.getDirectory());
+        }
+        else {
+            root.remove(XML_LIBRARY);
+        }
+        flush();
     }
 
     /**
@@ -75,6 +107,10 @@ public class Store {
         try {
             SwapModem modem = loadModem(gatewayO.getObject(SWAP_MODEM));
             Network gw = Network.create(modem);
+            FileLibrary lib = getLibary();
+            if (lib != null) {
+                gw.setDeviceLibrary(new CompoundDeviceLibrary(lib, new ClassLoaderLibrary()));
+            }
             gw.setNetworkId(gatewayO.getInt(NETWORK_ID));
             gw.setChannel(gatewayO.getInt(CHANNEL));
             gw.setDeviceAddress(gatewayO.getInt(DEVICE_ADDRESS));
@@ -218,7 +254,7 @@ public class Store {
     private JsonObject getGateway(Network gw) {
         try {
             String key = makeKey(gw);
-            JsonObject networksO = root.getObject(GATEWAYS);
+            JsonObject networksO = root.getObject(NETWORKS);
             if (!networksO.containsKey(key)) {
                 JsonObject gwO = object(
                         field(NETWORK_ID, gw.getNetworkId()),
@@ -301,7 +337,7 @@ public class Store {
             } else {
                 root = object(
                         field(VERSION, STORE_VERSION),
-                        field(GATEWAYS, object())
+                        field(NETWORKS, object())
                 );
             }
         } catch (IOException ex) {
@@ -343,7 +379,8 @@ public class Store {
     private static final String SECURITY_OPTION = "securityOption";
     private static final String DEVICES = "devices";
     private static final String VERSION = "storeVersion";
-    private static final String GATEWAYS = "gateways";
+    private static final String NETWORKS = "gateways";
+    private static final String XML_LIBRARY = "xml-library";
 
     private class JsonStateStore implements DeviceStateStore {
 

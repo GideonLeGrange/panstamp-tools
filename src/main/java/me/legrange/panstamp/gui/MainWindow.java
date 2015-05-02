@@ -95,7 +95,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     private void start() throws NetworkException {
         model.start();
-         // Application.getApplication().setDefaultMenuBar(mainMenu);
+        // Application.getApplication().setDefaultMenuBar(mainMenu);
     }
 
     /**
@@ -261,16 +261,26 @@ public class MainWindow extends javax.swing.JFrame {
             JPopupMenu menu = view.getTreePopupMenu(path);
             networkTree.setComponentPopupMenu(menu);
         }
-       
+
     }//GEN-LAST:event_networkTreeMouseClicked
 
     public void quit() {
         System.exit(0);
     }
 
-     public void showAbout() {
+    public void showAbout() {
         AboutDialog ad = new AboutDialog(this, true);
         ad.setVisible(true);
+    }
+
+    public void showPreferences() {
+        PreferencesDialog pd;
+        try {
+            pd = new PreferencesDialog(this, model);
+            pd.setVisible(true);
+        } catch (DataStoreException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private Network gw;
@@ -294,6 +304,5 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JSplitPane topBottomSplitPane;
     private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
-  
 
 }
