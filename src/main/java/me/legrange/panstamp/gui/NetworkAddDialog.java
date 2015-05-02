@@ -2,6 +2,7 @@ package me.legrange.panstamp.gui;
 
 import gnu.io.CommPortIdentifier;
 import java.awt.CardLayout;
+import java.awt.Frame;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkException;
@@ -17,6 +19,7 @@ import me.legrange.panstamp.gui.model.HexDocument;
 import me.legrange.panstamp.gui.model.IntegerDocument;
 import me.legrange.panstamp.gui.model.Model;
 import me.legrange.panstamp.ModemException;
+import me.legrange.panstamp.gui.task.Task;
 import me.legrange.swap.ModemSetup;
 import me.legrange.swap.SwapException;
 
@@ -34,8 +37,9 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     /**
      * Creates new form PanStampSettingsDialog
      */
-    public NetworkAddDialog(java.awt.Frame parent, Model model) {
+    public NetworkAddDialog(Frame parent, Model model) {
         super(parent, true);
+        this.parent = parent;
         this.model = model;
         initComponents();
         state.push(State.SELECT_TYPE);
@@ -615,18 +619,50 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     }
 
     private void createNetwork() throws ModemException, SwapException, NetworkException {
-        Network gw;
-        if (typeIsSerial()) {
-            gw = Network.openSerial(getSerialPort(), getSerialSpeed());
-        } else {
-            gw = Network.openTcp(getTcpHost(), getTcpPort());
-        }
-        ModemSetup setup = gw.getSWAPModem().getSetup();
-        setup.setChannel(getChannel());
-        setup.setDeviceAddress(getDeviceAddress());
-        setup.setNetworkID(getNetworkID());
-        gw.getSWAPModem().setSetup(setup);
-        model.addGateway(gw);
+        WaitDialog wd = new WaitDialog(parent, new Task() {
+            private Network gw;
+            private int progress = 0;
+            private String phase = "";
+
+            @Override
+            public int getProgress() {
+                return progress;
+            }
+
+            @Override
+            public String getPhase() {
+                return phase;
+            }
+
+            @Override
+            public void run() {
+                try {
+                    if (typeIsSerial()) {
+                        phase = "Opening serial modem";
+                        gw = Network.openSerial(getSerialPort(), getSerialSpeed());
+                        progress = 40;
+                    } else {
+                        phase = "Opening TCP modem";
+                        gw = Network.openTcp(getTcpHost(), getTcpPort());
+                        progress = 40;
+                    }
+                    phase = "Configuring modem";
+                    ModemSetup setup = gw.getSWAPModem().getSetup();
+                    setup.setChannel(getChannel());
+                    setup.setDeviceAddress(getDeviceAddress());
+                    setup.setNetworkID(getNetworkID());
+                    progress = 80;
+                    phase = "Connected";
+                    gw.getSWAPModem().setSetup(setup);
+                    model.addGateway(gw);
+                    progress = 100;
+                } catch (NetworkException | SwapException ex) {
+                    Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        setVisible(false);
+        wd.start();
     }
 
     private String getSerialPort() {
@@ -735,6 +771,7 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     private javax.swing.JRadioButton tcpRadioButton;
     private javax.swing.ButtonGroup typeButtonGroup;
     // End of variables declaration//GEN-END:variables
+    private final Frame parent;
     private final Model model;
     private final Stack<State> state = new Stack<>();
 
