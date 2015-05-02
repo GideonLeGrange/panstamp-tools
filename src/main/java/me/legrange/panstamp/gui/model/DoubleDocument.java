@@ -6,6 +6,7 @@ import javax.swing.text.PlainDocument;
 
 /**
  * An extension of PlainDocument that restricts the text to doubles in a range.
+ *
  * @author gideon
  */
 public class DoubleDocument extends PlainDocument {
@@ -15,7 +16,6 @@ public class DoubleDocument extends PlainDocument {
         this.min = min;
         this.max = max;
     }
-    
 
     @Override
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
@@ -29,13 +29,34 @@ public class DoubleDocument extends PlainDocument {
             } else {
                 val = val.substring(0, offs) + str + val.substring(offs);
             }
-            try {
-                double newVal = Double.valueOf(val);
-                if ((newVal >= min) && (newVal <= max)) {
-                    super.insertString(offs, str, a); 
+            for (char c : val.toCharArray()) {
+                switch (c) {
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                        break;
+                    case '-':
+                        if ((val.indexOf('-') > 0) || val.lastIndexOf('-') != val.indexOf('-')) {
+                            return;
+                        }
+                        break;
+                    case '.':
+                        if (val.lastIndexOf('.') != val.indexOf('.')) {
+                            return;
+                        }
+                        break;
+                    default:
+                        return;
                 }
-            } catch (NumberFormatException e) {
             }
+            super.insertString(offs, str, a);
         }
     }
 
