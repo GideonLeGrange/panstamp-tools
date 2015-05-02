@@ -59,7 +59,7 @@ public class SetValueDialog extends javax.swing.JDialog {
             case INTEGER:
                 return new IntegerDocument(Integer.MIN_VALUE, Integer.MAX_VALUE);
             case NUMBER:
-                return new DoubleDocument(Double.MIN_VALUE, Double.MIN_VALUE);
+                return new DoubleDocument(Double.MIN_VALUE, Double.MAX_VALUE);
         }
         return new PlainDocument();
     }
