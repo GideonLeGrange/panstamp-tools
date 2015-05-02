@@ -212,6 +212,11 @@ public class MainWindow extends javax.swing.JFrame {
         panStampMenu.add(aboutMenuItem);
 
         configMenuItem.setText("Preferences");
+        configMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                configMenuItemActionPerformed(evt);
+            }
+        });
         panStampMenu.add(configMenuItem);
 
         quitItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
@@ -263,6 +268,10 @@ public class MainWindow extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_networkTreeMouseClicked
+
+    private void configMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configMenuItemActionPerformed
+        showPreferences();
+    }//GEN-LAST:event_configMenuItemActionPerformed
 
     public void quit() {
         System.exit(0);

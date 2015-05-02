@@ -21,8 +21,6 @@ import me.legrange.panstamp.Register;
  */
 class IconMap {
     
-    static final String STANDARD_REGISTER = "weight.png";
-    
     static Icon getWorldIcon() {
         return getIcon(WORLD);
     }
