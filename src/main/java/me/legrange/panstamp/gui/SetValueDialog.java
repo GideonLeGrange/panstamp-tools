@@ -4,10 +4,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.NetworkException;
+import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.PanStampListener;
+import me.legrange.panstamp.event.AbstractPanStampListener;
 import me.legrange.panstamp.gui.model.DoubleDocument;
 import me.legrange.panstamp.gui.model.IntegerDocument;
 
@@ -180,6 +184,18 @@ public class SetValueDialog extends javax.swing.JDialog {
             if ((ep.getType() != Endpoint.Type.BINARY) && valueTextField.getText().isEmpty()) {
                 return;
             }
+            ep.getRegister().getDevice().addListener(new AbstractPanStampListener() {
+
+                @Override
+                public void syncRequired(PanStamp dev) {
+                    dev.removeListener(this);
+                    JOptionPane.showMessageDialog(null, 
+                            String.format("Device %d is in sleep mode. You need to manually put the device into SYNC mode", dev.getAddress())
+                            , "Notice", JOptionPane.INFORMATION_MESSAGE);
+
+                }
+            } );
+            
             Object unit = unitComboBox.getSelectedItem();
             switch (ep.getType()) {
                 case NUMBER:

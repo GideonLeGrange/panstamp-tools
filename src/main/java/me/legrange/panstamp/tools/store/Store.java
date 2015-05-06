@@ -45,13 +45,15 @@ public class Store {
         return new Store(fileName);
     }
 
-    public void addGateway(Network gw) {
+    public void addGateway(Network gw) throws DataStoreException {
         JsonObject gwO = getGateway(gw);
         gw.setDeviceStore(new JsonStateStore(gw));
+        flush();
     }
 
     public void removeGateway(Network gw) throws NetworkException {
         root.getObject(NETWORKS).remove(makeKey(gw));
+        flush();
     }
 
     /**
