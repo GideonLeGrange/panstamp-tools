@@ -16,12 +16,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.DeviceStateStore;
-import me.legrange.panstamp.Endpoint;
+import me.legrange.panstamp.ModemException;
 import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkException;
+import me.legrange.panstamp.NetworkListener;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
 import me.legrange.panstamp.definition.CompoundDeviceLibrary;
+import me.legrange.panstamp.event.AbstractNetworkListener;
 import me.legrange.panstamp.xml.ClassLoaderLibrary;
 import me.legrange.panstamp.xml.FileLibrary;
 import me.legrange.swap.ModemSetup;
@@ -46,7 +48,8 @@ public class Store {
     }
 
     public void addGateway(Network gw) throws DataStoreException {
-        JsonObject gwO = getGateway(gw);
+        addJsonGateway(gw);
+        gw.addListener(networkListener);
         gw.setDeviceStore(new JsonStateStore(gw));
         flush();
     }
@@ -68,7 +71,7 @@ public class Store {
         JsonObject networksO = root.getObject(NETWORKS);
         for (String key : networksO.keySet()) {
             JsonObject networkO = networksO.getObject(key);
-            gateways.add(loadGateway(networkO));
+            gateways.add(loadNetwork(networkO));
         }
         return gateways;
     }
@@ -95,17 +98,33 @@ public class Store {
     public void setLibrary(FileLibrary lib) throws DataStoreException {
         if (lib != null) {
             root.put(XML_LIBRARY, lib.getDirectory());
-        }
-        else {
+        } else {
             root.remove(XML_LIBRARY);
         }
         flush();
     }
 
+    private JsonObject addDevice(PanStamp ps) throws DataStoreException {
+        Network nw = ps.getGateway();
+        JsonObject networkO = getGateway(nw);
+        JsonObject devicesO = getDevices(networkO);
+        JsonObject deviceO = new JsonObject();
+        devicesO.put("" + ps.getAddress(), deviceO);
+        flush();
+        return deviceO;
+    }
+       
+    private JsonElement removeDevice(PanStamp ps) {
+        Network nw = ps.getGateway();
+        JsonObject networkO = getGateway(nw);
+        JsonObject devicesO = getDevices(networkO);
+        return devicesO.remove("" + ps.getAddress());
+    }
+
     /**
-     * Load a gatway from JSON
+     * Load a network from JSON
      */
-    private Network loadGateway(JsonObject gatewayO) throws DataStoreException {
+    private Network loadNetwork(JsonObject gatewayO) throws DataStoreException {
         try {
             SwapModem modem = loadModem(gatewayO.getObject(SWAP_MODEM));
             Network gw = Network.create(modem);
@@ -118,6 +137,7 @@ public class Store {
             gw.setDeviceAddress(gatewayO.getInt(DEVICE_ADDRESS));
             gw.setSecurityOption(gatewayO.getInt(SECURITY_OPTION));
             loadDevices(gw, gatewayO.getObject(DEVICES));
+            gw.setDeviceStore(new JsonStateStore(gw));
             return gw;
         } catch (NetworkException ex) {
             throw new DataStoreException(ex.getMessage(), ex);
@@ -225,32 +245,22 @@ public class Store {
         );
     }
 
-    /**
-     * convert list of panStamp nodes to JSON
-     */
-    private JsonElement storeDevices(List<PanStamp> devices) throws NetworkException {
-        JsonObject devicesO = new JsonObject();
-        for (PanStamp dev : devices) {
-            devicesO.put("" + dev.getAddress(), storeDevice(dev));
+    private JsonObject addJsonGateway(Network gw) {
+        try {
+            JsonObject networksO = root.getObject(NETWORKS);
+            String key = makeKey(gw);
+            JsonObject gwO = object(
+                    field(NETWORK_ID, gw.getNetworkId()),
+                    field(DEVICE_ADDRESS, gw.getDeviceAddress()),
+                    field(CHANNEL, gw.getChannel()),
+                    field(SECURITY_OPTION, gw.getSecurityOption()),
+                    field(SWAP_MODEM, storeModem(gw.getSWAPModem())),
+                    field(DEVICES, new JsonObject()));
+            networksO.put(key, gwO);
+            return gwO;
+        } catch (NetworkException ex) {
+            return new JsonObject();
         }
-        return devicesO;
-    }
-
-    /**
-     * convert a panStamp to JSON
-     */
-    private JsonObject storeDevice(PanStamp ps) throws NetworkException {
-        JsonObject stateO = new JsonObject();
-        for (Register reg : ps.getRegisters()) {
-            if (reg.isStandard()) {
-                if (reg.hasValue()) {
-                    for (Endpoint ep : reg.getEndpoints()) {
-                        stateO.put(ep.getName(), ep.getValue());
-                    }
-                }
-            }
-        }
-        return stateO;
     }
 
     private JsonObject getGateway(Network gw) {
@@ -258,14 +268,7 @@ public class Store {
             String key = makeKey(gw);
             JsonObject networksO = root.getObject(NETWORKS);
             if (!networksO.containsKey(key)) {
-                JsonObject gwO = object(
-                        field(NETWORK_ID, gw.getNetworkId()),
-                        field(DEVICE_ADDRESS, gw.getDeviceAddress()),
-                        field(CHANNEL, gw.getChannel()),
-                        field(SECURITY_OPTION, gw.getSecurityOption()),
-                        field(SWAP_MODEM, storeModem(gw.getSWAPModem())),
-                        field(DEVICES, new JsonObject()));
-                networksO.put(key, gwO);
+                return addJsonGateway(gw);
             }
             return networksO.getObject(key);
         } catch (NetworkException ex) {
@@ -383,6 +386,30 @@ public class Store {
     private static final String VERSION = "storeVersion";
     private static final String NETWORKS = "gateways";
     private static final String XML_LIBRARY = "xml-library";
+
+    private NetworkListener networkListener = new AbstractNetworkListener() {
+
+        @Override
+        public void deviceDetected(Network gw, PanStamp dev) {
+            try {
+                System.out.printf("deviceDetected(%d, %d)\n", gw.getNetworkId(), dev.getAddress());
+                addDevice(dev);
+            } catch (ModemException | DataStoreException ex) {
+                Logger.getLogger(Store.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        @Override
+        public void deviceRemoved(Network gw, PanStamp dev) {
+            try {
+                System.out.printf("deviceRemoved(%d, %d)\n", gw.getNetworkId(), dev.getAddress());
+            } catch (ModemException ex) {
+                Logger.getLogger(Store.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            removeDevice(dev);
+        }
+
+    };
 
     private class JsonStateStore implements DeviceStateStore {
 
