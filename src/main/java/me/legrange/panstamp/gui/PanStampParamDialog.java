@@ -11,6 +11,7 @@ import javax.swing.InputVerifier;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -87,7 +88,7 @@ public final class PanStampParamDialog extends javax.swing.JDialog {
             field.setText(par.getDefault().toString());
         }
         field.setInputVerifier(new InputVerifier() {
-            
+
             private final Pattern pattern = Pattern.compile(par.getPattern());
 
             @Override
@@ -97,6 +98,7 @@ public final class PanStampParamDialog extends javax.swing.JDialog {
         });
         return field;
     }
+
     private Component makeStringField(Parameter<String> par) throws NetworkException {
         return makeTextField(par);
     }
@@ -184,59 +186,77 @@ public final class PanStampParamDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-       for (Component com : paramMap.keySet()) {
-           Parameter par = paramMap.get(com);
-           updateFromComponent(par, com);
-       }
+        boolean updated = false;
+        for (Component com : paramMap.keySet()) {
+            Parameter par = paramMap.get(com);
+            updated = updated | updateFromComponent(par, com);
+        }
+        if (updated) {
+            try {
+                if (ps.getSyncState() != 1) {
+                    JOptionPane.showMessageDialog(null,
+                            String.format("Device %d is in sleep mode. You need to manually put the device into SYNC mode", ps.getAddress()), "Notice", JOptionPane.INFORMATION_MESSAGE);
+
+                }
+            } catch (NetworkException ex) {
+                Logger.getLogger(PanStampParamDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_okButtonActionPerformed
 
-    private void updateFromComponent(Parameter par, Component com) {
+    private boolean updateFromComponent(Parameter par, Component com) {
+        boolean updated = false;
         try {
             switch (par.getType()) {
                 case NUMBER:
-                    JTextField text = (JTextField)com;
+                    JTextField text = (JTextField) com;
                     double dVal = Double.parseDouble(text.getText());
                     Parameter<Double> dPar = par;
                     if (dVal != dPar.getValue()) {
                         dPar.setValue(dVal);
+                        updated = true;
                     }
                     break;
                 case INTEGER:
                     com = makeIntegerField(par);
-                    text = (JTextField)com;
+                    text = (JTextField) com;
                     int iVal = Integer.parseInt(text.getText());
                     Parameter<Integer> iPar = par;
                     if (iVal != iPar.getValue()) {
                         iPar.setValue(iVal);
+                        updated = true;
                     }
                     break;
                 case BINARY: {
                     com = makeBinaryField(par);
-                    JCheckBox check = (JCheckBox)com;
+                    JCheckBox check = (JCheckBox) com;
                     boolean bVal = check.isSelected();
                     Parameter<Boolean> bPar = par;
                     if (bVal != bPar.getValue()) {
                         bPar.setValue(bVal);
+                        updated = true;
                     }
                     break;
                 }
                 case STRING: {
                     com = makeStringField(par);
-                    text = (JTextField)com;
+                    text = (JTextField) com;
                     String val = text.getText();
                     Parameter<String> sPar = par;
                     if (!val.equals(sPar.getValue())) {
                         sPar.setValue(val);
-                    } 
+                        updated = true;
+                    }
                     break;
                 }
             }
-            
+
             // Variables declaration - do not modify
         } catch (NetworkException ex) {
             Logger.getLogger(PanStampParamDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         dispose();
+        return updated;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -184,18 +184,6 @@ public class SetValueDialog extends javax.swing.JDialog {
             if ((ep.getType() != Endpoint.Type.BINARY) && valueTextField.getText().isEmpty()) {
                 return;
             }
-            ep.getRegister().getDevice().addListener(new AbstractPanStampListener() {
-
-                @Override
-                public void syncRequired(PanStamp dev) {
-                    dev.removeListener(this);
-                    JOptionPane.showMessageDialog(null, 
-                            String.format("Device %d is in sleep mode. You need to manually put the device into SYNC mode", dev.getAddress())
-                            , "Notice", JOptionPane.INFORMATION_MESSAGE);
-
-                }
-            } );
-            
             Object unit = unitComboBox.getSelectedItem();
             switch (ep.getType()) {
                 case NUMBER:
@@ -209,9 +197,8 @@ public class SetValueDialog extends javax.swing.JDialog {
                 case INTEGER:
                     if (unit != null) {
                         ep.setValue(unitComboBox.getSelectedItem().toString(), Integer.parseInt(valueTextField.getText()));
-                    }
-                    else {
-                         ep.setValue(Integer.parseInt(valueTextField.getText()));
+                    } else {
+                        ep.setValue(Integer.parseInt(valueTextField.getText()));
                     }
                     break;
                 case STRING:
@@ -222,6 +209,12 @@ public class SetValueDialog extends javax.swing.JDialog {
                     break;
             }
             dispose();
+            PanStamp ps = ep.getRegister().getDevice();
+            if (ps.getSyncState() != 1) {
+                JOptionPane.showMessageDialog(null,
+                        String.format("Device %d is in sleep mode. You need to manually put the device into SYNC mode", ps.getAddress()), "Notice", JOptionPane.INFORMATION_MESSAGE);
+
+            }
         } catch (NetworkException ex) {
             Logger.getLogger(SetValueDialog.class.getName()).log(Level.SEVERE, null, ex);
         }

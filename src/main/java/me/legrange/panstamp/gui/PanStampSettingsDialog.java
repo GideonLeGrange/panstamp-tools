@@ -2,9 +2,11 @@ package me.legrange.panstamp.gui;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
+import me.legrange.panstamp.event.AbstractPanStampListener;
 import me.legrange.panstamp.gui.model.HexDocument;
 import me.legrange.panstamp.gui.model.IntegerDocument;
 import me.legrange.panstamp.gui.model.Model;
@@ -17,6 +19,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form PanStampSettingsDialog
+     *
      * @param parent
      * @param model
      * @param ps
@@ -46,8 +49,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
         }
         return "<unknown>";
     }
-    
-    
+
     private String getTxInterval() {
         try {
             return "" + ps.getTxInterval();
@@ -56,7 +58,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
         }
         return "<unknown>";
     }
-        
+
     private String getNetwork() {
         try {
             return String.format("%4x", ps.getNetwork());
@@ -65,7 +67,6 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
         }
         return "<unknown>";
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -239,11 +240,16 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
             ps.setNetwork(Integer.parseInt(networkField.getText(), 16));
             ps.setSecurityOption(getIntValue(securityField));
             ps.setTxInterval(getIntValue(intervalField));
+            if (ps.getSyncState() != 1) {
+                JOptionPane.showMessageDialog(null,
+                        String.format("Device %d is in sleep mode. You need to manually put the device into SYNC mode", ps.getAddress()), "Notice", JOptionPane.INFORMATION_MESSAGE);
+
+            }
             dispose();
         } catch (NetworkException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
