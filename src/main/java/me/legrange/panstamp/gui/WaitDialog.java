@@ -1,49 +1,54 @@
 package me.legrange.panstamp.gui;
 
+import javax.swing.JOptionPane;
 import me.legrange.panstamp.gui.task.Task;
+import me.legrange.panstamp.gui.task.TaskRunner;
 
 /**
  *
  * @author gideon
  */
-class WaitDialog extends javax.swing.JDialog {
+public class WaitDialog extends javax.swing.JDialog implements TaskRunner {
 
     /**
      * Creates new form WaitDialog
      */
-     WaitDialog(java.awt.Frame parent, Task task) {
+     public WaitDialog(java.awt.Frame parent, Task task) {
         super(parent, true);
         initComponents();
         setLocationRelativeTo(null);
         this.task = task;
-        taskThread = new Thread(task, "Task thread");
-        taskThread.setDaemon(true);
-        updateThread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                while (taskThread.isAlive()) {
-                    updateProgress();
-                    try {
-                        Thread.sleep(250);
-                    } catch (InterruptedException ex) {
-                    }
-                }
-                dispose();
-            }
-        });
     }
     
-    void start() {
-        updateThread.start();
-        taskThread.start();
+    public Object start() throws Throwable {
+        System.out.println("WD::start() => task");
+        task.start(this);
+        System.out.println("WD::start() => visible");
         setVisible(true);
+        System.out.println("WD::start() => return");
+        if (error != null) throw error;
+        return result;
     }
 
-    private void updateProgress() {
-        progressLabel.setText(task.getPhase());
-        progressBar.setValue(task.getProgress());
+    
+    @Override
+    public void completed(Object result) {
+        this.result = result;
+        dispose();
     }
+
+    @Override
+    public void error(Throwable e) {
+        this.error = e;
+        dispose();
+    }
+
+    @Override
+    public void update(int progress, String stage) {
+ //       progressBar.setValue(progress);
+        progressLabel.setText(stage);
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -54,76 +59,63 @@ class WaitDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        progressTabs = new javax.swing.JTabbedPane();
         networkPanel = new javax.swing.JPanel();
-        progressBar = new javax.swing.JProgressBar();
         progressLabel = new javax.swing.JLabel();
-        cancelButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setUndecorated(true);
+        setResizable(false);
 
         progressLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         progressLabel.setText(".");
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ajax-loader.gif"))); // NOI18N
 
         javax.swing.GroupLayout networkPanelLayout = new javax.swing.GroupLayout(networkPanel);
         networkPanel.setLayout(networkPanelLayout);
         networkPanelLayout.setHorizontalGroup(
             networkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(networkPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(networkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(progressLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                    .addComponent(progressLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         networkPanelLayout.setVerticalGroup(
             networkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, networkPanelLayout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
                 .addComponent(progressLabel)
                 .addGap(18, 18, 18)
-                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addComponent(jLabel1)
+                .addGap(14, 14, 14))
         );
-
-        progressTabs.addTab("Waiting...", networkPanel);
-
-        cancelButton.setText("Cancel");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(progressTabs)
-                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cancelButton)
-                .addGap(149, 149, 149))
+                .addComponent(networkPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(progressTabs)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cancelButton)
-                .addContainerGap())
+            .addComponent(networkPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel networkPanel;
-    private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel progressLabel;
-    private javax.swing.JTabbedPane progressTabs;
     // End of variables declaration//GEN-END:variables
     private final Task task;
-    private final Thread taskThread;
-    private final Thread updateThread;
-    
+    private Object result;
+    private Throwable error;
 }

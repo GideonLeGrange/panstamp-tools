@@ -7,21 +7,16 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import me.legrange.panstamp.Network;
-import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.gui.model.HexDocument;
 import me.legrange.panstamp.gui.model.IntegerDocument;
 import me.legrange.panstamp.gui.model.Model;
-import me.legrange.panstamp.ModemException;
-import me.legrange.panstamp.gui.task.Task;
-import me.legrange.swap.ModemSetup;
-import me.legrange.swap.SwapException;
+import me.legrange.panstamp.gui.task.CreateSerialTask;
+import me.legrange.panstamp.gui.task.CreateTcpNetworkTask;
 
 /**
  *
@@ -495,14 +490,9 @@ public class NetworkAddDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
-        try {
-            createNetwork();
-        } catch (ModemException | SwapException ex) {
-            Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NetworkException ex) {
-            Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
+        if (createNetwork()) {
+            dispose();
         }
-        dispose();
     }//GEN-LAST:event_finishButtonActionPerformed
 
     private void serialRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serialRadioButtonActionPerformed
@@ -619,51 +609,20 @@ public class NetworkAddDialog extends javax.swing.JDialog {
         return state.peek();
     }
 
-    private void createNetwork() throws ModemException, SwapException, NetworkException {
-        WaitDialog wd = new WaitDialog(parent, new Task() {
-            private Network gw;
-            private int progress = 0;
-            private String phase = "";
-
-            @Override
-            public int getProgress() {
-                return progress;
-            }
-
-            @Override
-            public String getPhase() {
-                return phase;
-            }
-
-            @Override
-            public void run() {
-                try {
-                    if (typeIsSerial()) {
-                        phase = "Opening serial modem";
-                        gw = Network.openSerial(getSerialPort(), getSerialSpeed());
-                        progress = 40;
-                    } else {
-                        phase = "Opening TCP modem";
-                        gw = Network.openTcp(getTcpHost(), getTcpPort());
-                        progress = 40;
-                    }
-                    phase = "Configuring modem";
-                    ModemSetup setup = gw.getSWAPModem().getSetup();
-                    setup.setChannel(getChannel());
-                    setup.setDeviceAddress(getDeviceAddress());
-                    setup.setNetworkID(getNetworkID());
-                    progress = 80;
-                    phase = "Connected";
-                    gw.getSWAPModem().setSetup(setup);
-                    model.addGateway(gw);
-                    progress = 100;
-                } catch (NetworkException | SwapException ex) {
-                    Logger.getLogger(NetworkAddDialog.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        setVisible(false);
-        wd.start();
+    private boolean createNetwork() {
+        WaitDialog wd;
+        if (typeIsSerial()) {
+            wd = new WaitDialog(parent, new CreateSerialTask(getSerialPort(), getSerialSpeed(), getChannel(), getDeviceAddress(), getNetworkID()));
+        } else {
+            wd = new WaitDialog(parent, new CreateTcpNetworkTask(getTcpHost(), getTcpPort(), getChannel(), getDeviceAddress(), getNetworkID()));
+        }
+        try {
+            model.addGateway((Network) wd.start());
+            return true;
+        } catch (Throwable ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
     }
 
     private String getSerialPort() {

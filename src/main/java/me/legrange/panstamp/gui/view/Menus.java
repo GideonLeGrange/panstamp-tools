@@ -12,6 +12,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
@@ -21,12 +22,14 @@ import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.Register;
+import me.legrange.panstamp.gui.WaitDialog;
 import me.legrange.panstamp.gui.model.tree.EndpointNode;
 import me.legrange.panstamp.gui.model.tree.NetworkNode;
 import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
 import me.legrange.panstamp.gui.model.tree.PanStampNode;
 import me.legrange.panstamp.gui.model.tree.RegisterNode;
 import me.legrange.panstamp.gui.model.tree.WorldNode;
+import me.legrange.panstamp.gui.task.Task;
 
 /**
  *
@@ -169,10 +172,23 @@ public class Menus {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                WaitDialog wd = new WaitDialog(null,
+                        new Task() {
+
+                            @Override
+                            protected Object run() throws Throwable {
+                                update(10, "Opening");
+                                Network nw = getSelectedGateway();
+                                nw.open();
+                                return nw;
+                            }
+
+                        });
                 try {
-                    getSelectedGateway().open();
-                } catch (NetworkException ex) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+                    wd.start();
+                } catch (Throwable ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
                 }
             }
         });
@@ -187,12 +203,25 @@ public class Menus {
         };
         closeItem.addActionListener(new ActionListener() {
 
-            @Override
+ @Override
             public void actionPerformed(ActionEvent e) {
+                WaitDialog wd = new WaitDialog(null,
+                        new Task() {
+
+                            @Override
+                            protected Object run() throws Throwable {
+                                update(10, "Closing");
+                                Network nw = getSelectedGateway();
+                                nw.close();
+                                return nw;
+                            }
+
+                        });
                 try {
-                    getSelectedGateway().close();
-                } catch (NetworkException ex) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+                    wd.start();
+                } catch (Throwable ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
                 }
             }
         });
