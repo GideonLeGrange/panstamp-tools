@@ -16,6 +16,7 @@ import me.legrange.panstamp.PanStamp;
 import me.legrange.panstamp.definition.CompoundDeviceLibrary;
 import me.legrange.panstamp.tools.store.DataStoreException;
 import me.legrange.panstamp.tools.store.Store;
+import me.legrange.panstamp.tools.store.Store1;
 import me.legrange.panstamp.xml.ClassLoaderLibrary;
 import me.legrange.panstamp.xml.FileLibrary;
 
@@ -37,10 +38,11 @@ public final class Model {
             addGateway(gw);
         }
     }
-
+private Store1 store1 = new Store1();
     public synchronized void addGateway(Network gw) throws NetworkException {
         networks.add(gw);
-        store.addGateway(gw);
+ //       store.addGateway(gw);
+        store1.addNetwork(gw);
         gw.setDeviceLibrary(devLib);
         SignalCollector sc = new SignalCollector();
         gw.getSWAPModem().addListener(sc);
@@ -62,7 +64,8 @@ public final class Model {
         ec.stop();
         SignalCollector sc = signalCollectors.get(gw);
         gw.getSWAPModem().removeListener(sc);
-        store.removeGateway(gw);
+//        store.removeGateway(gw);
+        store1.removeNetwork(gw);
     }
 
     public TreeModel getTreeModel() {
