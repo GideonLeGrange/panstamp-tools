@@ -31,6 +31,10 @@ import me.legrange.swap.tcp.TcpModem;
  * @author gideon
  */
 public class Store1 {
+    
+    /** TODO: 
+     * Add count down timer to store after an update 
+     */
 
     public static final String STORE_VERSION = "1.0";
 
