@@ -394,6 +394,7 @@ public class Store {
             try {
                 System.out.printf("deviceDetected(%d, %d)\n", gw.getNetworkId(), dev.getAddress());
                 addDevice(dev);
+                flush();
             } catch (ModemException | DataStoreException ex) {
                 Logger.getLogger(Store.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -403,14 +404,15 @@ public class Store {
         public void deviceRemoved(Network gw, PanStamp dev) {
             try {
                 System.out.printf("deviceRemoved(%d, %d)\n", gw.getNetworkId(), dev.getAddress());
-            } catch (ModemException ex) {
+               removeDevice(dev);
+               flush();
+            } catch (ModemException | DataStoreException ex) {
                 Logger.getLogger(Store.class.getName()).log(Level.SEVERE, null, ex);
             }
-            removeDevice(dev);
         }
 
     };
-
+    
     private class JsonStateStore implements DeviceStateStore {
 
         public JsonStateStore(Network gw) {
