@@ -65,6 +65,7 @@ public class Menus {
         JMenu menu = new JMenu("Networks");
         for (JMenuItem c : getWorldMenuItems()) {
             menu.add(c);
+            c.setEnabled(c.isEnabled());
         }
         return menu;
     }
@@ -73,6 +74,7 @@ public class Menus {
         JMenu menu = new JMenu("Network");
         for (JMenuItem c : getGatewayMenuItems()) {
             menu.add(c);
+            c.setEnabled(c.isEnabled());
         }
         return menu;
     }
@@ -81,6 +83,7 @@ public class Menus {
         JMenu menu = new JMenu("Device");
         for (JComponent c : getPanStampMenuItems()) {
             menu.add(c);
+            c.setEnabled(c.isEnabled());
         }
         return menu;
     }
@@ -89,6 +92,7 @@ public class Menus {
         JMenu menu = new JMenu("Register");
         for (JComponent c : getRegisterMenuItems()) {
             menu.add(c);
+            c.setEnabled(c.isEnabled());
         }
         menu.setEnabled(menu.getItemCount() > 0);
         return menu;
@@ -98,6 +102,7 @@ public class Menus {
         JMenu menu = new JMenu("Endpoint");
         for (JComponent c : getEndpointMenuItems()) {
             menu.add(c);
+            c.setEnabled(c.isEnabled());
         }
         return menu;
     }
