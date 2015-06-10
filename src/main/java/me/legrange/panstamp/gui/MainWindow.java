@@ -3,8 +3,6 @@ package me.legrange.panstamp.gui;
 import me.legrange.panstamp.gui.osx.AppleExtension;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.UIManager;
@@ -97,7 +95,6 @@ public class MainWindow extends javax.swing.JFrame {
      */
     private void start() throws NetworkException {
         model.start();
-        // Application.getApplication().setDefaultMenuBar(mainMenu);
     }
 
     /**
@@ -263,8 +260,6 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void networkTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_networkTreeMouseClicked
-        mainMenu.setEnabled(false);        mainMenu.setEnabled(true);
-
         TreePath path = networkTree.getClosestPathForLocation(evt.getX(), evt.getY());
         if (!evt.isPopupTrigger()) {
             JPopupMenu menu = view.getTreePopupMenu(path);

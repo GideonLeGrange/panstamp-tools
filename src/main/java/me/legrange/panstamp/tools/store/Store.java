@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.legrange.panstamp.DeviceStateStore;
-import me.legrange.panstamp.ModemException;
 import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.NetworkListener;
@@ -113,7 +112,7 @@ public class Store {
         flush();
         return deviceO;
     }
-       
+
     private JsonElement removeDevice(PanStamp ps) {
         Network nw = ps.getGateway();
         JsonObject networkO = getGateway(nw);
@@ -392,27 +391,25 @@ public class Store {
         @Override
         public void deviceDetected(Network gw, PanStamp dev) {
             try {
-                System.out.printf("deviceDetected(%d, %d)\n", gw.getNetworkId(), dev.getAddress());
                 addDevice(dev);
                 flush();
-            } catch (ModemException | DataStoreException ex) {
+            } catch (DataStoreException ex) {
                 Logger.getLogger(Store.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
         @Override
         public void deviceRemoved(Network gw, PanStamp dev) {
+            removeDevice(dev);
             try {
-                System.out.printf("deviceRemoved(%d, %d)\n", gw.getNetworkId(), dev.getAddress());
-               removeDevice(dev);
-               flush();
-            } catch (ModemException | DataStoreException ex) {
+                flush();
+            } catch (DataStoreException ex) {
                 Logger.getLogger(Store.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
     };
-    
+
     private class JsonStateStore implements DeviceStateStore {
 
         public JsonStateStore(Network gw) {
