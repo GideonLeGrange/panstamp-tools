@@ -4,9 +4,9 @@
     <groupId>me.legrange</groupId>
     <packaging>jar</packaging>
     <artifactId>panstamp-tool</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     
-    <name>panStamp Configuration GUI</name>
+    <name>panStamp Tools GUI</name>
     <url>http://maven.apache.org</url>
     <build>
         
@@ -42,7 +42,7 @@
                             <mainClass>me.legrange.panstamp.gui.MainWindow</mainClass>
                             <iconFile>src/main/resources/panstamp.icns</iconFile>
                             <jvmVersion>1.7+</jvmVersion>
-                            <bundleName>PanStamp Tool</bundleName>
+                            <bundleName>${project.name}</bundleName>
                             <version>1.0-SNAPSHOT</version> 
                         </configuration>
                         <executions>
