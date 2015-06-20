@@ -46,7 +46,7 @@ public class View {
     }
 
     public JMenu getGatewayMenu() {
-        return menus.getGatewayMenu();
+        return menus.getNetworkMenu();
     }
 
     public JMenu getWorldMenu() {

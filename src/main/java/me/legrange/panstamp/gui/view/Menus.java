@@ -16,6 +16,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.Network;
@@ -28,7 +32,6 @@ import me.legrange.panstamp.gui.model.tree.NetworkNode;
 import me.legrange.panstamp.gui.model.tree.NetworkTreeNode;
 import me.legrange.panstamp.gui.model.tree.PanStampNode;
 import me.legrange.panstamp.gui.model.tree.RegisterNode;
-import me.legrange.panstamp.gui.model.tree.WorldNode;
 import me.legrange.panstamp.gui.task.Task;
 
 /**
@@ -47,7 +50,7 @@ public class Menus {
                         case WORLD:
                             return getWorldPopupMenu();
                         case NETWORK:
-                            return getGatewayPopupMenu();
+                            return getNetworkPopupMenu();
                         case PANSTAMP:
                             return getPanStampPopupMenu(false);
                         case ENDPOINT:
@@ -66,14 +69,16 @@ public class Menus {
         for (JMenuItem c : getWorldMenuItems()) {
             menu.add(c);
         }
+        menu.addMenuListener(menuEnableListener);
         return menu;
     }
 
-    JMenu getGatewayMenu() {
-        JMenu menu = new JMenu("Network");
-        for (JMenuItem c : getGatewayMenuItems()) {
+    JMenu getNetworkMenu() {
+        final JMenu menu = new JMenu("Network");
+        for (JMenuItem c : getNetworkMenuItems()) {
             menu.add(c);
         }
+        menu.addMenuListener(menuEnableListener);
         return menu;
     }
 
@@ -82,6 +87,7 @@ public class Menus {
         for (JComponent c : getPanStampMenuItems()) {
             menu.add(c);
         }
+        menu.addMenuListener(menuEnableListener);
         return menu;
     }
 
@@ -90,7 +96,8 @@ public class Menus {
         for (JComponent c : getRegisterMenuItems()) {
             menu.add(c);
         }
-        menu.setEnabled(menu.getItemCount() > 0);
+//        menu.setEnabled(menu.getItemCount() > 0);
+        menu.addMenuListener(menuEnableListener);
         return menu;
     }
 
@@ -99,6 +106,7 @@ public class Menus {
         for (JComponent c : getEndpointMenuItems()) {
             menu.add(c);
         }
+        menu.addMenuListener(menuEnableListener);
         return menu;
     }
 
@@ -108,40 +116,27 @@ public class Menus {
     }
 
     private JPopupMenu getWorldPopupMenu() {
-        JPopupMenu worldPopupMenu = new JPopupMenu(((WorldNode) getSelectedNode()).toString());
-        for (JMenuItem item : getWorldMenuItems()) {
-            worldPopupMenu.add(item);
-            item.setEnabled(item.isEnabled());
-
-        }
-        return worldPopupMenu;
+        JPopupMenu menu = getWorldMenu().getPopupMenu();
+                menu.addPopupMenuListener(popupDisplayListener);
+        return menu;
     }
 
-    private JPopupMenu getGatewayPopupMenu() {
-        JPopupMenu gatewayPopupMenu = new JPopupMenu(((NetworkNode) getSelectedNode()).toString());
-        for (JMenuItem item : getGatewayMenuItems()) {
-            gatewayPopupMenu.add(item);
-            item.setEnabled(item.isEnabled());
-        }
-        return gatewayPopupMenu;
+    private JPopupMenu getNetworkPopupMenu() {
+        JPopupMenu menu = getNetworkMenu().getPopupMenu();
+        menu.addPopupMenuListener(popupDisplayListener);
+        return menu;
     }
 
     private JPopupMenu getPanStampPopupMenu(boolean isMain) {
-        JPopupMenu panstampPopupMenu = new JPopupMenu(((PanStampNode) getSelectedNode()).toString());
-        for (JComponent item : getPanStampMenuItems()) {
-            panstampPopupMenu.add(item);
-            item.setEnabled(item.isEnabled());
-        }
-        return panstampPopupMenu;
+        JPopupMenu menu = getPanStampMenu().getPopupMenu();
+        menu.addPopupMenuListener(popupDisplayListener);
+        return menu;
     }
 
     private JPopupMenu getEndpointPopupMenu() {
-        JPopupMenu endpointPopupMenu = new JPopupMenu(((EndpointNode) getSelectedNode()).toString());
-        for (JComponent item : getEndpointMenuItems()) {
-            endpointPopupMenu.add(item);
-            item.setEnabled(item.isEnabled());
-        }
-        return endpointPopupMenu;
+        JPopupMenu menu = getEndpointMenu().getPopupMenu();
+        menu.addPopupMenuListener(popupDisplayListener);
+        return menu;
     }
 
     private List<JMenuItem> getWorldMenuItems() {
@@ -158,7 +153,7 @@ public class Menus {
         return items;
     }
 
-    private List<JMenuItem> getGatewayMenuItems() {
+    private List<JMenuItem> getNetworkMenuItems() {
         List<JMenuItem> list = new LinkedList<>();
         final JMenuItem openItem = new JMenuItem("Open") {
 
@@ -203,7 +198,7 @@ public class Menus {
         };
         closeItem.addActionListener(new ActionListener() {
 
- @Override
+            @Override
             public void actionPerformed(ActionEvent e) {
                 WaitDialog wd = new WaitDialog(null,
                         new Task() {
@@ -447,6 +442,23 @@ public class Menus {
         regsMenu.add(intItem);
         noneItem.setSelected(true);
         regsMenu.add(noneItem);
+        regsMenu.addMenuListener(new MenuListener() {
+
+            @Override
+            public void menuSelected(MenuEvent e) {
+                allItem.setSelected(allItem.isSelected());
+                intItem.setSelected(intItem.isSelected());
+                noneItem.setSelected(noneItem.isSelected());
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) {
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+            }
+        });
         return regsMenu;
     }
 
@@ -567,6 +579,59 @@ public class Menus {
     }
 
     private final View view;
+    private final MenuListener menuEnableListener = new MenuListener() {
+
+        @Override
+        public void menuSelected(MenuEvent e) {
+            if (e.getSource() instanceof JMenu) {
+                JMenu menu = (JMenu) e.getSource();
+                int count = menu.getItemCount();
+                for (int i = 0; i < count; ++i) {
+                    JMenuItem item = menu.getItem(i);
+                    if (item != null) {
+                        item.setEnabled(item.isEnabled());
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void menuDeselected(MenuEvent e) {
+        }
+
+        @Override
+        public void menuCanceled(MenuEvent e) {
+        }
+    };
+
+    private final PopupMenuListener popupDisplayListener = new PopupMenuListener() {
+
+        @Override
+        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+            if (e.getSource() instanceof JPopupMenu) {
+                JPopupMenu menu = (JPopupMenu) e.getSource();
+                for (Component com : menu.getComponents()) {
+                    if (com instanceof JMenuItem) {
+                        JMenuItem item = (JMenuItem) com;
+                        item.setEnabled(item.isEnabled());
+                    }
+                }
+            }
+
+        }
+
+        @Override
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+            if (e.getSource() instanceof JPopupMenu) {
+                JPopupMenu menu = (JPopupMenu) e.getSource();
+                menu.removePopupMenuListener(this);
+            }
+        }
+
+        @Override
+        public void popupMenuCanceled(PopupMenuEvent e) {
+        }
+    };
     private static final ThreadLocal<NetworkTreeNode> selectedNode = new ThreadLocal<>();
 
 }

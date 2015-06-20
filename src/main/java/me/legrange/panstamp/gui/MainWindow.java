@@ -3,6 +3,7 @@ package me.legrange.panstamp.gui;
 import me.legrange.panstamp.gui.osx.AppleExtension;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.UIManager;
@@ -79,6 +80,7 @@ public class MainWindow extends javax.swing.JFrame {
         view = new View(this, model);
         initComponents();
         setLocationRelativeTo(null);
+    
         mainMenu.add(view.getWorldMenu());
         mainMenu.add(view.getGatewayMenu());
         mainMenu.add(view.getDeviceMenu());
