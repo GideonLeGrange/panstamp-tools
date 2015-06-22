@@ -20,7 +20,7 @@ import me.legrange.panstamp.tools.store.DataStoreException;
  *
  * @author gideon
  */
-public class MainWindow extends javax.swing.JFrame {
+public class PanStampToolsGUI extends javax.swing.JFrame {
 
     /**
      * @param args the command line arguments
@@ -33,7 +33,7 @@ public class MainWindow extends javax.swing.JFrame {
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(PanStampToolsGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             } else {
@@ -45,14 +45,14 @@ public class MainWindow extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PanStampToolsGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
 
                 try {
-                    final MainWindow mw = new MainWindow();
+                    final PanStampToolsGUI mw = new PanStampToolsGUI();
                     if (AppleExtension.isOSX()) {
                         AppleExtension.apply(mw);
                         mw.panStampMenu.setVisible(false);
@@ -60,11 +60,11 @@ public class MainWindow extends javax.swing.JFrame {
                     mw.setVisible(true);
                     mw.start();
                 } catch (DataStoreException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(PanStampToolsGUI.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NetworkException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(PanStampToolsGUI.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NoSuchMethodException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(PanStampToolsGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -75,7 +75,7 @@ public class MainWindow extends javax.swing.JFrame {
      *
      * @throws me.legrange.panstamp.tools.store.DataStoreException
      */
-    public MainWindow() throws DataStoreException {
+    public PanStampToolsGUI() throws DataStoreException {
         model = new Model();
         view = new View(this, model);
         initComponents();
@@ -289,7 +289,7 @@ public class MainWindow extends javax.swing.JFrame {
             pd = new PreferencesDialog(this, model);
             pd.setVisible(true);
         } catch (DataStoreException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PanStampToolsGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

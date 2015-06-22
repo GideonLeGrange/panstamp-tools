@@ -8,7 +8,7 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.gui.MainWindow;
+import me.legrange.panstamp.gui.PanStampToolsGUI;
 import me.legrange.panstamp.gui.PanStampParamDialog;
 import me.legrange.panstamp.gui.PanStampSettingsDialog;
 import me.legrange.panstamp.gui.NetworkAddDialog;
@@ -65,7 +65,7 @@ public class View {
         return menus.getEndpointMenu();
     }
 
-    public View(MainWindow window, Model model) {
+    public View(PanStampToolsGUI window, Model model) {
         this.model = model;
         this.window = window;
         this.treeRender = new NetworkTreeNodeRenderer(model, this);
@@ -98,7 +98,7 @@ public class View {
     private NetworkAddDialog networkAdd;
     private final TreeCellRenderer treeRender;
     private final Model model;
-    private final MainWindow window;
+    private final PanStampToolsGUI window;
     private final Menus menus;
 
 
