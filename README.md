@@ -33,7 +33,9 @@ A cross-platform jar file is also provided and can be downloaded [here](https://
 
 ### Running 
 
-To run the JAR version, execute the jar using the Java runtime:
+The Windows application is currently shipped as a single .exe file and can be run directly. The OS X application is provided as a .dmg file containing an application that can be dragged into the Mac Applications folder and run from there. 
+
+To run the cross platform jar version, execute the jar using the Java runtime:
 
 ```shell
 java -jar panstamp-tool-1.0-shaded.jar
