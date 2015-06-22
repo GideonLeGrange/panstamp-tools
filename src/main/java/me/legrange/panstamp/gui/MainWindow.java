@@ -201,7 +201,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         leftRightSplitPane.setLeftComponent(leftPanel);
 
-        panStampMenu.setText("PanStamp Tool");
+        panStampMenu.setText("panStamp Tools GUI");
         panStampMenu.setAutoscrolls(true);
 
         aboutMenuItem.setText("About");

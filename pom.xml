@@ -98,14 +98,10 @@
                                         <preCp>anything</preCp>
                                     </classPath>
                                     <icon>src/main/resources/panstamp.ico</icon>
-                                    
                                     <jre>
                                         <minVersion>1.7.0</minVersion>
                                         <jdkPreference>preferJdk</jdkPreference>
-                                        <!--                                 <bundledJre64Bit>false</bundledJre64Bit>
-                                        <bundledJreAsFallback>false</bundledJreAsFallback> -->
                                         <runtimeBits>64/32</runtimeBits>
-                                 
                                     </jre>
                                     <versionInfo>
                                         <fileVersion>1.0.0.0</fileVersion>

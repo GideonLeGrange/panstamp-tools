@@ -59,7 +59,7 @@
           <Font name="Lucida Grande" size="18" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="panStamp Tools Configuration GUI"/>
+        <Property name="text" type="java.lang.String" value="panStamp Tools GUI"/>
         <Property name="horizontalTextPosition" type="int" value="0"/>
       </Properties>
     </Component>

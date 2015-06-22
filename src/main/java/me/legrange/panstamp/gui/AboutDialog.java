@@ -45,7 +45,7 @@ public class AboutDialog extends javax.swing.JDialog {
 
         bannerLabel.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         bannerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        bannerLabel.setText("panStamp Tools Configuration GUI");
+        bannerLabel.setText("panStamp Tools GUI");
         bannerLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         okButton.setText("OK");
