@@ -1,8 +1,6 @@
 # panstamp-tools
 
-A a Java based GUI tool for configuring and monitoring panStamp networks, and debugging panStamp applications. Here's a screen shot:
-
-![Screen Shot](http://www.panstamp.org/forum/attachment.php?aid=261)
+A a Java based GUI tool for configuring and monitoring panStamp networks, and debugging panStamp applications. 
 
 ## What are panStamps? 
 
