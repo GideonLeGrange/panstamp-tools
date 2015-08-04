@@ -4,7 +4,7 @@
     <groupId>me.legrange</groupId>
     <packaging>jar</packaging>
     <artifactId>panstamp-tool</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     
     <name>panStamp Tools GUI</name>
     <url>http://maven.apache.org</url>
