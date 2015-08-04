@@ -1,6 +1,5 @@
 package me.legrange.panstamp.gui;
 
-import javax.swing.JOptionPane;
 import me.legrange.panstamp.gui.task.Task;
 import me.legrange.panstamp.gui.task.TaskRunner;
 

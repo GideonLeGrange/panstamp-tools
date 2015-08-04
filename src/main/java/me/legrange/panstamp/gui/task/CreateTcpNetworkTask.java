@@ -1,7 +1,5 @@
 package me.legrange.panstamp.gui.task;
 
-import me.legrange.panstamp.gui.model.Model;
-import me.legrange.swap.ModemSetup;
 import me.legrange.panstamp.Network;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.swap.SwapException;
@@ -23,7 +21,7 @@ public class CreateTcpNetworkTask extends CreateNetworkTask {
     @Override
     protected Network openNetwork() throws SwapException, NetworkException {
         update(5, "Opening TCP modem");
-        return Network.openSerial(tcpHost, tcpPort);
+        return Network.openTcp(tcpHost, tcpPort);
     }
 
     private final String tcpHost;
