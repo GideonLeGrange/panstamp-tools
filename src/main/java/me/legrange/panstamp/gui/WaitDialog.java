@@ -20,11 +20,8 @@ public class WaitDialog extends javax.swing.JDialog implements TaskRunner {
     }
     
     public Object start() throws Throwable {
-        System.out.println("WD::start() => task");
         task.start(this);
-        System.out.println("WD::start() => visible");
         setVisible(true);
-        System.out.println("WD::start() => return");
         if (error != null) throw error;
         return result;
     }
