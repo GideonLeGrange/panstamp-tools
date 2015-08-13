@@ -115,7 +115,7 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Version 1.0"/>
+            <Property name="text" type="java.lang.String" value="Version 1.0.1"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
