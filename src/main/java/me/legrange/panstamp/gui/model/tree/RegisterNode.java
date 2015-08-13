@@ -85,4 +85,12 @@ public class RegisterNode extends NetworkTreeNode<Register, Endpoint> implements
         epn.start();
 
     }
+
+    @Override
+    public int compareTo(NetworkTreeNode<Register, Endpoint> o) {
+        RegisterNode rn = (RegisterNode) o;
+        return getRegister().getId() - rn.getRegister().getId();
+    }
+    
+    
 }

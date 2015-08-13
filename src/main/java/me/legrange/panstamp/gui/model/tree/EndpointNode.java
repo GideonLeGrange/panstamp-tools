@@ -1,7 +1,5 @@
 package me.legrange.panstamp.gui.model.tree;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.EndpointListener;
 import me.legrange.panstamp.NetworkException;
@@ -53,6 +51,13 @@ public class EndpointNode extends NetworkTreeNode<Endpoint, Object> implements E
 
     @Override
     void addChild(Object child) {
+    }
+
+    @Override
+    public int compareTo(NetworkTreeNode<Endpoint, Object> node) {
+        EndpointNode epn = (EndpointNode)node;
+        return getEndpoint().getName().compareTo(epn.getEndpoint().getName()); // FIXME: Alpha ordering is so it compiles, but we need natural ordering
+//        return getEndpoint().compareTo(epn.getEndpoint());
     }
 
 }

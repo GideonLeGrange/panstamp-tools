@@ -67,6 +67,13 @@ public class NetworkNode extends NetworkTreeNode<Network, PanStamp> {
         return Type.NETWORK;
     }
 
+    @Override
+    public int compareTo(NetworkTreeNode<Network, PanStamp> o) {
+        return 0;
+    }
+    
+    
+
     private synchronized void addPanStamp(PanStamp ps) {
         addChild(ps);
     }

@@ -174,6 +174,14 @@ public class PanStampNode extends NetworkTreeNode<PanStamp, Register> implements
         }
     }
 
+    @Override
+    public int compareTo(NetworkTreeNode<PanStamp, Register> o) {
+        PanStampNode psn = (PanStampNode)o;
+        return getPanStamp().getAddress() - psn.getPanStamp().getAddress();
+    }
+
+    
+    
     private synchronized void addRegister(Register reg) {
         if (nodes.get(reg.getId()) == null) {
             addChild(reg);

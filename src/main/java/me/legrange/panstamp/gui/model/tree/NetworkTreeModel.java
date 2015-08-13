@@ -1,5 +1,6 @@
 package me.legrange.panstamp.gui.model.tree;
 
+import java.util.Enumeration;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -24,7 +25,19 @@ public class NetworkTreeModel extends DefaultTreeModel {
     }
 
     synchronized void addToTree(NetworkTreeNode childNode, MutableTreeNode parentNode) {
-        insertNodeInto(childNode, parentNode, parentNode.getChildCount());
+        int pos = 0;
+        Enumeration peers = parentNode.children();
+        while (peers.hasMoreElements()) {
+            NetworkTreeNode peer = (NetworkTreeNode) peers.nextElement();
+            if (childNode.compareTo(peer) > 0) {
+              pos ++;
+            }
+            else {
+                break;
+            }
+        }
+        insertNodeInto(childNode, parentNode, pos);
+//        insertNodeInto(childNode, parentNode, parentNode.getChildCount());
         reload(parentNode);
     }
 

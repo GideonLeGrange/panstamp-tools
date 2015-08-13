@@ -7,7 +7,7 @@ import javax.swing.tree.MutableTreeNode;
  *
  * @author gideon
  */
-public abstract class NetworkTreeNode<S,C> extends DefaultMutableTreeNode {
+public abstract class NetworkTreeNode<S,C> extends DefaultMutableTreeNode implements Comparable<NetworkTreeNode<S, C>> {
 
     public enum Type {
 

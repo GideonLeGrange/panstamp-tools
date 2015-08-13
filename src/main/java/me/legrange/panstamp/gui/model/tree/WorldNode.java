@@ -28,6 +28,11 @@ public class WorldNode extends NetworkTreeNode<String, Network> {
     }
 
     @Override
+    public int compareTo(NetworkTreeNode<String, Network> o) {
+        return 0;
+    }
+    
+    @Override
     protected void addToTree(NetworkTreeNode childNode, NetworkTreeNode parentNode) {
         tm.addToTree(childNode, parentNode);
     }
