@@ -36,7 +36,7 @@ public class NetworkTreeModel extends DefaultTreeModel {
                 break;
             }
         }
-        insertNodeInto(childNode, parentNode, pos);
+        insertNodeInto(childNode, parentNode, pos   );
 //        insertNodeInto(childNode, parentNode, parentNode.getChildCount());
         reload(parentNode);
     }

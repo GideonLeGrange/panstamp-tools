@@ -124,7 +124,7 @@ public class PanStampNode extends NetworkTreeNode<PanStamp, Register> implements
 
     @Override
     protected void stop() {
-        ((Network) getPanStamp().getGateway()).removeDevice(getPanStamp().getAddress());
+        ((Network) getPanStamp().getNetwork()).removeDevice(getPanStamp().getAddress());
         super.stop();
     }
 

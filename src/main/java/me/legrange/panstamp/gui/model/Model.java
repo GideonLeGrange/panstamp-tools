@@ -77,12 +77,12 @@ public final class Model {
     }
 
     public SignalDataSet getSignalDataSet(PanStamp ps) {
-        SignalCollector sc = signalCollectors.get(ps.getGateway());
+        SignalCollector sc = signalCollectors.get(ps.getNetwork());
         return sc.getDataSet(ps.getAddress());
     }
 
     public EndpointDataSet getEndpointDataSet(Endpoint ep) {
-        EndpointCollector ec = endpointCollectors.get(ep.getRegister().getDevice().getGateway());
+        EndpointCollector ec = endpointCollectors.get(ep.getRegister().getDevice().getNetwork());
         return ec.getDataSet(ep);
     }
 

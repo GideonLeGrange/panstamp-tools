@@ -261,11 +261,11 @@ public class Menus {
                 case NETWORK:
                     return ((NetworkNode) node).getNetwork();
                 case PANSTAMP:
-                    return ((PanStampNode) node).getPanStamp().getGateway();
+                    return ((PanStampNode) node).getPanStamp().getNetwork();
                 case REGISTER:
-                    return ((RegisterNode) node).getRegister().getDevice().getGateway();
+                    return ((RegisterNode) node).getRegister().getDevice().getNetwork();
                 case ENDPOINT:
-                    return ((EndpointNode) node).getEndpoint().getRegister().getDevice().getGateway();
+                    return ((EndpointNode) node).getEndpoint().getRegister().getDevice().getNetwork();
                 default:
                     return null;
             }
@@ -319,7 +319,7 @@ public class Menus {
             public void actionPerformed(ActionEvent e) {
                 PanStampNode psn = getSelectedPanStampNode();
                 if (psn != null) {
-                    psn.getPanStamp().getGateway().removeDevice(psn.getPanStamp().getAddress());
+                    psn.getPanStamp().getNetwork().removeDevice(psn.getPanStamp().getAddress());
                 }
             }
         }
@@ -331,7 +331,7 @@ public class Menus {
             @Override
             public boolean isEnabled() {
                 PanStamp dev = getSelectedDevice();
-                return (dev != null) && dev.getGateway().isOpen();
+                return (dev != null) && dev.getNetwork().isOpen();
             }
         };
 
@@ -349,7 +349,7 @@ public class Menus {
             @Override
             public boolean isEnabled() {
                 PanStamp dev = getSelectedDevice();
-                if ((dev != null) && dev.getGateway().isOpen()) {
+                if ((dev != null) && dev.getNetwork().isOpen()) {
                     for (Register reg : getSelectedDevice().getRegisters()) {
                         if (!reg.getParameters().isEmpty()) {
                             return true;
@@ -364,7 +364,7 @@ public class Menus {
             @Override
             public boolean isEnabled() {
                 PanStamp dev = getSelectedDevice();
-                return (dev != null) && (dev.getGateway().isOpen());
+                return (dev != null) && (dev.getNetwork().isOpen());
             }
         };
 
@@ -399,7 +399,7 @@ public class Menus {
             @Override
             public boolean isEnabled() {
                 Endpoint ep = getSelectedEndpoint();
-                return (ep != null) && ep.getRegister().getDevice().getGateway().isOpen() && ep.isOutput();
+                return (ep != null) && ep.getRegister().getDevice().getNetwork().isOpen() && ep.isOutput();
             }
         };
         setItem.addActionListener(new ActionListener() {
@@ -414,7 +414,7 @@ public class Menus {
             @Override
             public boolean isEnabled() {
                 Endpoint ep = getSelectedEndpoint();
-                return (ep != null) && (ep.getRegister().getDevice().getGateway().isOpen());
+                return (ep != null) && (ep.getRegister().getDevice().getNetwork().isOpen());
             }
         };
         graphItem.addActionListener(new ActionListener() {
@@ -473,7 +473,7 @@ public class Menus {
             @Override
             public boolean isEnabled() {
                 PanStamp dev = getSelectedDevice();
-                return (dev != null) && (dev.getGateway().isOpen());
+                return (dev != null) && (dev.getNetwork().isOpen());
             }
         };
         item.addActionListener(new ActionListener() {

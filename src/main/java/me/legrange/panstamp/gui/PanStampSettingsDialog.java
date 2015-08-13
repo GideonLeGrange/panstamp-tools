@@ -61,7 +61,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
 
     private String getNetwork() {
         try {
-            return String.format("%4x", ps.getNetwork());
+            return String.format("%4x", ps.getNetworkId());
         } catch (NetworkException ex) {
             Logger.getLogger(PanStampSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -237,7 +237,7 @@ public class PanStampSettingsDialog extends javax.swing.JDialog {
         try {
             ps.setAddress(getIntValue(addressField));
             ps.setChannel(getIntValue(channelField));
-            ps.setNetwork(Integer.parseInt(networkField.getText(), 16));
+            ps.setNetworkId(Integer.parseInt(networkField.getText(), 16));
             ps.setSecurityOption(getIntValue(securityField));
             ps.setTxInterval(getIntValue(intervalField));
             if (ps.getSyncState() != 1) {

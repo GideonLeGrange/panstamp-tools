@@ -104,7 +104,7 @@ public class Store {
     }
 
     private JsonObject addDevice(PanStamp ps) throws DataStoreException {
-        Network nw = ps.getGateway();
+        Network nw = ps.getNetwork();
         JsonObject networkO = getGateway(nw);
         JsonObject devicesO = getDevices(networkO);
         JsonObject deviceO = new JsonObject();
@@ -114,7 +114,7 @@ public class Store {
     }
 
     private JsonElement removeDevice(PanStamp ps) {
-        Network nw = ps.getGateway();
+        Network nw = ps.getNetwork();
         JsonObject networkO = getGateway(nw);
         JsonObject devicesO = getDevices(networkO);
         return devicesO.remove("" + ps.getAddress());

@@ -163,7 +163,7 @@ class EndpointTableModel implements TableModel {
     }
 
     private void add(PanStamp ps) {
-        if (ps.getGateway().isOpen()) {
+        if (ps.getNetwork().isOpen()) {
             add(String.format("Detected new device with address %d", ps.getAddress()));
         }
         ps.addListener(panStampL);
@@ -180,7 +180,7 @@ class EndpointTableModel implements TableModel {
     }
 
     private void add(Register reg) {
-        if (reg.getDevice().getGateway().isOpen()) {
+        if (reg.getDevice().getNetwork().isOpen()) {
             add(String.format("Learnt of register %d for device %d", reg.getId(), reg.getDevice().getAddress()));
         }
         reg.addListener(registerL);
@@ -197,7 +197,7 @@ class EndpointTableModel implements TableModel {
     }
 
     private void add(Endpoint ep) {
-        if (ep.getRegister().getDevice().getGateway().isOpen()) {
+        if (ep.getRegister().getDevice().getNetwork().isOpen()) {
             add(String.format("Learnt of endpoint '%s' for register %d on device %d",
                     ep.getName(), ep.getRegister().getId(), ep.getRegister().getDevice().getAddress()));
         }
@@ -278,7 +278,7 @@ class EndpointTableModel implements TableModel {
         @Override
         public void valueReceived(Endpoint ep, Object value) {
             try {
-                if (ep.getRegister().getDevice().getGateway().isOpen()) {
+                if (ep.getRegister().getDevice().getNetwork().isOpen()) {
                     add(String.format("%s in address %d on node %d changed to %s",
                             ep.getName(), ep.getRegister().getId(),
                             ep.getRegister().getDevice().getAddress(), formatValue(ep)));
