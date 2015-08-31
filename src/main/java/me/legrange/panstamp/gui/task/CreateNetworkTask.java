@@ -22,7 +22,7 @@ import me.legrange.swap.SwapException;
     protected final Network run() throws SwapException, NetworkException {
         Network gw = openNetwork();
         update(40, "Configuring modem");
-        ModemSetup setup = gw.getSWAPModem().getSetup();
+        ModemSetup setup = gw.getSwapModem().getSetup();
         update(60, "Configuring modem");
         setup.setChannel(channel);
         update(67, "Configuring modem");
@@ -30,7 +30,7 @@ import me.legrange.swap.SwapException;
         update(73, "Configuring modem");
         setup.setNetworkID(networkId);
         update(80, "Configuring modem");
-        gw.getSWAPModem().setSetup(setup);
+        gw.getSwapModem().setSetup(setup);
         update(90, "Completed");
         return gw;
     }

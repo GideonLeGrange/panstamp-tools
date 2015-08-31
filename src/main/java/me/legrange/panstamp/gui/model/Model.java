@@ -42,25 +42,25 @@ public final class Model {
         store.addGateway(gw);
         gw.setDeviceLibrary(devLib);
         SignalCollector sc = new SignalCollector();
-        gw.getSWAPModem().addListener(sc);
+        gw.getSwapModem().addListener(sc);
         signalCollectors.put(gw, sc);
         endpointCollectors.put(gw, new EndpointCollector(gw));
         ntm.addGateway(gw);
         etm.addGateway(gw);
-        gw.getSWAPModem().addListener(smm);
+        gw.getSwapModem().addListener(smm);
     }
 
     public void deleteGateway(Network gw) throws NetworkException {
         if (gw.isOpen()) {
             gw.close();
         }
-        gw.getSWAPModem().removeListener(smm);
+        gw.getSwapModem().removeListener(smm);
         etm.removeGateway(gw);
         ntm.removeGateway(gw);
         EndpointCollector ec = endpointCollectors.remove(gw);
         ec.stop();
         SignalCollector sc = signalCollectors.get(gw);
-        gw.getSWAPModem().removeListener(sc);
+        gw.getSwapModem().removeListener(sc);
         store.removeGateway(gw);
     }
 

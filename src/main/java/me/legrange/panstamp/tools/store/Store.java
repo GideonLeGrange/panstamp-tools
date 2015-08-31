@@ -149,13 +149,12 @@ public class Store {
     private void loadDevices(Network gw, JsonObject devicesO) throws NetworkException {
         for (String key : devicesO.keySet()) {
             JsonObject deviceO = devicesO.getObject(key);
-            PanStamp ps = new PanStamp((Network) gw, Integer.parseInt(key));
+            PanStamp ps = gw.addDevice(Integer.parseInt(key));
             for (String regKey : deviceO.keySet()) {
                 int id = Integer.parseInt(regKey);
                 Register reg = ps.getRegister(id);
                 reg.setValue(hexToBytes(deviceO.getString(regKey)));
             }
-            gw.addDevice(ps);
         }
     }
 
@@ -253,7 +252,7 @@ public class Store {
                     field(DEVICE_ADDRESS, gw.getDeviceAddress()),
                     field(CHANNEL, gw.getChannel()),
                     field(SECURITY_OPTION, gw.getSecurityOption()),
-                    field(SWAP_MODEM, storeModem(gw.getSWAPModem())),
+                    field(SWAP_MODEM, storeModem(gw.getSwapModem())),
                     field(DEVICES, new JsonObject()));
             networksO.put(key, gwO);
             return gwO;
@@ -312,12 +311,12 @@ public class Store {
      */
     private String makeKey(Network gw) throws NetworkException {
         String path = "";
-        switch (gw.getSWAPModem().getType()) {
+        switch (gw.getSwapModem().getType()) {
             case SERIAL:
-                path = ((SerialModem) gw.getSWAPModem()).getPort();
+                path = ((SerialModem) gw.getSwapModem()).getPort();
                 break;
             case TCP_IP:
-                path = ((TcpModem) gw.getSWAPModem()).getHost() + ":" + ((TcpModem) gw.getSWAPModem()).getPort();
+                path = ((TcpModem) gw.getSwapModem()).getHost() + ":" + ((TcpModem) gw.getSwapModem()).getPort();
                 break;
         }
         return String.format("%s->%d", path, gw.getNetworkId());

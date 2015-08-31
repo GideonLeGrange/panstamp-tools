@@ -29,7 +29,7 @@ public class NetworkNode extends NetworkTreeNode<Network, PanStamp> {
         String txt;
         try {
             Network gw = getNetwork();
-            SwapModem sm = gw.getSWAPModem();
+            SwapModem sm = gw.getSwapModem();
             switch (sm.getType()) {
                 case SERIAL:
                     txt = String.format("Serial Network - %4x", gw.getNetworkId());
