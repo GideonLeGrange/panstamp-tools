@@ -10,8 +10,6 @@ import javax.swing.text.PlainDocument;
 import me.legrange.panstamp.Endpoint;
 import me.legrange.panstamp.NetworkException;
 import me.legrange.panstamp.PanStamp;
-import me.legrange.panstamp.PanStampListener;
-import me.legrange.panstamp.event.AbstractPanStampListener;
 import me.legrange.panstamp.gui.model.DoubleDocument;
 import me.legrange.panstamp.gui.model.IntegerDocument;
 
