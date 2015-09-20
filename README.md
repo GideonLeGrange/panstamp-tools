@@ -38,7 +38,7 @@ The Windows application is currently shipped as a single .exe file and can be ru
 To run the cross platform jar version, execute the jar using the Java runtime:
 
 ```shell
-java -jar panstamp-tool-1.0-shaded.jar
+java -jar panstamp-tool-1.0.2-shaded.jar
 ```
 
 ## Getting help
