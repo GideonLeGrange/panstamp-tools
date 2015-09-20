@@ -2,8 +2,6 @@
 
 A a Java based GUI tool for configuring and monitoring panStamp networks, and debugging panStamp applications.
 
-![Screenshot](https://github.com/GideonLeGrange/panstamp-tools/releases/download/v1.0.2/screenshot1.png?raw=true "Screen shot")
-
 ## What are panStamps? 
 
 PanStamps are autonomous low-power wireless modules programmable from the Arduino IDE and made for telemetry and control projects. 
