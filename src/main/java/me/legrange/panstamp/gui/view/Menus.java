@@ -52,7 +52,9 @@ public class Menus {
                         case NETWORK:
                             return getNetworkPopupMenu();
                         case PANSTAMP:
-                            return getPanStampPopupMenu(false);
+                            return getPanStampPopupMenu();
+                        case REGISTER:
+                            return getRegisterPopupMenu();
                         case ENDPOINT:
                             return getEndpointPopupMenu();
                     }
@@ -96,7 +98,6 @@ public class Menus {
         for (JComponent c : getRegisterMenuItems()) {
             menu.add(c);
         }
-//        menu.setEnabled(menu.getItemCount() > 0);
         menu.addMenuListener(menuEnableListener);
         return menu;
     }
@@ -117,7 +118,7 @@ public class Menus {
 
     private JPopupMenu getWorldPopupMenu() {
         JPopupMenu menu = getWorldMenu().getPopupMenu();
-                menu.addPopupMenuListener(popupDisplayListener);
+        menu.addPopupMenuListener(popupDisplayListener);
         return menu;
     }
 
@@ -127,8 +128,14 @@ public class Menus {
         return menu;
     }
 
-    private JPopupMenu getPanStampPopupMenu(boolean isMain) {
+    private JPopupMenu getPanStampPopupMenu() {
         JPopupMenu menu = getPanStampMenu().getPopupMenu();
+        menu.addPopupMenuListener(popupDisplayListener);
+        return menu;
+    }
+
+    private JPopupMenu getRegisterPopupMenu() {
+        JPopupMenu menu = getRegisterMenu().getPopupMenu();
         menu.addPopupMenuListener(popupDisplayListener);
         return menu;
     }
@@ -289,6 +296,23 @@ public class Menus {
     }
 
     /**
+     * Determine which register, if any, is currently selected in the tree view.
+     * A register is considered selected if a register node or one of it's descendants
+     * is selected.
+     *
+     * @return The selected register, or null if none is selected.
+     */
+    private Register getSelectedRegister() {
+        NetworkTreeNode node = getSelectedNode();
+        if (node != null) {
+            if (node.getType() == NetworkTreeNode.Type.REGISTER) {
+                return ((RegisterNode) node).getRegister();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Determine which endpoint, if any, is currently selected in the tree view.
      * A endpoint is considered selected if a endpoint node is selected.
      *
@@ -390,7 +414,27 @@ public class Menus {
     }
 
     private List<JComponent> getRegisterMenuItems() {
-        return Collections.EMPTY_LIST;
+        List<JComponent> items = new LinkedList<>();
+        final JMenuItem reqItem = new JMenuItem("Request value") {
+            @Override
+            public boolean isEnabled() {
+                Register reg = getSelectedRegister();
+                return (reg != null) && reg.getDevice().getNetwork().isOpen();
+            }
+        };
+        reqItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    getSelectedRegister().requestValue();
+                } catch (NetworkException ex) {
+                    Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        items.add(reqItem);
+        return items;
     }
 
     private List<JComponent> getEndpointMenuItems() {
@@ -410,6 +454,26 @@ public class Menus {
             }
         });
         items.add(setItem);
+        final JMenuItem reqItem = new JMenuItem("Request value") {
+            @Override
+            public boolean isEnabled() {
+                Endpoint ep = getSelectedEndpoint();
+                return (ep != null) && ep.getRegister().getDevice().getNetwork().isOpen();
+            }
+        };
+        reqItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    getSelectedEndpoint().requestValue();
+                } catch (NetworkException ex) {
+                    Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        items.add(reqItem);
+        items.add(new JSeparator());
         final JMenuItem graphItem = new JMenuItem("Data graph...") {
             @Override
             public boolean isEnabled() {

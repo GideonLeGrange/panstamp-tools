@@ -58,6 +58,7 @@ public class SetValueDialog extends javax.swing.JDialog {
         switch (ep.getType()) {
             case BINARY:
             case STRING:
+            case BYTE_ARRAY :
                 return new PlainDocument();
             case INTEGER:
                 return new IntegerDocument(Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -204,6 +205,8 @@ public class SetValueDialog extends javax.swing.JDialog {
                     break;
                 case BINARY:
                     ep.setValue(valueCheckBox.isSelected());
+                    break;
+                case BYTE_ARRAY :
                     break;
             }
             dispose();

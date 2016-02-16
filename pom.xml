@@ -4,7 +4,7 @@
     <groupId>me.legrange</groupId>
     <packaging>jar</packaging>
     <artifactId>panstamp-tool</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     
     <name>panStamp Tools GUI</name>
     <url>http://maven.apache.org</url>
@@ -154,7 +154,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>panstamp</artifactId>
-            <version>2.0.2</version>
+            <version>2.2</version>
         </dependency>
     </dependencies>
 </project>

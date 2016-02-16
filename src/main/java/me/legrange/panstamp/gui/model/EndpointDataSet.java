@@ -143,6 +143,7 @@ public class EndpointDataSet implements XYDataset, EndpointListener {
                     }
                     return d;
                 case STRING:
+                case BYTE_ARRAY :
                     return 0.0;
             }
         } catch (NetworkException e) {
