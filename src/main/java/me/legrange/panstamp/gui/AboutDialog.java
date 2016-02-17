@@ -58,10 +58,10 @@ public class AboutDialog extends javax.swing.JDialog {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Version 1.0.2");
+        jLabel1.setText("Version 1.0.3");
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Copyright of Gideon le Grange, 2015");
+        jLabel3.setText("Copyright of Gideon le Grange, 2015-2016");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("<html>Visit the panStamp tools <u>website</u></html>");

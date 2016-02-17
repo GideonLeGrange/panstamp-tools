@@ -115,13 +115,13 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Version 1.0.2"/>
+            <Property name="text" type="java.lang.String" value="Version 1.0.3"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Copyright of Gideon le Grange, 2015"/>
+            <Property name="text" type="java.lang.String" value="Copyright of Gideon le Grange, 2015-2016"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
