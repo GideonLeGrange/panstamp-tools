@@ -26,10 +26,10 @@ You need a Windows, OS X or Linux system with the Java Runtime version 1.7 or ne
 You can download binary versions of the application from the [Releases](https://github.com/GideonLeGrange/panstamp-tools/releases) section. 
 
 Pre-built binaries are supplied for:
-* [Mac OS X](https://github.com/GideonLeGrange/panstamp-tools/releases/download/v1.0.2/panstamp-tool-1.0.2.dmg)
-* [Windows](https://github.com/GideonLeGrange/panstamp-tools/releases/download/v1.0.2/panstamp-gui.exe)
+* [Mac OS X](https://github.com/GideonLeGrange/panstamp-tools/releases/download/v1.0.3/panstamp-tool-1.0.3.dmg)
+* [Windows](https://github.com/GideonLeGrange/panstamp-tools/releases/download/v1.0.3/panstamp-gui.exe)
 
-A cross-platform jar file is also provided and can be downloaded [here](https://github.com/GideonLeGrange/panstamp-tools/releases/download/v1.0.2/panstamp-tool-1.0.2-shaded.jar)
+A cross-platform jar file is also provided and can be downloaded [here](https://github.com/GideonLeGrange/panstamp-tools/releases/download/v1.0.3/panstamp-tool-1.0.3-shaded.jar)
 
 ### Running 
 
@@ -38,7 +38,7 @@ The Windows application is currently shipped as a single .exe file and can be ru
 To run the cross platform jar version, execute the jar using the Java runtime:
 
 ```shell
-java -jar panstamp-tool-1.0.2-shaded.jar
+java -jar panstamp-tool-1.0.3-shaded.jar
 ```
 
 ## Getting help
