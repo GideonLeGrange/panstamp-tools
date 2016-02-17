@@ -11,9 +11,9 @@ You can read all about them [on their commercial site](http://www.panstamp.com/)
 
 ## Versions
 
-**The current stable version is 1.0.2**
+**The current stable version is 1.0.3**
 
-Version 1.0.2 brings in some important serial modem IO bug fixes from the [panstamp-java library](https://github.com/GideonLeGrange/panstamp-java). 
+Version 1.0.3 brings the application up to date with version 2.2 of the [panstamp-java library](https://github.com/GideonLeGrange/panstamp-java) and introduces the ability to send a query message to a panStamp. 
 
 ## Getting and running the application 
 
